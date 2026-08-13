@@ -72,7 +72,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $action = static::createApi4ActionMock(GetOrCreateAction::class);
     $action->setApplicationProcessId(12);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['is_eligible' => FALSE]
     );
     $this->applicationProcessManagerMock->method('getBundle')

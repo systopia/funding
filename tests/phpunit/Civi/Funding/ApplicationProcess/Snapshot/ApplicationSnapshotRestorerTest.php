@@ -72,7 +72,7 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
   }
 
   public function testRestoreLastSnapshot(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $costItem = ApplicationCostItemFactory::createApplicationCostItem();
     $resourcesItem = ApplicationResourcesItemFactory::createApplicationResourcesItem();

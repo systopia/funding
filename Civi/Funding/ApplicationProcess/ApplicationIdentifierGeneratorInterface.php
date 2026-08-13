@@ -27,4 +27,8 @@ interface ApplicationIdentifierGeneratorInterface {
     ApplicationProcessEntityBundle $applicationProcessBundle
   ): string;
 
+  public function generateIdentifierOnFundingCaseChange(
+    ApplicationProcessEntityBundle $applicationProcessBundle
+  ): string;
+
 }

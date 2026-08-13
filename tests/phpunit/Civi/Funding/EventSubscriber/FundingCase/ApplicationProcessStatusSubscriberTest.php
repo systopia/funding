@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\FundingCase;
 
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -107,8 +106,8 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     string $applicationProcessStatus
   ): ApplicationProcessUpdatedEvent {
     return new ApplicationProcessUpdatedEvent(
-      ApplicationProcessFactory::createApplicationProcess(['status' => 'previous_status']),
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ApplicationProcessBundleFactory::create(['status' => 'previous_status']),
+      ApplicationProcessBundleFactory::create(
         ['status' => $applicationProcessStatus],
         ['status' => $fundingCaseStatus]
       ),

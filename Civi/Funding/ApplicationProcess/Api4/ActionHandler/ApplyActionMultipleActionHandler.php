@@ -22,10 +22,12 @@ namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\Api4\Action\FundingApplicationProcess\ApplyActionMultipleAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\BatchActionHandler\MoveToNewFundingCaseHandler;
 use Civi\Funding\ApplicationProcess\Command\ApplicationActionApplyCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationAllowedActionsGetCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationActionApplyHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationAllowedActionsGetHandlerInterface;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use CRM_Funding_ExtensionUtil as E;
 
@@ -33,36 +35,36 @@ final class ApplyActionMultipleActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'FundingApplicationProcess';
 
-  private ApplicationActionApplyHandlerInterface $actionApplyHandler;
-
-  private ApplicationAllowedActionsGetHandlerInterface $allowedActionsGetHandler;
-
-  private ApplicationProcessManager $applicationProcessManager;
-
   public function __construct(
-    ApplicationActionApplyHandlerInterface $actionApplyHandler,
-    ApplicationAllowedActionsGetHandlerInterface $allowedActionsGetHandler,
-    ApplicationProcessManager $applicationProcessManager,
-  ) {
-    $this->actionApplyHandler = $actionApplyHandler;
-    $this->allowedActionsGetHandler = $allowedActionsGetHandler;
-    $this->applicationProcessManager = $applicationProcessManager;
-  }
+    private readonly ApplicationActionApplyHandlerInterface $actionApplyHandler,
+    private readonly ApplicationAllowedActionsGetHandlerInterface $allowedActionsGetHandler,
+    private readonly ApplicationProcessManager $applicationProcessManager,
+    private readonly MoveToNewFundingCaseHandler $moveToNewFundingCaseApplier,
+  ) {}
 
   /**
    * Applies an action to multiple application processes. The action must be
    * applicable without form data.
    *
-   * @phpstan-return array<int, array{status: string, is_review_calculative: bool|null, is_review_content: bool|null}>
+   * @return array<int, array{status: string, is_review_calculative: bool|null, is_review_content: bool|null, ...}>
    *
    * @throws \Civi\API\Exception\UnauthorizedException
    * @throws \CRM_Core_Exception
    */
   public function applyActionMultiple(ApplyActionMultipleAction $action): array {
-    $newStatusList = [];
+    $applicationProcessBundles = $this->getApplicationProcessBundles($action->getIds(), $action->getAction());
 
-    foreach ($action->getIds() as $id) {
-      $newStatusList[$id] = $this->applyActionById($action->getAction(), $id);
+    // Note: Should there be more than one action that has to be handled
+    // differently, we should use a service container containing the appliers
+    // (tagged services).
+    if (MoveToNewFundingCaseHandler::ACTION === $action->getAction()) {
+      return $this->moveToNewFundingCaseApplier->handle($applicationProcessBundles);
+    }
+
+    $newStatusList = [];
+    foreach ($applicationProcessBundles as $applicationProcessBundle) {
+      $newStatusList[$applicationProcessBundle->getApplicationProcess()->getId()]
+        = $this->applyAction($action->getAction(), $applicationProcessBundle);
     }
 
     return $newStatusList;
@@ -70,29 +72,8 @@ final class ApplyActionMultipleActionHandler implements ActionHandlerInterface {
 
   /**
    * @phpstan-return array{status: string, is_review_calculative: bool|null, is_review_content: bool|null}
-   *
-   * @throws \Civi\API\Exception\UnauthorizedException
-   * @throws \CRM_Core_Exception
    */
-  private function applyActionById(string $action, int $id): array {
-    $applicationProcessBundle = $this->applicationProcessManager->getBundle($id);
-    if (NULL === $applicationProcessBundle) {
-      throw new UnauthorizedException(E::ts('Application process with ID %1 not found.', [1 => $id]));
-    }
-
-    $applicationProcessStatusList = $this->applicationProcessManager->getStatusList($applicationProcessBundle);
-    $allowedActions = $this->allowedActionsGetHandler->handle(new ApplicationAllowedActionsGetCommand(
-      $applicationProcessBundle,
-      $applicationProcessStatusList,
-    ));
-
-    if (!isset($allowedActions[$action])) {
-      throw new UnauthorizedException(E::ts('Performing action %1 on application process %2 is not allowed.', [
-        1 => $action,
-        2 => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
-      ]));
-    }
-
+  private function applyAction(string $action, ApplicationProcessEntityBundle $applicationProcessBundle): array {
     $this->actionApplyHandler->handle(new ApplicationActionApplyCommand(
       $action, $applicationProcessBundle, NULL
     ));
@@ -104,6 +85,37 @@ final class ApplyActionMultipleActionHandler implements ActionHandlerInterface {
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
       'is_review_content' => $applicationProcess->getIsReviewContent(),
     ];
+  }
+
+  /**
+   * @param list<int> $ids
+   *
+   * @phpstan-return iterable<ApplicationProcessEntityBundle>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  private function getApplicationProcessBundles(array $ids, string $action): iterable {
+    foreach ($ids as $id) {
+      $applicationProcessBundle = $this->applicationProcessManager->getBundle($id);
+      if (NULL === $applicationProcessBundle) {
+        throw new UnauthorizedException(E::ts('Application process with ID %1 not found.', [1 => $id]));
+      }
+
+      $applicationProcessStatusList = $this->applicationProcessManager->getStatusList($applicationProcessBundle);
+      $allowedActions = $this->allowedActionsGetHandler->handle(new ApplicationAllowedActionsGetCommand(
+        $applicationProcessBundle,
+        $applicationProcessStatusList,
+      ));
+
+      if (!isset($allowedActions[$action])) {
+        throw new UnauthorizedException(E::ts('Performing action %1 on application process %2 is not allowed.', [
+          1 => $action,
+          2 => $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
+        ]));
+      }
+
+      yield $applicationProcessBundle;
+    }
   }
 
 }

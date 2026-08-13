@@ -126,6 +126,18 @@ final class DefaultApplicationProcessActions {
     ]);
   }
 
+  public static function moveToNewFundingCase(?string $label = NULL): ApplicationProcessAction {
+    return new ApplicationProcessAction([
+      'name' => 'move-to-new-funding-case',
+      'label' => $label ?? E::ts('Move to New Funding Case'),
+      'batchPossible' => TRUE,
+      'confirmMessage' => E::ts(
+        // phpcs:disable Generic.Files.LineLength.TooLong
+        'Moves the selected applications to a new funding case. Per affected funding case a new funding case will be created. Do you want to continue?'
+      ),
+    ]);
+  }
+
   /**
    * @return non-empty-array<string, ApplicationProcessAction>
    */
@@ -148,6 +160,7 @@ final class DefaultApplicationProcessActions {
       'request-change' => self::requestChange(),
       'approve' => self::approve(),
       'reject' => self::reject(),
+      'move-to-new-funding-case' => self::moveToNewFundingCase(),
     ];
   }
 

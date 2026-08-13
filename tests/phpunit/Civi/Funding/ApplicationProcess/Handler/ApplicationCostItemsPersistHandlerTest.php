@@ -48,7 +48,7 @@ final class ApplicationCostItemsPersistHandlerTest extends TestCase {
   }
 
   public function testHandle(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['request_data' => ['foo' => 'bar']]
     );
 

@@ -22,7 +22,6 @@ namespace Civi\Funding\EventSubscriber\ClearingProcess;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -128,12 +127,12 @@ final class ApplicationProcessWithdrawSubscriberTest extends TestCase {
 
   private function createEvent(string $oldStatus, string $newStatus): ApplicationProcessUpdatedEvent {
     return new ApplicationProcessUpdatedEvent(
-      ApplicationProcessFactory::createApplicationProcess([
+      ApplicationProcessBundleFactory::create([
         'status' => $oldStatus,
         'is_rejected' => 'rejected' === $oldStatus,
         'is_withdrawn' => 'withdrawn' === $oldStatus,
       ]),
-      ApplicationProcessBundleFactory::createApplicationProcessBundle([
+      ApplicationProcessBundleFactory::create([
         'status' => $newStatus,
         'is_rejected' => 'rejected' === $newStatus,
         'is_withdrawn' => 'withdrawn' === $newStatus,

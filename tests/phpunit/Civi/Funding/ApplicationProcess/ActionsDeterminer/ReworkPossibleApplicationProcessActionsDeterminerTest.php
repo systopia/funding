@@ -306,7 +306,7 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
     array $permissions,
     string $fundingCaseStatus = FundingCaseStatus::OPEN
   ): ApplicationProcessEntityBundle {
-    return ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    return ApplicationProcessBundleFactory::create([
       'status' => $status,
       'is_review_calculative' => $isReviewCalculative,
       'is_review_content' => $isReviewContent,

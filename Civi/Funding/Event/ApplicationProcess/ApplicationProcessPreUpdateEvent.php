@@ -21,21 +21,27 @@ namespace Civi\Funding\Event\ApplicationProcess;
 
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseEntity;
 
 final class ApplicationProcessPreUpdateEvent extends AbstractApplicationEvent {
 
-  private ApplicationProcessEntity $previousApplicationProcess;
-
   public function __construct(
-    ApplicationProcessEntity $previousApplicationProcess,
+    private readonly ApplicationProcessEntityBundle $previousApplicationProcessBundle,
     ApplicationProcessEntityBundle $applicationProcessBundle
   ) {
     parent::__construct($applicationProcessBundle);
-    $this->previousApplicationProcess = $previousApplicationProcess;
   }
 
   public function getPreviousApplicationProcess(): ApplicationProcessEntity {
-    return $this->previousApplicationProcess;
+    return $this->previousApplicationProcessBundle->getApplicationProcess();
+  }
+
+  public function getPreviousApplicationProcessBundle(): ApplicationProcessEntityBundle {
+    return $this->previousApplicationProcessBundle;
+  }
+
+  public function getPreviousFundingCase(): FundingCaseEntity {
+    return $this->previousApplicationProcessBundle->getFundingCase();
   }
 
 }

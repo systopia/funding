@@ -754,8 +754,24 @@ msgstr ""
 msgid "Funding Application Created"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStartedSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStatusSubscriber.php Civi/Funding/Upgrade/Upgrader0024.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStartedSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessStatusSubscriber.php Civi/Funding/Upgrade/Upgrader0024.php
 msgid "Application: %1 (%2)"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
+msgid "Funding Application Moved"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
+msgid "Previous identifier: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
+msgid "From funding case: %1"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
+msgid "To funding case: %1"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
@@ -1040,6 +1056,14 @@ msgstr ""
 
 #: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/case/fundingCase.template.html
 msgid "Approve"
+msgstr ""
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Move to New Funding Case"
+msgstr ""
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Moves the selected applications to a new funding case. Per affected funding case a new funding case will be created. Do you want to continue?"
 msgstr ""
 
 #: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
@@ -1526,7 +1550,7 @@ msgstr ""
 msgid "Last Internal Comment"
 msgstr ""
 
-#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/application/history/activities/clearingCreate.template.html ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html ang/crmFunding/application/history/activities/clearingStatusChange.template.html ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/snapshotCreation.template.html ang/crmFunding/application/history/activities/statusChange.template.html ang/crmFunding/clearing/clearingSidebar.template.html
+#: ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/application/history/activities/clearingCreate.template.html ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html ang/crmFunding/application/history/activities/clearingStatusChange.template.html ang/crmFunding/application/history/activities/comment.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/move.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/snapshotCreation.template.html ang/crmFunding/application/history/activities/statusChange.template.html ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Date: %date"
 msgstr ""
 
@@ -1542,7 +1566,7 @@ msgstr ""
 msgid "Clearing started"
 msgstr ""
 
-#: ang/crmFunding/application/history/activities/clearingCreate.template.html ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html ang/crmFunding/application/history/activities/clearingStatusChange.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/snapshotCreation.template.html ang/crmFunding/application/history/activities/statusChange.template.html
+#: ang/crmFunding/application/history/activities/clearingCreate.template.html ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html ang/crmFunding/application/history/activities/clearingStatusChange.template.html ang/crmFunding/application/history/activities/create.template.html ang/crmFunding/application/history/activities/move.template.html ang/crmFunding/application/history/activities/reviewStatusChange.template.html ang/crmFunding/application/history/activities/snapshotCreation.template.html ang/crmFunding/application/history/activities/statusChange.template.html
 msgid "Performed by: %name"
 msgstr ""
 
@@ -1568,6 +1592,18 @@ msgstr ""
 
 #: ang/crmFunding/application/history/activities/create.template.html
 msgid "Created"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/move.template.html
+msgid "Moved to funding case %identifier"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/move.template.html
+msgid "Previous funding case: %identifier"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/move.template.html
+msgid "Previous application identifier: %identifier"
 msgstr ""
 
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
@@ -1802,6 +1838,14 @@ msgstr ""
 msgid "Activity type for funding application creation"
 msgstr ""
 
+#: managed/ActivityTypeFundingApplicationMove.mgd.php
+msgid "Funding Application Move"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationMove.mgd.php
+msgid "Activity type when a funding application is moved to another funding case"
+msgstr ""
+
 #: managed/ActivityTypeFundingApplicationRestore.mgd.php managed/CustomGroupFundingApplicationRestore.mgd.php
 msgid "Funding Application Restore"
 msgstr ""
@@ -1868,6 +1912,22 @@ msgstr ""
 
 #: managed/CustomGroupFundingApplicationStatusChange.mgd.php managed/CustomGroup_funding_clearing_status_change.mgd.php
 msgid "To Status"
+msgstr ""
+
+#: managed/CustomGroup_funding_application_move.mgd.php
+msgid "Funding Application Process Move"
+msgstr ""
+
+#: managed/CustomGroup_funding_application_move.mgd.php
+msgid "Previous Application Identifier"
+msgstr ""
+
+#: managed/CustomGroup_funding_application_move.mgd.php
+msgid "From Funding Case With Identifier"
+msgstr ""
+
+#: managed/CustomGroup_funding_application_move.mgd.php
+msgid "To Funding Case With Identifier"
 msgstr ""
 
 #: managed/CustomGroup_funding_application_process_task.mgd.php

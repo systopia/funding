@@ -32,6 +32,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ApplicationProcess\ApplicationResourcesItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationSnapshotManager;
+use Civi\Funding\ApplicationProcess\BatchActionHandler\MoveToNewFundingCaseHandler;
 use Civi\Funding\ApplicationProcess\EligibleApplicationProcessesLoader;
 use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorCollector;
 use Civi\Funding\ApplicationProcess\Form\Validation\ApplicationFormAddValidatorInterface;
@@ -179,6 +180,8 @@ ServiceRegistrator::autowireAllImplementing(
   ActionHandlerInterface::class,
   [ActionHandlerInterface::SERVICE_TAG => []],
 );
+
+$container->autowire(MoveToNewFundingCaseHandler::class);
 
 $container->register(OpisApplicationValidator::class, OpisApplicationValidator::class)
   ->setFactory([OpisApplicationValidatorFactory::class, 'getValidator']);

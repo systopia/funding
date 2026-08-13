@@ -75,7 +75,7 @@ final class ClearingProcessManagerTest extends TestCase {
   }
 
   public function testCreate(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $clearingProcess = ClearingProcessFactory::create([
       'id' => NULL,
       'status' => 'not-started',

@@ -66,7 +66,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       'data_pointer' => '/test',
     ]);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $costItemSchema = new JsonSchemaCostItem([
       'type' => $item->getType(),
       'identifier' => $item->getIdentifier(),
@@ -111,7 +111,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       ],
     ]);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $costItemsSchema = new JsonSchemaCostItems([
       'type' => $item0->getType(),
       'identifierProperty' => 'theIdentifier',
@@ -146,7 +146,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       'data_pointer' => '/test',
     ]);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $costItemSchema = new JsonSchemaCostItem([
       'type' => $item->getType(),
       'identifier' => $item->getIdentifier(),
@@ -187,7 +187,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       ],
     ]);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $costItemsSchema = new JsonSchemaCostItems([
       'type' => $item0->getType(),
       'identifierProperty' => 'theIdentifier',
@@ -218,7 +218,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       'someProperty' => new JsonSchemaNumber(),
     ]);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
 
     $this->itemManagerMock->method('getByApplicationProcessId')
       ->with($applicationProcessBundle->getApplicationProcess()->getId())
@@ -241,7 +241,7 @@ final class ClearableCostItemsLoaderTest extends TestCase {
       'test' => new JsonSchemaNumber(),
     ]);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
 
     $this->itemManagerMock->method('getByApplicationProcessId')
       ->with($applicationProcessBundle->getApplicationProcess()->getId())

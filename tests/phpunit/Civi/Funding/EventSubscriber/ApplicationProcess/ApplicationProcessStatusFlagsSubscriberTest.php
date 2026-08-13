@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
@@ -60,7 +59,7 @@ final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
   }
 
   public function testOnPreCreate(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'test',
       'is_eligible' => NULL,
       'is_in_work' => TRUE,
@@ -89,8 +88,8 @@ final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
   }
 
   public function testOnPreUpdate(): void {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'test',
       'is_eligible' => TRUE,
     ]);
@@ -106,7 +105,7 @@ final class ApplicationProcessStatusFlagsSubscriberTest extends TestCase {
       'withdrawn' => FALSE,
     ]);
 
-    $event = new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle);
+    $event = new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle);
     $this->subscriber->onPreUpdate($event);
     static::assertNull($applicationProcessBundle->getApplicationProcess()->getIsEligible());
   }

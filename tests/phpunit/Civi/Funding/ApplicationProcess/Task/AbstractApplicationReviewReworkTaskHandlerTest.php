@@ -46,7 +46,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'current',
       'is_in_work' => FALSE,
       'is_review_calculative' => TRUE,
@@ -78,7 +78,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
       'is_review_calculative' => NULL,
       'is_review_content' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'current',
       'is_in_work' => FALSE,
       'is_review_calculative' => NULL,
@@ -100,7 +100,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'current',
       'is_in_work' => TRUE,
       'is_review_calculative' => TRUE,
@@ -121,7 +121,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rework-review-requested',
       'is_review_calculative' => TRUE,
       'is_review_content' => NULL,
@@ -150,7 +150,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
       'is_review_content' => TRUE,
       'is_in_work' => FALSE,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'now',
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,
@@ -181,7 +181,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
       'is_review_content' => TRUE,
       'is_in_work' => FALSE,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'current',
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,
@@ -213,7 +213,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
       'reviewer_calc_contact_id' => 123,
       'reviewer_cont_contact_id' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'test',
       'is_in_work' => FALSE,
       'is_review_calculative' => TRUE,
@@ -245,7 +245,7 @@ final class AbstractApplicationReviewReworkTaskHandlerTest extends TestCase {
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rework-review-requested',
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,

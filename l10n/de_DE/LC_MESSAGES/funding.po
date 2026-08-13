@@ -1230,6 +1230,7 @@ msgid "Funding Application Created"
 msgstr "Förderantrag erstellt"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessCreatedSubscriber.php
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationSnapshotCreateSubscriber.php
@@ -1239,6 +1240,22 @@ msgstr "Förderantrag erstellt"
 #: Civi/Funding/Upgrade/Upgrader0024.php
 msgid "Application: %1 (%2)"
 msgstr "Antrag: %1 (%2)"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
+msgid "Funding Application Moved"
+msgstr "Förderantrag verschoben"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
+msgid "Previous identifier: %1"
+msgstr "Vorheriger Bezeichner: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
+msgid "From funding case: %1"
+msgstr "Von Förderfall: %1"
+
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessMovedSubscriber.php
+msgid "To funding case: %1"
+msgstr "Zu Förderfall: %1"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 msgid "Funding Application Review Status Changed"
@@ -1563,6 +1580,19 @@ msgstr "Fachlich genehmigen"
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Approve"
 msgstr "Bewilligen"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid "Move to New Funding Case"
+msgstr "In neuen Förderfall verschieben"
+
+#: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
+msgid ""
+"Moves the selected applications to a new funding case. Per affected funding "
+"case a new funding case will be created. Do you want to continue?"
+msgstr ""
+"Verschiebt die ausgewählten Anträge in einen neuen Förderfall. Pro "
+"betroffenem Förderall wird ein neuer Förderfall erstellt. Möchten Sie "
+"fortfahren?"
 
 #: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessStatuses.php
 msgid "Applied"
@@ -2240,6 +2270,7 @@ msgstr "Letzter interner Kommentar"
 #: ang/crmFunding/application/history/activities/clearingStatusChange.template.html
 #: ang/crmFunding/application/history/activities/comment.template.html
 #: ang/crmFunding/application/history/activities/create.template.html
+#: ang/crmFunding/application/history/activities/move.template.html
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
 #: ang/crmFunding/application/history/activities/snapshotCreation.template.html
 #: ang/crmFunding/application/history/activities/statusChange.template.html
@@ -2267,6 +2298,7 @@ msgstr "Verwendungsnachweis gestartet"
 #: ang/crmFunding/application/history/activities/clearingReviewStatusChange.template.html
 #: ang/crmFunding/application/history/activities/clearingStatusChange.template.html
 #: ang/crmFunding/application/history/activities/create.template.html
+#: ang/crmFunding/application/history/activities/move.template.html
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
 #: ang/crmFunding/application/history/activities/snapshotCreation.template.html
 #: ang/crmFunding/application/history/activities/statusChange.template.html
@@ -2296,6 +2328,18 @@ msgstr "Externer Kommentar"
 #: ang/crmFunding/application/history/activities/create.template.html
 msgid "Created"
 msgstr "Angelegt"
+
+#: ang/crmFunding/application/history/activities/move.template.html
+msgid "Moved to funding case %identifier"
+msgstr "In Förderfall %identifier verschoben"
+
+#: ang/crmFunding/application/history/activities/move.template.html
+msgid "Previous funding case: %identifier"
+msgstr "Vorheriger Förderfallfall: %identifier"
+
+#: ang/crmFunding/application/history/activities/move.template.html
+msgid "Previous application identifier: %identifier"
+msgstr "Vorheriger Antragsbezeichner: %identifier"
 
 #: ang/crmFunding/application/history/activities/reviewStatusChange.template.html
 msgid "Content review: %status"
@@ -2595,6 +2639,16 @@ msgstr "Aktivitätsart für interne Förderantragskommentare"
 msgid "Activity type for funding application creation"
 msgstr "Aktivitätsart für Förderantragswiederherstellung"
 
+#: managed/ActivityTypeFundingApplicationMove.mgd.php
+msgid "Funding Application Move"
+msgstr "Förderantragsverschiebung"
+
+#: managed/ActivityTypeFundingApplicationMove.mgd.php
+msgid ""
+"Activity type when a funding application is moved to another funding case"
+msgstr ""
+"Aktivitätsart für die Verschiebung eines Antrags in einen anderen Förderfall"
+
 #: managed/ActivityTypeFundingApplicationRestore.mgd.php
 #: managed/CustomGroupFundingApplicationRestore.mgd.php
 msgid "Funding Application Restore"
@@ -2672,6 +2726,22 @@ msgstr "Von Status"
 #: managed/CustomGroup_funding_clearing_status_change.mgd.php
 msgid "To Status"
 msgstr "Zu Status"
+
+#: managed/CustomGroup_funding_application_move.mgd.php
+msgid "Funding Application Process Move"
+msgstr "Förderantragsprozessverschiebung"
+
+#: managed/CustomGroup_funding_application_move.mgd.php
+msgid "Previous Application Identifier"
+msgstr "Vorheriger Antragsbezeichner"
+
+#: managed/CustomGroup_funding_application_move.mgd.php
+msgid "From Funding Case With Identifier"
+msgstr "Von Förderfall mit Bezeichner"
+
+#: managed/CustomGroup_funding_application_move.mgd.php
+msgid "To Funding Case With Identifier"
+msgstr "Zu Förderfall mit Bezeichner"
 
 #: managed/CustomGroup_funding_application_process_task.mgd.php
 msgid "Funding Application Process Task"

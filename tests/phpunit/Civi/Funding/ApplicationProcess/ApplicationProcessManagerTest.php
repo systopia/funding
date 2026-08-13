@@ -28,6 +28,7 @@ use Civi\Funding\AbstractFundingHeadlessTestCase;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\EntityFactory\FundingCaseBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
@@ -103,45 +104,30 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
     $fundingCaseType = FundingCaseTypeFixture::addFixture();
     $fundingCase = $this->createFundingCase($fundingProgram->getId(), $fundingCaseType->getId());
 
-    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->withConsecutive(
-      [
-        ApplicationProcessPreCreateEvent::class,
-        static::callback(
-          function (ApplicationProcessPreCreateEvent $event) use (
-            $fundingCase,
-            $fundingCaseType,
-            $fundingProgram
-          ) {
-            static::assertSame($fundingCase, $event->getFundingCase());
-            static::assertSame($fundingCaseType, $event->getFundingCaseType());
-            static::assertSame($fundingProgram, $event->getFundingProgram());
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')
+      ->willReturnCallback(function (string $eventName, $event) use ($fundingCase, $fundingCaseType, $fundingProgram) {
+        static $calls = 0;
+        ++$calls;
+        if (1 === $calls) {
+          static::assertSame(ApplicationProcessPreCreateEvent::class, $eventName);
+          static::assertInstanceOf(ApplicationProcessPreCreateEvent::class, $event);
+          static::assertSame($fundingCase, $event->getFundingCase());
+          static::assertSame($fundingCaseType, $event->getFundingCaseType());
+          static::assertSame($fundingProgram, $event->getFundingProgram());
 
-            $event->getApplicationProcess()
-              ->setIsInWork(TRUE)
-              ->setIsWithdrawn(FALSE)
-              ->setIsRejected(FALSE);
-
-            return TRUE;
-          }
-        ),
-      ],
-      [
-        ApplicationProcessCreatedEvent::class,
-        static::callback(
-          function (ApplicationProcessCreatedEvent $event) use (
-            $fundingCase,
-            $fundingCaseType,
-            $fundingProgram
-          ) {
-            static::assertSame($fundingCase, $event->getFundingCase());
-            static::assertSame($fundingCaseType, $event->getFundingCaseType());
-            static::assertSame($fundingProgram, $event->getFundingProgram());
-
-            return TRUE;
-          }
-        ),
-      ]
-    );
+          $event->getApplicationProcess()
+            ->setIsInWork(TRUE)
+            ->setIsWithdrawn(FALSE)
+            ->setIsRejected(FALSE);
+        }
+        else {
+          static::assertSame(ApplicationProcessCreatedEvent::class, $eventName);
+          static::assertInstanceOf(ApplicationProcessCreatedEvent::class, $event);
+          static::assertSame($fundingCase, $event->getFundingCase());
+          static::assertSame($fundingCaseType, $event->getFundingCaseType());
+          static::assertSame($fundingProgram, $event->getFundingProgram());
+        }
+      });
 
     $validatedData = new ValidatedApplicationDataMock();
     $applicationProcess = $this->applicationProcessManager->create(
@@ -449,32 +435,31 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       $fundingCaseType,
       $fundingProgram
     );
-    $previousTitle = $applicationProcess->getTitle();
+    $previousApplicationProcessBundle = new ApplicationProcessEntityBundle(
+      clone $applicationProcess,
+      $fundingCase,
+      $fundingCaseType,
+      $fundingProgram
+    );
 
-    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')->withConsecutive(
+    $this->fundingCaseManagerMock->expects(static::once())->method('getBundle')
+      ->with($fundingCase->getId())
+      ->willReturn(new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram));
+
+    $dispatchSeries = [
       [
         ApplicationProcessPreUpdateEvent::class,
-        static::callback(
-          function (ApplicationProcessPreUpdateEvent $event) use ($previousTitle, $applicationProcessBundle) {
-            static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
-            static::assertSame($applicationProcessBundle, $event->getApplicationProcessBundle());
-
-            return TRUE;
-          }
-        ),
+        new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle),
       ],
       [
         ApplicationProcessUpdatedEvent::class,
-        static::callback(
-          function (ApplicationProcessUpdatedEvent $event) use ($previousTitle, $applicationProcessBundle) {
-            static::assertSame($previousTitle, $event->getPreviousApplicationProcess()->getTitle());
-            static::assertSame($applicationProcessBundle, $event->getApplicationProcessBundle());
-
-            return TRUE;
-          }
-        ),
-      ]
-    );
+        new ApplicationProcessUpdatedEvent($previousApplicationProcessBundle, $applicationProcessBundle),
+      ],
+    ];
+    $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch')
+      ->willReturnCallback(function (...$args) use (&$dispatchSeries) {
+        static::assertEquals(array_shift($dispatchSeries), $args);
+      });
 
     $applicationProcess->setTitle('New title');
     $this->applicationProcessManager->update($applicationProcessBundle);
@@ -496,7 +481,6 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       $fundingCaseType,
       $fundingProgram
     );
-    $oldStatus = $applicationProcess->getStatus();
 
     $this->activityManagerMock->expects(static::once())->method('getLastByApplicationProcessAndType')
       ->with($applicationProcess->getId(), ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE)
@@ -505,6 +489,10 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
         'subject' => 'test',
         'funding_application_status_change.from_status' => 'previous_status',
       ]));
+
+    $this->fundingCaseManagerMock->expects(static::once())->method('getBundle')
+      ->with($fundingCase->getId())
+      ->willReturn(new FundingCaseBundle($fundingCase, $fundingCaseType, $fundingProgram));
 
     $this->eventDispatcherMock->expects(static::exactly(2))->method('dispatch');
 

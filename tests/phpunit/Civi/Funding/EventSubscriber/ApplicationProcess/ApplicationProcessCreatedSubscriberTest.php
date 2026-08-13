@@ -58,7 +58,7 @@ final class ApplicationProcessCreatedSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'title' => 'Title',
       'identifier' => 'Identifier',
     ]);

@@ -21,7 +21,6 @@ namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler\ApplicationProcessA
 
 use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Api4\Generic\Result;
-use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler;
@@ -36,9 +35,10 @@ final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler
 
   public function get(RemoteFundingGetAction $action): Result {
     $action->addClause('OR',
-      ['activity_type_id', '=', ActivityTypeIds::FUNDING_APPLICATION_CREATE],
-      ['activity_type_id', '=', ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE],
-      ['activity_type_id', '=', ActivityTypeIds::FUNDING_APPLICATION_COMMENT_EXTERNAL],
+      ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_CREATE],
+      ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_MOVE],
+      ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE],
+      ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_COMMENT_EXTERNAL],
       ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CLEARING_CREATE],
       ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CLEARING_STATUS_CHANGE],
     );

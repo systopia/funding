@@ -21,7 +21,7 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
   }
 
   public function testCreateTasksOnChangeStatusAppliable(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'draft',
       'is_in_work' => TRUE,
     ]);
@@ -42,7 +42,7 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
   }
 
   public function testCreateTasksOnChangeStatusUnchanged(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'draft',
       'is_in_work' => TRUE,
       'short_description' => 'foo',
@@ -60,7 +60,7 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
   }
 
   public function testCreateTasksOnChangeStatusNotAppliable(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'applied',
       'is_in_work' => FALSE,
     ]);
@@ -76,7 +76,7 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
   }
 
   public function testCreateTasksOnNewAppliable(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'draft',
       'is_in_work' => TRUE,
     ]);
@@ -93,7 +93,7 @@ final class AbstractCombinedApplicationApplyTaskCreatorTest extends TestCase {
   }
 
   public function testCreateTasksOnNewNotAppliable(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'applied',
       'is_in_work' => FALSE,
     ]);

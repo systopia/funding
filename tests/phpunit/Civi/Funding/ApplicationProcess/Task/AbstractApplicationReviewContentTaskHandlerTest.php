@@ -30,7 +30,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
       'is_in_work' => TRUE,
       'is_eligible' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'applied',
       'reviewer_cont_contact_id' => 123,
       'is_in_work' => FALSE,
@@ -57,7 +57,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'review',
       'is_review_content' => FALSE,
       'is_in_work' => FALSE,
@@ -74,7 +74,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'draft',
       'is_in_work' => TRUE,
       'is_eligible' => NULL,
@@ -85,7 +85,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
   }
 
   public function testCreateTasksOnNewStatusApplied(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'applied',
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
@@ -106,7 +106,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
   }
 
   public function testCreateTasksOnNewInWork(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'new',
       'is_in_work' => TRUE,
       'is_eligible' => NULL,
@@ -122,7 +122,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rejected',
       'is_in_work' => FALSE,
       'is_eligible' => FALSE,
@@ -147,7 +147,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_review_content' => FALSE,
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
@@ -173,7 +173,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
       'is_eligible' => NULL,
       'reviewer_cont_contact_id' => 123,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
       'reviewer_cont_contact_id' => 1234,
@@ -200,7 +200,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'review2',
       'is_in_work' => FALSE,
       'is_eligible' => NULL,
@@ -226,7 +226,7 @@ final class AbstractApplicationReviewContentTaskHandlerTest extends TestCase {
       'is_in_work' => TRUE,
       'is_eligible' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'review',
       'is_in_work' => FALSE,
       'is_eligible' => NULL,

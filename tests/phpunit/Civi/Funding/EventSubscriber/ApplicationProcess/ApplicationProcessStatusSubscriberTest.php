@@ -25,7 +25,6 @@ use Civi\Funding\Api4\OptionsLoaderInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -107,10 +106,8 @@ final class ApplicationProcessStatusSubscriberTest extends TestCase {
     ];
 
     return new ApplicationProcessUpdatedEvent(
-      ApplicationProcessFactory::createApplicationProcess($applicationProcessValues + ['status' => $oldStatus]),
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(
-        $applicationProcessValues + ['status' => $newStatus]
-      ),
+      ApplicationProcessBundleFactory::create($applicationProcessValues + ['status' => $oldStatus]),
+      ApplicationProcessBundleFactory::create($applicationProcessValues + ['status' => $newStatus]),
     );
   }
 

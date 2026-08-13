@@ -53,7 +53,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'is_review_calculative' => TRUE,
       'is_review_content' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'review',
       'is_review_calculative' => TRUE,
       'is_review_content' => FALSE,
@@ -85,7 +85,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'is_review_calculative' => TRUE,
       'is_review_content' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'test',
       'is_review_calculative' => TRUE,
       'is_review_content' => FALSE,
@@ -111,7 +111,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'review',
       'is_review_calculative' => TRUE,
       'is_review_content' => NULL,
@@ -137,7 +137,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
 
   public function testModifyTaskCompleted(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'review']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['status' => 'rejected']
     );
 
@@ -167,7 +167,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'reviewer_calc_contact_id' => 123,
       'reviewer_cont_contact_id' => NULL,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'review',
       'is_review_calculative' => TRUE,
       'is_review_content' => TRUE,
@@ -200,7 +200,7 @@ final class AbstractApplicationReviewFinishTaskHandlerTest extends TestCase {
       'is_review_calculative' => TRUE,
       'is_review_content' => FALSE,
     ]);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rejected',
       'is_review_calculative' => TRUE,
       'is_review_content' => FALSE,

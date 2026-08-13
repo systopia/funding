@@ -25,6 +25,16 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 
 /**
  * @phpstan-type statusPermissionsActionMapT array<string|null, array<string, list<string>>>
+ *   Mapping of application process status to mapping of permission to list of
+ *   allowed actions. If the funding case status is also relevant, the
+ *   application process status can be prepended by it with an "&" as separator.
+ *   The permissions for new application processes can be defined by using
+ *   NULL/the empty string as status.
+ *   [
+ *     'status' => 'permission' => ['action1', 'action2', ...],
+ *     'case_status&status' => 'permission' => ['action3', ...],
+ *     ...
+ *   ]
  */
 abstract class AbstractApplicationProcessActionsDeterminer implements ApplicationProcessActionsDeterminerInterface {
 
@@ -42,6 +52,7 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
 
   public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
     return $this->doGetActions(
+      $applicationProcessBundle->getFundingCase()->getStatus(),
       $applicationProcessBundle->getApplicationProcess()->getStatus(),
       $applicationProcessBundle->getFundingCase()->getPermissions()
     );
@@ -52,7 +63,7 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
     FundingCaseTypeEntity $fundingCaseType,
     ?FundingCaseEntity $fundingCase
   ): array {
-    return $this->doGetActions(NULL, $permissions);
+    return $this->doGetActions($fundingCase?->getStatus(), NULL, $permissions);
   }
 
   public function isActionAllowed(
@@ -79,14 +90,20 @@ abstract class AbstractApplicationProcessActionsDeterminer implements Applicatio
   }
 
   /**
+   * @param string|null $fundingCaseStatus
+   *
    * @phpstan-param array<string> $permissions
    *
    * @phpstan-return list<string>
    */
-  private function doGetActions(?string $status, array $permissions): array {
+  private function doGetActions(?string $fundingCaseStatus, ?string $status, array $permissions): array {
     $actions = [];
     foreach ($permissions as $permission) {
-      $actions = \array_merge($actions, $this->statusPermissionActionsMap[$status][$permission] ?? []);
+      $actions = \array_merge(
+        $actions,
+        $this->statusPermissionActionsMap[$status][$permission] ?? [],
+        $this->statusPermissionActionsMap["$fundingCaseStatus&$status"][$permission] ?? []
+      );
     }
 
     return \array_values(\array_unique($actions));

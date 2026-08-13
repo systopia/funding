@@ -23,7 +23,6 @@ namespace Civi\Funding\EventSubscriber\FundingCase;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FundingCaseBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -81,11 +80,11 @@ final class UpdateAmountApprovedSumOfAmountsEligibleSubscriberTest extends TestC
   }
 
   public function testAmountEligibleChanged(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['is_eligible' => TRUE, 'amount_eligible' => 12.34],
       ['status' => 'ongoing', 'amount_approved' => 100]
     );
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => TRUE,
       'amount_eligible' => 12.33,
     ]);
@@ -126,18 +125,18 @@ final class UpdateAmountApprovedSumOfAmountsEligibleSubscriberTest extends TestC
       );
 
     $this->subscriber->onUpdated(new ApplicationProcessUpdatedEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle
     ));
     $this->subscriber->onPreCommit();
   }
 
   public function testEligibilityChanged(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['is_eligible' => TRUE, 'amount_eligible' => 12.34],
       ['status' => 'ongoing', 'amount_approved' => 100]
     );
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => NULL,
       'amount_eligible' => 12.34,
     ]);
@@ -178,7 +177,7 @@ final class UpdateAmountApprovedSumOfAmountsEligibleSubscriberTest extends TestC
       );
 
     $this->subscriber->onUpdated(new ApplicationProcessUpdatedEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle
     ));
     $this->subscriber->onPreCommit();
@@ -186,11 +185,11 @@ final class UpdateAmountApprovedSumOfAmountsEligibleSubscriberTest extends TestC
 
   public function testAutoUpdateNotEnabled(): void {
     $this->metaDataMock->autoUpdateAmountApproved = AutoUpdateAmountApproved::No;
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['is_eligible' => TRUE, 'amount_eligible' => 12.34],
       ['status' => 'ongoing', 'amount_approved' => 100]
     );
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => TRUE,
       'amount_eligible' => 12.33,
     ]);
@@ -200,18 +199,18 @@ final class UpdateAmountApprovedSumOfAmountsEligibleSubscriberTest extends TestC
     $this->updateAmountApprovedHandlerMock->expects(static::never())->method('handle');
 
     $this->subscriber->onUpdated(new ApplicationProcessUpdatedEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle
     ));
     $this->subscriber->onPreCommit();
   }
 
   public function testFundingCaseNotOngoing(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['is_eligible' => TRUE, 'amount_eligible' => 12.34],
       ['status' => 'ongoing', 'amount_approved' => 100]
     );
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => TRUE,
       'amount_eligible' => 12.34,
     ]);
@@ -221,7 +220,7 @@ final class UpdateAmountApprovedSumOfAmountsEligibleSubscriberTest extends TestC
     $this->updateAmountApprovedHandlerMock->expects(static::never())->method('handle');
 
     $this->subscriber->onUpdated(new ApplicationProcessUpdatedEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle
     ));
     $this->subscriber->onPreCommit();

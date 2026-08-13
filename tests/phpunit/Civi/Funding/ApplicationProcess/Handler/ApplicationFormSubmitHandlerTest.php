@@ -102,7 +102,7 @@ final class ApplicationFormSubmitHandlerTest extends TestCase {
 
   private function createCommand(): ApplicationFormSubmitCommand {
     return new ApplicationFormSubmitCommand(
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(),
+      ApplicationProcessBundleFactory::create(),
       [23 => new FullApplicationProcessStatus('status', NULL, NULL)],
       ['test' => 'foo'],
     );

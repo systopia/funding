@@ -35,7 +35,7 @@ final class ApplicationProcessBundleFactory {
    * @phpstan-param fundingCaseTypeValuesT $fundingCaseTypeValues
    * @phpstan-param fundingProgramValuesT $fundingProgramValues
    */
-  public static function createApplicationProcessBundle(
+  public static function create(
     array $applicationProcessValues = [],
     array $fundingCaseValues = [],
     array $fundingCaseTypeValues = [],

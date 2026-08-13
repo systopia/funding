@@ -46,6 +46,7 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
           case 'funding_application_status_change':
           case 'funding_application_review_status_change':
           case 'funding_application_create':
+          case 'funding_application_move':
           case 'funding_clearing_status_change':
           case 'funding_clearing_review_status_change':
           case 'funding_clearing_create':

@@ -27,6 +27,8 @@ use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 /**
  * @method string getAction()
  * @method $this setAction(string $action)
+ *
+ * @see \Civi\Funding\ClearingProcess\Api4\ActionHandler\ApplyActionMultipleActionHandler
  */
 final class ApplyActionMultipleAction extends AbstractAction {
 

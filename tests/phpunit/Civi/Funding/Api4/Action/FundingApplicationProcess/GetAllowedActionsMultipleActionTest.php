@@ -61,6 +61,11 @@ final class GetAllowedActionsMultipleActionTest extends AbstractFundingHeadlessT
           'reject-calculative' => ['label' => 'Reject Calculative', 'confirm' => NULL],
           'request-change' => ['label' => 'Request Change', 'confirm' => NULL],
           'reject' => ['label' => 'Reject', 'confirm' => NULL],
+          'move-to-new-funding-case' => [
+            'label' => 'Move to New Funding Case',
+            // phpcs:ignore Generic.Files.LineLength.TooLong
+            'confirm' => 'Moves the selected applications to a new funding case. Per affected funding case a new funding case will be created. Do you want to continue?',
+          ],
         ],
       ],
       $result->getArrayCopy()

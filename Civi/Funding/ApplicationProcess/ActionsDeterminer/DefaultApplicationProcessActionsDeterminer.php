@@ -46,9 +46,17 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
     ],
+    'open&applied' => [
+      'review_calculative' => ['move-to-new-funding-case'],
+      'review_content' => ['move-to-new-funding-case'],
+    ],
     'review' => [
       'review_calculative' => ['request-change', 'update', 'reject', 'add-comment'],
       'review_content' => ['request-change', 'update', 'reject', 'add-comment'],
+    ],
+    'open&review' => [
+      'review_calculative' => ['move-to-new-funding-case'],
+      'review_content' => ['move-to-new-funding-case'],
     ],
     'draft' => [
       'application_modify' => ['save'],
@@ -61,6 +69,10 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
+    ],
+    'open&eligible' => [
+      'review_calculative' => ['move-to-new-funding-case'],
+      'review_content' => ['move-to-new-funding-case'],
     ],
     'complete' => [
       'application_withdraw' => ['withdraw'],
