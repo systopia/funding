@@ -56,7 +56,7 @@ final class GetFormActionHandlerTest extends TestCase {
   }
 
   public function testGetForm(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $statusList = [123 => new FullApplicationProcessStatus('test', NULL, NULL)];
 
     $applicationProcessId = $applicationProcessBundle->getApplicationProcess()->getId();

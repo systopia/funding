@@ -25,7 +25,6 @@ use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewSubmitResult;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesAddIdentifiersHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFilesPersistHandlerInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\ExternalFileFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
@@ -80,7 +79,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $externalFile = ExternalFileFactory::create();
     $this->filesPersistHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationFilesPersistCommand($applicationProcessBundle, NULL))
@@ -96,7 +95,7 @@ final class ApplicationFilesSubscriberTest extends TestCase {
   }
 
   public function testOnPreCreate(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $this->filesAddIdentifiersHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationFilesAddIdentifiersCommand($applicationProcessBundle));
 
@@ -104,27 +103,28 @@ final class ApplicationFilesSubscriberTest extends TestCase {
   }
 
   public function testOnPreUpdate(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create();
     $this->filesAddIdentifiersHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationFilesAddIdentifiersCommand($applicationProcessBundle));
 
     $this->subscriber->onPreUpdate(new ApplicationProcessPreUpdateEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle,
     ));
   }
 
   public function testOnUpdated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $previousApplicationProcess = $previousApplicationProcessBundle->getApplicationProcess();
     $externalFile = ExternalFileFactory::create();
     $this->filesPersistHandlerMock->expects(static::once())->method('handle')
       ->with(new ApplicationFilesPersistCommand($applicationProcessBundle, $previousApplicationProcess))
       ->willReturn(['https://example.org' => $externalFile]);
 
     $this->subscriber->onUpdated(new ApplicationProcessUpdatedEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle,
     ));
 

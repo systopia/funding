@@ -100,7 +100,7 @@ final class ApplicationProcessDeletedSubscriberTest extends TestCase {
 
   private function createEvent(bool $combinedApplication = FALSE): ApplicationProcessDeletedEvent {
     return new ApplicationProcessDeletedEvent(
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(
+      ApplicationProcessBundleFactory::create(
         [],
         [],
         ['is_combined_application' => $combinedApplication],

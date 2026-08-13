@@ -350,11 +350,11 @@ class ApplicationProcessManager {
 
     $applicationProcess->setModificationDate(new \DateTime(date('YmdHis')));
 
-    $previousApplicationProcess = $this->get($applicationProcess->getId());
-    Assert::notNull($previousApplicationProcess, 'Application process could not be loaded');
+    $previousApplicationProcessBundle = $this->getBundle($applicationProcess->getId());
+    Assert::notNull($previousApplicationProcessBundle, 'Application process could not be loaded');
 
     $event = new ApplicationProcessPreUpdateEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle,
     );
     $this->eventDispatcher->dispatch(ApplicationProcessPreUpdateEvent::class, $event);
@@ -364,7 +364,7 @@ class ApplicationProcessManager {
     $this->api4->executeAction($action);
 
     $event = new ApplicationProcessUpdatedEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle,
     );
     $this->eventDispatcher->dispatch(ApplicationProcessUpdatedEvent::class, $event);

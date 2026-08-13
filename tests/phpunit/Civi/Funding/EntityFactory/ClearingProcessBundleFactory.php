@@ -44,7 +44,7 @@ final class ClearingProcessBundleFactory {
     array $fundingCaseTypeValues = [],
     array $fundingProgramValues = []
   ): ClearingProcessEntityBundle {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       $applicationProcessValues,
       $fundingCaseValues,
       $fundingCaseTypeValues,

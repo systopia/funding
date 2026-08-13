@@ -101,7 +101,7 @@ final class TransferContractRenderHandlerTest extends TestCase {
   }
 
   private function createCommand(): TransferContractRenderCommand {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'amount_requested' => 88.99,
       'is_eligible' => TRUE,
     ]);

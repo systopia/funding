@@ -26,7 +26,6 @@ use Civi\Funding\ApplicationProcess\Handler\ApplicationSnapshotCreateHandlerInte
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
@@ -151,14 +150,14 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
     $previousValues = array_map(fn(array $oldAndNew) => $oldAndNew[0], $changeSet);
     $currentValues = array_map(fn(array $oldAndNew) => $oldAndNew[1], $changeSet);
 
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess($previousValues);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle($currentValues);
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create($previousValues);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create($currentValues);
 
-    return new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle);
+    return new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle);
   }
 
   public function testOnSnapshotCreated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'title' => 'Test Application',
       'identifier' => self::APPLICATION_PROCESS_ID,
     ]);

@@ -20,9 +20,11 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
 use Civi\Api4\FundingApplicationProcess;
+use Civi\Api4\FundingTask;
 use Civi\Api4\Generic\DAOUpdateAction;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -36,7 +38,10 @@ class ApplicationProcessIdentifierSubscriber implements EventSubscriberInterface
    * @inheritDoc
    */
   public static function getSubscribedEvents(): array {
-    return [ApplicationProcessCreatedEvent::class => ['onCreated', PHP_INT_MAX]];
+    return [
+      ApplicationProcessCreatedEvent::class => ['onCreated', PHP_INT_MAX],
+      ApplicationProcessPreUpdateEvent::class => 'onPreUpdate',
+    ];
   }
 
   public function __construct(
@@ -59,6 +64,24 @@ class ApplicationProcessIdentifierSubscriber implements EventSubscriberInterface
       ->addValue('identifier', $identifier)
       ->addWhere('id', '=', $applicationProcess->getId());
     $this->api4->executeAction($action);
+  }
+
+  public function onPreUpdate(ApplicationProcessPreUpdateEvent $event): void {
+    if ($event->getFundingCase()->getId() !== $event->getPreviousFundingCase()->getId()) {
+      $applicationProcessBundle = $event->getApplicationProcessBundle();
+      $applicationProcess = $applicationProcessBundle->getApplicationProcess();
+      $newIdentifier = $this->applicationIdentifierGenerator
+        ->generateIdentifierOnFundingCaseChange($applicationProcessBundle);
+      if ($newIdentifier !== $applicationProcess->getIdentifier()) {
+        $taskUpdate = FundingTask::update(FALSE)
+          ->setIgnoreCasePermissions(TRUE)
+          ->addValue('funding_case_task.affected_identifier', $newIdentifier)
+          ->addWhere('funding_case_task.affected_identifier', '=', $applicationProcess->getIdentifier());
+        $this->api4->executeAction($taskUpdate);
+
+        $applicationProcess->setIdentifier($newIdentifier);
+      }
+    }
   }
 
 }

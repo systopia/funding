@@ -58,7 +58,7 @@ final class PersonalkostenSnapshotRestoreSubscriberTest extends TestCase {
   }
 
   public function testFoerderquoteChanged(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       applicationProcessValues: [
         'request_data' => [
           'foerderquote' => 10,
@@ -81,7 +81,7 @@ final class PersonalkostenSnapshotRestoreSubscriberTest extends TestCase {
   }
 
   public function testSachkostenpauschaleChanged(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       applicationProcessValues: [
         'request_data' => [
           'foerderquote' => 10,
@@ -104,7 +104,7 @@ final class PersonalkostenSnapshotRestoreSubscriberTest extends TestCase {
   }
 
   public function testNotChanged(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       applicationProcessValues: [
         'request_data' => [
           'foerderquote' => 10,
@@ -126,7 +126,7 @@ final class PersonalkostenSnapshotRestoreSubscriberTest extends TestCase {
   }
 
   public function testDifferentFundingCaseType(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       applicationProcessValues: [
         'request_data' => [
           'foerderquote' => 10,

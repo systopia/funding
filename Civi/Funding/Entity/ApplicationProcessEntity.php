@@ -64,6 +64,12 @@ final class ApplicationProcessEntity extends AbstractEntity {
     return $this->values['funding_case_id'];
   }
 
+  public function setFundingCaseId(int $fundingCaseId): self {
+    $this->values['funding_case_id'] = $fundingCaseId;
+
+    return $this;
+  }
+
   public function getStatus(): string {
     return $this->values['status'];
   }

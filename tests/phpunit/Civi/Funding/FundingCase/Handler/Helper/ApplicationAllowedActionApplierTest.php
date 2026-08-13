@@ -58,7 +58,7 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
   }
 
   public function testApplyAllowedAction(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $statusList = [123 => new FullApplicationProcessStatus('test', NULL, NULL)];
     $this->applicationProcessManagerMock->method('getStatusList')
       ->with($applicationProcessBundle)
@@ -78,7 +78,7 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
   }
 
   public function testApplyAllowedActionNotAllowed(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $statusList = [123 => new FullApplicationProcessStatus('test', NULL, NULL)];
     $this->applicationProcessManagerMock->method('getStatusList')
       ->with($applicationProcessBundle)
@@ -96,12 +96,12 @@ final class ApplicationAllowedActionApplierTest extends TestCase {
   }
 
   public function testApplyAllowedActionsByFundingCase(): void {
-    $applicationProcessBundle1 = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle1 = ApplicationProcessBundleFactory::create([
       'id' => 10,
       'status' => 'status1',
     ]);
     $applicationProcess1 = $applicationProcessBundle1->getApplicationProcess();
-    $applicationProcessBundle2 = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle2 = ApplicationProcessBundleFactory::create([
       'id' => 20,
       'status' => 'status2',
     ]);

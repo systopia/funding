@@ -58,7 +58,7 @@ final class AbstractClearingCreateTaskModifierOnApplicationProcessChangeTest ext
   }
 
   public function testModifyTask(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
 
     $task = FundingTaskEntity::newTask([
@@ -84,7 +84,7 @@ final class AbstractClearingCreateTaskModifierOnApplicationProcessChangeTest ext
   }
 
   public function testModifyTaskDifferentTaskType(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
 
     $task = FundingTaskEntity::newTask([

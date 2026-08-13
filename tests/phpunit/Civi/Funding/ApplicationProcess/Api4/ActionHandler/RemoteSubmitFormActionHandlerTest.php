@@ -72,7 +72,7 @@ final class RemoteSubmitFormActionHandlerTest extends TestCase {
   }
 
   public function testSubmitForm(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $contactId = 1;
     $action = $this->createSubmitFormAction($applicationProcessBundle, $contactId);
     $command = new ApplicationFormSubmitCommand(
@@ -105,7 +105,7 @@ final class RemoteSubmitFormActionHandlerTest extends TestCase {
   }
 
   public function testOnSubmitFormInvalid(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $contactId = 1;
     $action = $this->createSubmitFormAction($applicationProcessBundle, $contactId);
     $command = new ApplicationFormSubmitCommand(

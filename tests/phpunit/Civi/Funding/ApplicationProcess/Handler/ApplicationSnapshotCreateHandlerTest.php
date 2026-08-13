@@ -100,7 +100,7 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
   }
 
   public function testHandle(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => TRUE,
     ]);
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();

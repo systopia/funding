@@ -34,7 +34,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
    * @dataProvider provideAppliableStatus
    */
   public function testCreateTasksOnNewStatusAppliable(string $appliableStatus): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => $appliableStatus,
     ]);
 
@@ -52,7 +52,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
   }
 
   public function testCreateTasksOnNewStatusNotAppliable(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'test']);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(['status' => 'test']);
 
     $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
     static::assertSame([], $tasks);
@@ -63,7 +63,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
    */
   public function testCreateTasksOnChangeStatusAppliable(string $appliableStatus): void {
     $previousApplication = ApplicationProcessFactory::createApplicationProcess(['status' => 'old']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => $appliableStatus,
     ]);
 
@@ -82,7 +82,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
 
   public function testCreateTasksOnChangeStatusNotAppliable(): void {
     $previousApplication = ApplicationProcessFactory::createApplicationProcess(['status' => 'new']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'test',
     ]);
 
@@ -92,7 +92,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
 
   public function testModifyStatusNotAppliable(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'new']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'test',
     ]);
 
@@ -114,7 +114,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
    */
   public function testModifyStatusStillAppliable(string $appliableStatus): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'new']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => $appliableStatus,
     ]);
 
@@ -133,7 +133,7 @@ final class AbstractApplicationApplyTaskHandlerTest extends TestCase {
 
   public function testModifyTaskDifferentTaskType(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'review']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'draft',
     ]);
 

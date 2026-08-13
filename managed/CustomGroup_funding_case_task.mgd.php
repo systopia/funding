@@ -67,6 +67,7 @@ return [
         'label' => E::ts('Affected Identifier'),
         'html_type' => 'Text',
         'is_required' => TRUE,
+        'is_searchable' => TRUE,
         'text_length' => 255,
         'note_columns' => 60,
         'note_rows' => 4,

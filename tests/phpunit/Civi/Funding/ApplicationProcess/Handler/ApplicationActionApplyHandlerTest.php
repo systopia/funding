@@ -196,7 +196,7 @@ final class ApplicationActionApplyHandlerTest extends TestCase {
 
     return new ApplicationActionApplyCommand(
       $action,
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(),
+      ApplicationProcessBundleFactory::create(),
       ApplicationFormValidationResultFactory::createValid(
         ['_action' => $action] + $formData,
         $mappedData,

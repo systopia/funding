@@ -23,7 +23,6 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -120,11 +119,11 @@ final class ApplicationProcessReviewStatusSubscriberTest extends TestCase {
     ];
 
     return new ApplicationProcessUpdatedEvent(
-      ApplicationProcessFactory::createApplicationProcess($applicationProcessValues + [
+      ApplicationProcessBundleFactory::create($applicationProcessValues + [
         'is_review_calculative' => $oldIsCalculativeReview,
         'is_review_content' => $oldIsContentReview,
       ]),
-      ApplicationProcessBundleFactory::createApplicationProcessBundle($applicationProcessValues + [
+      ApplicationProcessBundleFactory::create($applicationProcessValues + [
         'is_review_calculative' => $newIsCalculativeReview,
         'is_review_content' => $newIsContentReview,
       ]),

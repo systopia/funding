@@ -64,7 +64,7 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
   }
 
   public function testOnFormSubmitSuccess(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $costItemsData = ['test' => $this->createCostItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], $costItemsData);
     $event = new ApplicationFormSubmitSuccessEvent(
@@ -79,7 +79,7 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
   }
 
   public function testOnFormSubmitSuccessReadOnly(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $costItemsData = ['test' => $this->createCostItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], $costItemsData, [], TRUE);
     $event = new ApplicationFormSubmitSuccessEvent(
@@ -93,7 +93,7 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
   }
 
   public function testOnFormSubmitSuccessWithRestore(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $applicationProcessBundle->getApplicationProcess()->setRestoredSnapshot(
       ApplicationSnapshotFactory::createApplicationSnapshot()
     );

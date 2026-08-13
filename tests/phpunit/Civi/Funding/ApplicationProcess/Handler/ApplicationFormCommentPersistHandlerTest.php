@@ -47,7 +47,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
 
   public function testHandleInternal(): void {
     $command = new ApplicationFormCommentPersistCommand(
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(),
+      ApplicationProcessBundleFactory::create(),
       new ValidatedApplicationDataMock(
         [],
         [
@@ -80,7 +80,7 @@ final class ApplicationFormCommentPersistHandlerTest extends TestCase {
 
   public function testHandleExternal(): void {
     $command = new ApplicationFormCommentPersistCommand(
-      ApplicationProcessBundleFactory::createApplicationProcessBundle(),
+      ApplicationProcessBundleFactory::create(),
       new ValidatedApplicationDataMock(
         [],
         [

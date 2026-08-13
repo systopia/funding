@@ -19,10 +19,12 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
+use Civi\Api4\FundingTask;
 use Civi\Api4\Generic\DAOUpdateAction;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
+use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\RemoteTools\Api4\Api4Interface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -60,17 +62,21 @@ final class ApplicationProcessIdentifierSubscriberTest extends TestCase {
   public function testGetSubscribedEvents(): void {
     $expectedSubscriptions = [
       ApplicationProcessCreatedEvent::class => ['onCreated', PHP_INT_MAX],
+      ApplicationProcessPreUpdateEvent::class => 'onPreUpdate',
     ];
 
     static::assertEquals($expectedSubscriptions, $this->subscriber::getSubscribedEvents());
 
-    foreach ($expectedSubscriptions as [$method, $priority]) {
+    foreach ($expectedSubscriptions as $method) {
+      if (is_array($method)) {
+        [$method, $priority] = $method;
+      }
       static::assertTrue(method_exists(get_class($this->subscriber), $method));
     }
   }
 
   public function testOnCreated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(['id' => 2]);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(['id' => 2]);
     $event = new ApplicationProcessCreatedEvent($applicationProcessBundle);
 
     $this->applicationIdentifierGeneratorMock->method('generateIdentifier')
@@ -87,6 +93,40 @@ final class ApplicationProcessIdentifierSubscriberTest extends TestCase {
 
     $this->subscriber->onCreated($event);
     static::assertSame('generated', $applicationProcessBundle->getApplicationProcess()->getIdentifier());
+  }
+
+  public function testOnPreUpdate_WithFundingCaseChange(): void {
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create(fundingCaseValues: ['id' => 1]);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
+      ['identifier' => 'identifierX'],
+      fundingCaseValues: ['id' => 2]
+    );
+
+    $this->applicationIdentifierGeneratorMock->method('generateIdentifierOnFundingCaseChange')
+      ->with($applicationProcessBundle)
+      ->willReturn('generated');
+
+    $this->api4Mock->expects(static::once())->method('executeAction')
+      ->with(FundingTask::update(FALSE)
+        ->setIgnoreCasePermissions(TRUE)
+        ->addValue('funding_case_task.affected_identifier', 'generated')
+        ->addWhere('funding_case_task.affected_identifier', '=', 'identifierX')
+      );
+
+    $event = new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle);
+    $this->subscriber->onPreUpdate($event);
+    static::assertSame('generated', $applicationProcessBundle->getApplicationProcess()->getIdentifier());
+  }
+
+  public function testOnPreUpdate_WithoutFundingCaseChange(): void {
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(['identifier' => 'identifierX']);
+
+    $this->api4Mock->expects(static::never())->method('executeAction');
+
+    $event = new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle);
+    $this->subscriber->onPreUpdate($event);
+    static::assertSame('identifierX', $applicationProcessBundle->getApplicationProcess()->getIdentifier());
   }
 
 }

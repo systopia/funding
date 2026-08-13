@@ -99,7 +99,7 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
   }
 
   public function testGetStatusOnApplicationProcessStatusChangeWithdrawn(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'withdrawn',
       'is_withdrawn' => TRUE,
     ]);
@@ -121,7 +121,7 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
   }
 
   public function testGetStatusOnApplicationProcessStatusChangeRejected(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rejected',
       'is_rejected' => TRUE,
     ]);
@@ -143,7 +143,7 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
   }
 
   public function testGetStatusOnApplicationProcessStatusChangeWithRemainingApplications(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['status' => 'withdrawn', 'is_withdrawn' => TRUE],
       ['status' => 'test']
     );
@@ -165,7 +165,7 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
   }
 
   public function testGetStatusOnApplicationProcessStatusChangeIneligibleNotFinalStatus(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['status' => 'ineligible_not_final'],
       ['status' => 'test']
     );
@@ -183,7 +183,7 @@ final class DefaultFundingCaseStatusDeterminerTest extends TestCase {
   }
 
   public function testGetStatusOnApplicationProcessStatusChangeReopened(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['status' => 'not_withdrawn', 'is_withdrawn' => FALSE],
       ['status' => 'withdrawn']
     );

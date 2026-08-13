@@ -21,7 +21,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use PHPUnit\Framework\TestCase;
@@ -52,7 +51,7 @@ final class ApplicationProcessAmountEligibleSubscriberTest extends TestCase {
   }
 
   public function testOnPreCreateEligible(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'amount_requested' => 1.2,
       'is_eligible' => TRUE,
     ]);
@@ -62,55 +61,55 @@ final class ApplicationProcessAmountEligibleSubscriberTest extends TestCase {
   }
 
   public function testOnPreUpdateEligible(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'amount_requested' => 1.2,
       'amount_eligible' => 100.0,
       'is_eligible' => TRUE,
     ]);
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create([
       'amount_requested' => 200.0,
       'amount_eligible' => 100.0,
       'is_eligible' => NULL,
     ]);
 
     $this->subscriber->onPreUpdate(
-      new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle)
+      new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle)
     );
     static::assertSame(1.2, $applicationProcessBundle->getApplicationProcess()->getAmountEligible());
   }
 
   public function testOnPreUpdateUneligible(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'amount_requested' => 100.0,
       'amount_eligible' => 100.0,
       'is_eligible' => FALSE,
     ]);
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create([
       'amount_requested' => 100.0,
       'amount_eligible' => 100.0,
       'is_eligible' => TRUE,
     ]);
 
     $this->subscriber->onPreUpdate(
-      new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle)
+      new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle)
     );
     static::assertSame(0.0, $applicationProcessBundle->getApplicationProcess()->getAmountEligible());
   }
 
   public function testOnPreUpdateEligibilityUnknown(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'amount_requested' => 300.0,
       'amount_eligible' => 100.0,
       'is_eligible' => NULL,
     ]);
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create([
       'amount_requested' => 200.0,
       'amount_eligible' => 100.0,
       'is_eligible' => TRUE,
     ]);
 
     $this->subscriber->onPreUpdate(
-      new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle)
+      new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle)
     );
     // Amount eligible is unchanged.
     static::assertSame(100.0, $applicationProcessBundle->getApplicationProcess()->getAmountEligible());

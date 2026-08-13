@@ -1,0 +1,16 @@
+<div class="funding-activity funding-application-move panel panel-primary">
+  <div class="funding-activity-title panel-heading">
+    {{ ts('Moved to funding case %identifier', {identifier: activity.to_funding_case_identifier}) }}
+    <i ng-class="[{fa: 'fa-arrow-circle-right'}, 'fa-arrow-circle-right']"></i>
+  </div>
+  <div class="panel-body">
+    <div class="funding-activity-date">{{ ts('Date: %date', {date: (activity.created_date | fundingDate)}) }}</div>
+    <div class="funding-activity-performed-by">{{ ts('Performed by: %name', {name: activity.source_contact_name}) }}</div>
+    <div>
+        {{ ts('Previous funding case: %identifier', {identifier: activity.from_funding_case_identifier}) }}
+    </div>
+    <div>
+      {{ ts('Previous application identifier: %identifier', {identifier: activity.previous_application_process_identifier}) }}
+    </div>
+  </div>
+</div>

@@ -23,7 +23,6 @@ use Civi\Funding\ActivityTypeIds;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -101,12 +100,12 @@ final class ApplicationSnapshotRestoreSubscriberTest extends TestCase {
    * @phpstan-param array<string, mixed> $currentValues
    */
   private function createUpdatedEvent(array $currentValues = []): ApplicationProcessUpdatedEvent {
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    // @phpstan-ignore-next-line
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle($currentValues);
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create();
+    // @phpstan-ignore argument.type
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create($currentValues);
 
     return new ApplicationProcessUpdatedEvent(
-      $previousApplicationProcess,
+      $previousApplicationProcessBundle,
       $applicationProcessBundle,
     );
   }

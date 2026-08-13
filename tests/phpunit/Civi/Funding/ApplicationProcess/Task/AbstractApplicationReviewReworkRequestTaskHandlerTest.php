@@ -41,7 +41,7 @@ final class AbstractApplicationReviewReworkRequestTaskHandlerTest extends TestCa
 
   public function testCreateTasksOnChangeReworkRequested(): void {
     $previousApplication = ApplicationProcessFactory::createApplicationProcess(['status' => 'old']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rework-requested',
     ]);
 
@@ -60,7 +60,7 @@ final class AbstractApplicationReviewReworkRequestTaskHandlerTest extends TestCa
 
   public function testCreateTasksOnChangeNotReworkRequested(): void {
     $previousApplication = ApplicationProcessFactory::createApplicationProcess(['status' => 'old']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'new',
     ]);
 
@@ -69,7 +69,7 @@ final class AbstractApplicationReviewReworkRequestTaskHandlerTest extends TestCa
   }
 
   public function testCreateTasksOnNew(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(['status' => 'test']);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(['status' => 'test']);
 
     $tasks = [...$this->taskHandler->createTasksOnNew($applicationProcessBundle)];
     static::assertSame([], $tasks);
@@ -77,7 +77,7 @@ final class AbstractApplicationReviewReworkRequestTaskHandlerTest extends TestCa
 
   public function testModifyTaskNotReworkRequested(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'rework-requested']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rework',
     ]);
 
@@ -96,7 +96,7 @@ final class AbstractApplicationReviewReworkRequestTaskHandlerTest extends TestCa
 
   public function testModifyTaskStillReworkRequested(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'rework-requested']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rework-requested',
     ]);
 
@@ -115,7 +115,7 @@ final class AbstractApplicationReviewReworkRequestTaskHandlerTest extends TestCa
 
   public function testModifyTaskDifferentTaskType(): void {
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(['status' => 'rework-requested']);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'status' => 'rework',
     ]);
 

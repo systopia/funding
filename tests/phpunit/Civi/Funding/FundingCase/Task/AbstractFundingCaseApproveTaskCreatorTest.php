@@ -34,7 +34,7 @@ final class AbstractFundingCaseApproveTaskCreatorTest extends TestCase {
   }
 
   public function testCreateTasksOnChangedToEligible(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => TRUE,
     ]);
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
@@ -59,7 +59,7 @@ final class AbstractFundingCaseApproveTaskCreatorTest extends TestCase {
   }
 
   public function testCreateTasksOnChangedToEligibleWithUndecidedEligiblity(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => TRUE,
     ]);
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
@@ -79,7 +79,7 @@ final class AbstractFundingCaseApproveTaskCreatorTest extends TestCase {
   }
 
   public function testCreateTasksOnChangedStillEligible(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => TRUE,
     ]);
     $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([

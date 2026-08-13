@@ -42,69 +42,205 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
 
   // phpcs:disable Generic.Files.LineLength.TooLong
   private const STATUS_PERMISSION_ACTIONS_MAP = [
-    'new' => [
-      'application_create' => [],
-      'application_modify' => ['save'],
-      'application_apply' => ['apply'],
-      'application_withdraw' => ['delete'],
-      'review_calculative' => [],
-      'review_content' => [],
+    FundingCaseStatus::OPEN => [
+      'new' => [
+        'application_create' => [],
+        'application_modify' => ['save'],
+        'application_apply' => ['apply'],
+        'application_withdraw' => ['delete'],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'applied' => [
+        'application_create' => [],
+        'application_modify' => ['modify'],
+        'application_apply' => [],
+        'application_withdraw' => ['withdraw'],
+        'review_calculative' => ['review', 'add-comment', 'move-to-new-funding-case'],
+        'review_content' => ['review', 'add-comment', 'move-to-new-funding-case'],
+      ],
+      'review' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => ['request-change', 'update', 'reject', 'add-comment', 'move-to-new-funding-case', 'approve-calculative', 'reject-calculative'],
+        'review_content' => ['request-change', 'update', 'reject', 'add-comment', 'move-to-new-funding-case', 'approve-content', 'reject-content'],
+      ],
+      'draft' => [
+        'application_create' => [],
+        'application_modify' => ['save'],
+        'application_apply' => ['apply'],
+        'application_withdraw' => ['withdraw'],
+        'review_calculative' => ['review', 'add-comment'],
+        'review_content' => ['review', 'add-comment'],
+      ],
+      'eligible' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => ['withdraw'],
+        'review_calculative' => ['update', 'add-comment', 'move-to-new-funding-case'],
+        'review_content' => ['update', 'add-comment', 'move-to-new-funding-case'],
+      ],
+      'withdrawn' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'rejected' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'complete' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => ['withdraw'],
+        'review_calculative' => ['update', 'add-comment'],
+        'review_content' => ['update', 'add-comment'],
+      ],
     ],
-    'applied' => [
-      'application_create' => [],
-      'application_modify' => ['modify'],
-      'application_apply' => [],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
+
+    FundingCaseStatus::ONGOING => [
+      'new' => [
+        'application_create' => [],
+        'application_modify' => ['save'],
+        'application_apply' => ['apply'],
+        'application_withdraw' => ['delete'],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'applied' => [
+        'application_create' => [],
+        'application_modify' => ['modify'],
+        'application_apply' => [],
+        'application_withdraw' => ['withdraw'],
+        'review_calculative' => ['review', 'add-comment'],
+        'review_content' => ['review', 'add-comment'],
+      ],
+      'review' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => ['request-change', 'update', 'reject', 'add-comment', 'approve-calculative', 'reject-calculative'],
+        'review_content' => ['request-change', 'update', 'reject', 'add-comment', 'approve-content', 'reject-content'],
+      ],
+      'draft' => [
+        'application_create' => [],
+        'application_modify' => ['save'],
+        'application_apply' => ['apply'],
+        'application_withdraw' => ['withdraw'],
+        'review_calculative' => ['review', 'add-comment'],
+        'review_content' => ['review', 'add-comment'],
+      ],
+      'eligible' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => ['withdraw'],
+        'review_calculative' => ['update', 'add-comment'],
+        'review_content' => ['update', 'add-comment'],
+      ],
+      'withdrawn' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'rejected' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'complete' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => ['withdraw'],
+        'review_calculative' => ['update', 'add-comment'],
+        'review_content' => ['update', 'add-comment'],
+      ],
     ],
-    'review' => [
-      'application_create' => [],
-      'application_modify' => [],
-      'application_apply' => [],
-      'application_withdraw' => [],
-      'review_calculative' => ['request-change', 'update', 'reject', 'add-comment', 'approve-calculative', 'reject-calculative'],
-      'review_content' => ['request-change', 'update', 'reject', 'add-comment', 'approve-content', 'reject-content'],
-    ],
-    'draft' => [
-      'application_create' => [],
-      'application_modify' => ['save'],
-      'application_apply' => ['apply'],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'eligible' => [
-      'application_create' => [],
-      'application_modify' => [],
-      'application_apply' => [],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['update', 'add-comment'],
-      'review_content' => ['update', 'add-comment'],
-    ],
-    'withdrawn' => [
-      'application_create' => [],
-      'application_modify' => [],
-      'application_apply' => [],
-      'application_withdraw' => [],
-      'review_calculative' => [],
-      'review_content' => [],
-    ],
-    'rejected' => [
-      'application_create' => [],
-      'application_modify' => [],
-      'application_apply' => [],
-      'application_withdraw' => [],
-      'review_calculative' => [],
-      'review_content' => [],
-    ],
-    'complete' => [
-      'application_create' => [],
-      'application_modify' => [],
-      'application_apply' => [],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['update', 'add-comment'],
-      'review_content' => ['update', 'add-comment'],
+
+    FundingCaseStatus::CLEARED => [
+      'new' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'applied' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'review' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'draft' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'eligible' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'withdrawn' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'rejected' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
+      'complete' => [
+        'application_create' => [],
+        'application_modify' => [],
+        'application_apply' => [],
+        'application_withdraw' => [],
+        'review_calculative' => [],
+        'review_content' => [],
+      ],
     ],
   ];
   // phpcs:enable
@@ -117,28 +253,49 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
   }
 
   public function testGetActions(): void {
-    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
-      foreach ($permissionActionsMap as $permission => $actions) {
-        $applicationProcessBundle = $this->createApplicationProcessBundle($status, NULL, NULL, [$permission]);
-        static::assertSame(
-          $actions,
-          $this->actionsDeterminer->getActions($applicationProcessBundle, []),
-          sprintf('Status: %s, permission: %s', $status, $permission)
-        );
+    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $fundingCaseStatus => $statusPermissionActionsMap) {
+      foreach ($statusPermissionActionsMap as $status => $permissionActionsMap) {
+        foreach ($permissionActionsMap as $permission => $actions) {
+          $applicationProcessBundle = $this->createApplicationProcessBundle(
+            $status,
+            NULL,
+            NULL,
+            [$permission],
+            $fundingCaseStatus
+          );
+          static::assertSame(
+            $actions,
+            $this->actionsDeterminer->getActions($applicationProcessBundle, []),
+            sprintf('Status: %s, permission: %s, funding case status: %s', $status, $permission, $fundingCaseStatus)
+          );
+        }
       }
     }
   }
 
   public function testGetActionsAll(): void {
-    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
-      $actions = array_values(array_unique(array_merge(...array_values($permissionActionsMap))));
-      $permissions = array_keys($permissionActionsMap);
-      $applicationProcessBundle = $this->createApplicationProcessBundle($status, NULL, NULL, $permissions);
-      static::assertEquals(
-        $actions,
-        $this->actionsDeterminer->getActions($applicationProcessBundle, []),
-        sprintf('Status: %s, permissions: %s', $status, var_export($permissions, TRUE))
-      );
+    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $fundingCaseStatus => $statusPermissionActionsMap) {
+      foreach ($statusPermissionActionsMap as $status => $permissionActionsMap) {
+        $actions = array_values(array_unique(array_merge(...array_values($permissionActionsMap))));
+        $permissions = array_keys($permissionActionsMap);
+        $applicationProcessBundle = $this->createApplicationProcessBundle(
+          $status,
+          NULL,
+          NULL,
+          $permissions,
+          $fundingCaseStatus
+        );
+        static::assertEquals(
+          $actions,
+          $this->actionsDeterminer->getActions($applicationProcessBundle, []),
+          sprintf(
+            'Status: %s, permissions: %s, funding case status: %s',
+            $status,
+            var_export($permissions, TRUE),
+            $fundingCaseStatus
+          )
+        );
+      }
     }
   }
 
@@ -278,25 +435,6 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
     );
   }
 
-  public function testGetActionsFundingCaseCleared(): void {
-    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
-      foreach ($permissionActionsMap as $permission => $actions) {
-        $applicationProcessBundle = $this->createApplicationProcessBundle(
-          $status,
-          NULL,
-          NULL,
-          [$permission],
-          FundingCaseStatus::CLEARED
-        );
-        static::assertSame(
-          [],
-          $this->actionsDeterminer->getActions($applicationProcessBundle, []),
-          sprintf('Status: %s, permission: %s', $status, $permission)
-        );
-      }
-    }
-  }
-
   public function testGetInitialActions(): void {
     $fundingCaseType = FundingCaseTypeFactory::createFundingCaseType();
     foreach (self::INITIAL_PERMISSION_ACTIONS_MAP as $permission => $actions) {
@@ -355,13 +493,21 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
   }
 
   public function testIsEditAllowed(): void {
-    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
-      foreach ($permissionActionsMap as $permission => $actions) {
-        $applicationProcessBundle = $this->createApplicationProcessBundle($status, NULL, NULL, [$permission]);
-        static::assertSame(
-          in_array('save', $actions, TRUE) || in_array('apply', $actions, TRUE) || in_array('update', $actions, TRUE),
-          $this->actionsDeterminer->isEditAllowed($applicationProcessBundle, [])
-        );
+    foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $fundingCaseStatus => $statusPermissionActionsMap) {
+      foreach ($statusPermissionActionsMap as $status => $permissionActionsMap) {
+        foreach ($permissionActionsMap as $permission => $actions) {
+          $applicationProcessBundle = $this->createApplicationProcessBundle(
+            $status,
+            NULL,
+            NULL,
+            [$permission],
+            $fundingCaseStatus
+          );
+          static::assertSame(
+            in_array('save', $actions, TRUE) || in_array('apply', $actions, TRUE) || in_array('update', $actions, TRUE),
+            $this->actionsDeterminer->isEditAllowed($applicationProcessBundle, [])
+          );
+        }
       }
     }
   }
@@ -377,13 +523,18 @@ final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {
     ?bool $isReviewCalculative,
     ?bool $isReviewContent,
     array $permissions,
-    string $fundingCaseStatus = FundingCaseStatus::OPEN
+    ?string $fundingCaseStatus = NULL
   ): ApplicationProcessEntityBundle {
-    return ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    if (str_contains('&', $status)) {
+      [$fundingCaseStatusExploded, $status] = explode('&', $status, 2);
+      $fundingCaseStatus ??= $fundingCaseStatusExploded;
+    }
+
+    return ApplicationProcessBundleFactory::create([
       'status' => $status,
       'is_review_calculative' => $isReviewCalculative,
       'is_review_content' => $isReviewContent,
-    ], ['permissions' => $permissions, 'status' => $fundingCaseStatus]);
+    ], ['permissions' => $permissions, 'status' => $fundingCaseStatus ?? FundingCaseStatus::OPEN]);
   }
 
 }

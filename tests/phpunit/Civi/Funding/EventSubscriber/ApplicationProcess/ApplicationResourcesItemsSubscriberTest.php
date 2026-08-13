@@ -65,7 +65,7 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
   }
 
   public function testOnFormSubmitSuccess(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], [], $resourcesItemsData);
     $event = new ApplicationFormSubmitSuccessEvent(
@@ -80,7 +80,7 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
   }
 
   public function testOnFormSubmitSuccessReadOnly(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $resourcesItemsData = ['test' => $this->createResourcesItem()];
     $validationResult = ApplicationFormValidationResultFactory::createValid([], [], [], $resourcesItemsData, TRUE);
     $event = new ApplicationFormSubmitSuccessEvent(
@@ -94,7 +94,7 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
   }
 
   public function testOnFormSubmitSuccessWithRestore(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $applicationProcessBundle->getApplicationProcess()->setRestoredSnapshot(
       ApplicationSnapshotFactory::createApplicationSnapshot()
     );

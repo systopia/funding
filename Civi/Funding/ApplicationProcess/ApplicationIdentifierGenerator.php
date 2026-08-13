@@ -36,4 +36,10 @@ final class ApplicationIdentifierGenerator implements ApplicationIdentifierGener
     );
   }
 
+  public function generateIdentifierOnFundingCaseChange(
+    ApplicationProcessEntityBundle $applicationProcessBundle
+  ): string {
+    return $this->generateIdentifier($applicationProcessBundle);
+  }
+
 }

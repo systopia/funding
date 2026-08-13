@@ -34,7 +34,7 @@ final class AbstractClearingCreateTaskCreatorOnApplicationChangeTest extends Tes
   }
 
   public function testCreateTasksOnChangeEligibleApproved(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['is_eligible' => TRUE],
       ['amount_approved' => 1.2]
     );
@@ -62,7 +62,7 @@ final class AbstractClearingCreateTaskCreatorOnApplicationChangeTest extends Tes
   }
 
   public function testCreateTasksOnChangeEligibleNotApproved(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       ['is_eligible' => TRUE],
       ['amount_approved' => NULL]
     );
@@ -76,7 +76,7 @@ final class AbstractClearingCreateTaskCreatorOnApplicationChangeTest extends Tes
   }
 
   public function testCreateTasksOnNew(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_eligible' => TRUE,
     ]);
     static::assertSame([], [...$this->taskCreator->createTasksOnNew($applicationProcessBundle)]);

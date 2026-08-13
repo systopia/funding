@@ -26,7 +26,6 @@ use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\ClearingProcessFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -64,15 +63,15 @@ final class ApplicationProcessReopenSubscriberTest extends TestCase {
   }
 
   public function testOnUpdatedNotReopened(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle([
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_withdrawn' => TRUE,
       'is_rejected' => FALSE,
     ]);
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess([
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create([
       'is_withdrawn' => FALSE,
       'is_rejected' => FALSE,
     ]);
-    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcess, $applicationProcessBundle);
+    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcessBundle, $applicationProcessBundle);
 
     $this->clearingProcessManagerMock->expects(static::never())->method('getByApplicationProcessId');
     $this->activityManagerMock->expects(static::never())->method('getLastByApplicationProcessAndType');
@@ -90,13 +89,9 @@ final class ApplicationProcessReopenSubscriberTest extends TestCase {
     array $applicationProcessValues,
     array $previousApplicationProcessValues
   ): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      $applicationProcessValues
-    );
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(
-      $previousApplicationProcessValues
-    );
-    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcess, $applicationProcessBundle);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create($applicationProcessValues);
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create($previousApplicationProcessValues);
+    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcessBundle, $applicationProcessBundle);
 
     $clearingProcess = ClearingProcessFactory::create(['status' => 'rejected']);
     $clearingProcessBundle = new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle);
@@ -132,13 +127,9 @@ final class ApplicationProcessReopenSubscriberTest extends TestCase {
     array $applicationProcessValues,
     array $previousApplicationProcessValues
   ): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
-      $applicationProcessValues
-    );
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess(
-      $previousApplicationProcessValues
-    );
-    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcess, $applicationProcessBundle);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create($applicationProcessValues);
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create($previousApplicationProcessValues);
+    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcessBundle, $applicationProcessBundle);
 
     $clearingProcess = ClearingProcessFactory::create(['status' => 'rejected']);
     $clearingProcessBundle = new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle);

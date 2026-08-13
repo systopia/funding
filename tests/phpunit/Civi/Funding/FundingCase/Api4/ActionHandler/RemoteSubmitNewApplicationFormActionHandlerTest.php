@@ -115,7 +115,7 @@ final class RemoteSubmitNewApplicationFormActionHandlerTest extends TestCase {
     );
 
     $validationResult = ApplicationFormValidationResultFactory::createValid();
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $result = ApplicationFormNewSubmitResult::createSuccess(
       $validationResult,
       $applicationProcessBundle,

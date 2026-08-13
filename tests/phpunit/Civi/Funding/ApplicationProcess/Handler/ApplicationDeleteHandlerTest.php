@@ -56,7 +56,7 @@ final class ApplicationDeleteHandlerTest extends TestCase {
   }
 
   public function testHandle(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
@@ -72,7 +72,7 @@ final class ApplicationDeleteHandlerTest extends TestCase {
   }
 
   public function testHandlePermissionMissing(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $statusList = [23 => new FullApplicationProcessStatus('status', NULL, NULL)];
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(

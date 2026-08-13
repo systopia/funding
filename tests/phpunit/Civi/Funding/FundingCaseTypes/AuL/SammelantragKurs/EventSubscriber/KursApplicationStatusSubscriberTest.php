@@ -177,19 +177,21 @@ final class KursApplicationStatusSubscriberTest extends TestCase {
     $previousValues = array_map(fn(array $oldAndNew) => $oldAndNew[0], $changeSet);
     $currentValues = array_map(fn(array $oldAndNew) => $oldAndNew[1], $changeSet);
 
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess($previousValues);
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create($previousValues);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       $currentValues,
       [],
       ['name' => $fundingCaseTypeName]
     );
 
-    $snapshot = ApplicationSnapshotFactory::createApplicationSnapshot($previousApplicationProcess->toArray());
+    $snapshot = ApplicationSnapshotFactory::createApplicationSnapshot(
+      $previousApplicationProcessBundle->getApplicationProcess()->toArray()
+    );
     $this->snapshotManagerMock->method('getLastByApplicationProcessId')
       ->with($snapshot->getApplicationProcessId())
       ->willReturn($snapshot);
 
-    return new ApplicationProcessPreUpdateEvent($previousApplicationProcess, $applicationProcessBundle);
+    return new ApplicationProcessPreUpdateEvent($previousApplicationProcessBundle, $applicationProcessBundle);
   }
 
 }

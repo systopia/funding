@@ -5,7 +5,6 @@ namespace Civi\Funding\Task\EventSubscriber;
 
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
-use Civi\Funding\EntityFactory\ApplicationProcessFactory;
 use Civi\Funding\EntityFactory\FundingCaseTypeFactory;
 use Civi\Funding\EntityFactory\FundingTaskFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessCreatedEvent;
@@ -61,7 +60,7 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
   }
 
   public function testOnCreated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $event = new ApplicationProcessCreatedEvent($applicationProcessBundle);
     $task = FundingTaskFactory::create();
 
@@ -75,7 +74,7 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
   }
 
   public function testOnCreatedWithoutCreators(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       [],
       [],
       ['name' => 'SomeCaseType']
@@ -88,9 +87,10 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
   }
 
   public function testOnUpdated(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcess, $applicationProcessBundle);
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $previousApplicationProcess = $previousApplicationProcessBundle->getApplicationProcess();
+    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcessBundle, $applicationProcessBundle);
 
     $existingTask = FundingTaskFactory::create(['subject' => 'Existing Task']);
     $newTask = FundingTaskFactory::create(['subject' => 'New Task']);
@@ -117,13 +117,13 @@ final class ApplicationProcessTaskSubscriberTest extends TestCase {
   }
 
   public function testOnUpdatedWithoutCreatorsOrModifiers(): void {
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle(
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
       [],
       [],
       ['name' => 'SomeCaseType']
     );
-    $previousApplicationProcess = ApplicationProcessFactory::createApplicationProcess();
-    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcess, $applicationProcessBundle);
+    $previousApplicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $event = new ApplicationProcessUpdatedEvent($previousApplicationProcessBundle, $applicationProcessBundle);
 
     $this->taskManagerMock->expects(static::never())->method('getOpenTasksBy');
     $this->taskCreatorMock->expects(static::never())->method('createTasksOnChange');
