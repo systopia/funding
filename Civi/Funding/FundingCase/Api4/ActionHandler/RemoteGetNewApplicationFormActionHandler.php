@@ -20,7 +20,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCase\Api4\ActionHandler;
 
 use Civi\Funding\Api4\Action\Remote\FundingCase\GetNewApplicationFormAction;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\Command\ApplicationFormDataGetCommand;
 use Civi\Funding\ApplicationProcess\Command\ApplicationFormNewCreateCommand;
+use Civi\Funding\ApplicationProcess\Handler\ApplicationFormDataGetHandlerInterface;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationFormNewCreateHandlerInterface;
 use Civi\Funding\FundingCase\Api4\ActionHandler\Traits\NewApplicationFormRemoteActionHandlerTrait;
 use Civi\Funding\FundingProgram\FundingCaseTypeManager;
@@ -36,21 +39,14 @@ final class RemoteGetNewApplicationFormActionHandler implements ActionHandlerInt
 
   public const ENTITY_NAME = 'RemoteFundingCase';
 
-  private FundingCaseTypeManager $fundingCaseTypeManager;
-
-  private FundingProgramManager $fundingProgramManager;
-
-  private ApplicationFormNewCreateHandlerInterface $newCreateHandler;
-
   public function __construct(
-    FundingCaseTypeManager $fundingCaseTypeManager,
-    FundingProgramManager $fundingProgramManager,
-    ApplicationFormNewCreateHandlerInterface $newCreateHandler,
+    private readonly ApplicationProcessManager $applicationProcessManager,
+    private readonly ApplicationFormDataGetHandlerInterface $formDataGetHandler,
+    private readonly FundingCaseTypeManager $fundingCaseTypeManager,
+    private readonly FundingProgramManager $fundingProgramManager,
+    private readonly ApplicationFormNewCreateHandlerInterface $newCreateHandler,
     FundingCaseTypeProgramRelationChecker $relationChecker
   ) {
-    $this->fundingCaseTypeManager = $fundingCaseTypeManager;
-    $this->fundingProgramManager = $fundingProgramManager;
-    $this->newCreateHandler = $newCreateHandler;
     $this->relationChecker = $relationChecker;
   }
 
@@ -87,8 +83,26 @@ final class RemoteGetNewApplicationFormActionHandler implements ActionHandlerInt
       )
     );
 
+    if (NULL !== $action->getCopyDataFromId()) {
+      $applicationProcessBundle = $this->applicationProcessManager->getBundle($action->getCopyDataFromId());
+      Assert::notNull(
+        $applicationProcessBundle,
+        sprintf('Application process with ID "%d" not found', $action->getCopyDataFromId())
+      );
+      Assert::same(
+        $fundingCaseType->getId(),
+        $applicationProcessBundle->getFundingCaseType()->getId(),
+        'Copies are only allowed with the same funding case type'
+      );
+      $formData = $this->formDataGetHandler->handle(new ApplicationFormDataGetCommand(
+          $applicationProcessBundle,
+          $this->applicationProcessManager->getStatusList($applicationProcessBundle),
+          ApplicationFormDataGetCommand::FLAG_COPY
+        )) + $form->getData();
+    }
+
     return [
-      'data' => $form->getData(),
+      'data' => $formData ?? $form->getData(),
       'jsonSchema' => $form->getJsonSchema()->toArray(),
       'uiSchema' => $form->getUiSchema()->toArray(),
     ];
