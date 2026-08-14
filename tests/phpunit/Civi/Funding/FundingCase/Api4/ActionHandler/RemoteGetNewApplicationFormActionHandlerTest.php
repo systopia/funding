@@ -270,7 +270,7 @@ final class RemoteGetNewApplicationFormActionHandlerTest extends TestCase {
       ->with($command)
       ->willReturn($form);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::createApplicationProcessBundle();
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
     $applicationProcessId = $applicationProcessBundle->getApplicationProcess()->getId();
     $statusList = [123 => new FullApplicationProcessStatus('test', NULL, NULL)];
 
