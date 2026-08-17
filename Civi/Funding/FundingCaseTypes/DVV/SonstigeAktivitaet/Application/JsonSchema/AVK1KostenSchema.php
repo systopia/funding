@@ -22,6 +22,7 @@ namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\JsonS
 
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItem;
 use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\JsonSchemaCostItems;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -174,7 +175,17 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           'fahrtkostenGesamt' => new JsonSchemaDataPointer('1/fahrtkostenGesamt'),
           'sachkostenGesamt' => new JsonSchemaDataPointer('1/sachkostenGesamt'),
           'sonstigeAusgabenGesamt' => new JsonSchemaDataPointer('1/sonstigeAusgabenGesamt'),
-        ]
+        ],
+        0,
+        [
+          '$validations' => [
+            JsonSchema::fromArray([
+              'keyword' => 'exclusiveMinimum',
+              'value' => 0,
+              'message' => 'Bitte legen Sie einen Kostenplan an.',
+            ]),
+          ],
+        ],
       ),
     ], [
       'required' => [

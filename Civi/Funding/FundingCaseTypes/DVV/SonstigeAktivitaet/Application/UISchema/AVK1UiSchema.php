@@ -98,7 +98,7 @@ final class AVK1UiSchema extends JsonFormsGroup {
           ], 'Bitte geben Sie hier die Spenden an, die Sie für Ihr Vorhaben aufbringen können.'),
           // Abschnitt II.3
           new AVK1OeffentlicheMittelUiSchema($currency),
-          new JsonFormsGroup('Gesamtfinanzierung und beantragter Zuschuss', [
+          new JsonFormsGroup('Finanzierung und beantragter KJP-Zuschuss', [
             new JsonFormsControl(
               '#/properties/finanzierung/properties/eigenanteil', 'Summe Eigenanteil in ' . $currency
             ),

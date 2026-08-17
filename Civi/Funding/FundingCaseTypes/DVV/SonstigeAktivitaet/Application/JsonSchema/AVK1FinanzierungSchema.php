@@ -80,12 +80,17 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
             JsonSchema::fromArray([
               'keyword' => 'evaluate',
               'value' => [
-                'expression' => 'gesamtkosten == 0 || data / gesamtkosten >= 0.1',
+                'expression' => 'gesamtkosten == 0 || data == 0 || data / gesamtkosten >= 0.1',
                 'variables' => [
                   'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
                 ],
               ],
               'message' => 'Der Eigenanteil muss mindestens 10 % betragen.',
+            ]),
+            JsonSchema::fromArray([
+              'keyword' => 'exclusiveMinimum',
+              'value' => 0,
+              'message' => 'Bitte überprüfen Sie Ihre Finanzierung.',
             ]),
           ],
         ],
@@ -146,8 +151,6 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           'eigenanteil' => new JsonSchemaDataPointer('1/eigenanteil'),
           'oeffentlicheMittelGesamt' => new JsonSchemaDataPointer('1/oeffentlicheMittelGesamt'),
         ],
-        NULL,
-        ['minimum' => 0.01],
       ),
       // Beantragter Zuschuss
       'beantragterZuschuss' => new JsonSchemaCalculate('number', 'round(max(gesamtkosten - gesamtmittel, 0), 2)', [
