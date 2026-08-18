@@ -2335,7 +2335,7 @@ msgstr "In Förderfall %identifier verschoben"
 
 #: ang/crmFunding/application/history/activities/move.template.html
 msgid "Previous funding case: %identifier"
-msgstr "Vorheriger Förderfallfall: %identifier"
+msgstr "Vorheriger Förderfall: %identifier"
 
 #: ang/crmFunding/application/history/activities/move.template.html
 msgid "Previous application identifier: %identifier"
