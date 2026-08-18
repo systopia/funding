@@ -21,12 +21,12 @@ namespace Civi\Funding\EventSubscriber\ApplicationProcess;
 
 use Civi\Funding\ApplicationProcess\Command\ApplicationResourcesItemsPersistCommand;
 use Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface;
+use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ApplicationResourcesItemsSubscriber implements EventSubscriberInterface {
-
-  private ApplicationResourcesItemsPersistHandlerInterface $resourcesItemsPersistHandler;
 
   /**
    * @inheritDoc
@@ -37,14 +37,17 @@ class ApplicationResourcesItemsSubscriber implements EventSubscriberInterface {
     ];
   }
 
-  public function __construct(ApplicationResourcesItemsPersistHandlerInterface $resourcesItemsPersistHandler) {
-    $this->resourcesItemsPersistHandler = $resourcesItemsPersistHandler;
-  }
+  public function __construct(
+    private readonly FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
+    private readonly ApplicationResourcesItemsPersistHandlerInterface $resourcesItemsPersistHandler,
+  ) {}
 
   public function onFormSubmitSuccess(ApplicationFormSubmitSuccessEvent $event): void {
-    if ($event->getResult()->getValidationResult()->isReadOnly() ||
-      NULL !== $event->getApplicationProcess()->getRestoredSnapshot() ||
-      'delete' === $event->getAction()) {
+    if (
+      $event->getResult()->getValidationResult()->isReadOnly()
+      || NULL !== $event->getApplicationProcess()->getRestoredSnapshot()
+      || $this->isDeleteAction($event->getAction(), $event->getFundingCaseType())
+    ) {
       return;
     }
 
@@ -52,6 +55,12 @@ class ApplicationResourcesItemsSubscriber implements EventSubscriberInterface {
       $event->getApplicationProcessBundle(),
       $event->getValidatedData()->getResourcesItemsData()
     ));
+  }
+
+  private function isDeleteAction(string $action, FundingCaseTypeEntity $fundingCaseType): bool {
+    $metaData = $this->metaDataProvider->get($fundingCaseType->getName());
+
+    return (bool) $metaData->getApplicationProcessAction($action)?->isDelete();
   }
 
 }

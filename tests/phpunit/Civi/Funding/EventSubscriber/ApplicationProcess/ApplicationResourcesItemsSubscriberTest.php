@@ -26,7 +26,10 @@ use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\ResourcesItemData;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -35,19 +38,20 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationResourcesItemsSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationResourcesItemsPersistHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $resourcesItemsPersistHandlerMock;
+  private FundingCaseTypeMetaDataMock $metaDataMock;
+
+  private ApplicationResourcesItemsPersistHandlerInterface&MockObject $resourcesItemsPersistHandlerMock;
 
   private ApplicationResourcesItemsSubscriber $subscriber;
 
   protected function setUp(): void {
     parent::setUp();
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock();
     $this->resourcesItemsPersistHandlerMock = $this->createMock(
       ApplicationResourcesItemsPersistHandlerInterface::class
     );
     $this->subscriber = new ApplicationResourcesItemsSubscriber(
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
       $this->resourcesItemsPersistHandlerMock
     );
   }
@@ -106,6 +110,28 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
       ApplicationFormSubmitResult::createSuccess($validationResult),
     );
 
+    $this->resourcesItemsPersistHandlerMock->expects(static::never())->method('handle');
+    $this->subscriber->onFormSubmitSuccess($event);
+  }
+
+  public function testOnFormSubmitSuccess_DeleteAction(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $resourcesItemsData = ['test' => $this->createResourcesItem()];
+    $validationResult = ApplicationFormValidationResultFactory::createValid(
+      ['_action' => 'test'], [], [], $resourcesItemsData
+    );
+    $event = new ApplicationFormSubmitSuccessEvent(
+      $applicationProcessBundle,
+      $applicationProcessBundle->getApplicationProcess()->getRequestData(),
+      ApplicationFormSubmitResult::createSuccess($validationResult),
+    );
+
+    $this->metaDataMock->addApplicationProcessAction(new ApplicationProcessAction([
+      'name' => 'test',
+      'label' => 'Test',
+      'delete' => TRUE,
+    ]));
+    // Resource items must not be persisted on application deletion.
     $this->resourcesItemsPersistHandlerMock->expects(static::never())->method('handle');
     $this->subscriber->onFormSubmitSuccess($event);
   }

@@ -26,7 +26,10 @@ use Civi\Funding\ApplicationProcess\JsonSchema\CostItem\CostItemData;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ApplicationSnapshotFactory;
 use Civi\Funding\Event\ApplicationProcess\ApplicationFormSubmitSuccessEvent;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction;
 use Civi\Funding\Mock\ApplicationProcess\Form\Validation\ApplicationFormValidationResultFactory;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -35,19 +38,19 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApplicationCostItemsSubscriberTest extends TestCase {
 
-  /**
-   * @var \Civi\Funding\ApplicationProcess\Handler\ApplicationCostItemsPersistHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
-   */
-  private MockObject $costItemsPersistHandlerMock;
+  private ApplicationCostItemsPersistHandlerInterface&MockObject $costItemsPersistHandlerMock;
+
+  private FundingCaseTypeMetaDataMock $metaDataMock;
 
   private ApplicationCostItemsSubscriber $subscriber;
 
   protected function setUp(): void {
     parent::setUp();
-
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock();
     $this->costItemsPersistHandlerMock = $this->createMock(ApplicationCostItemsPersistHandlerInterface::class);
     $this->subscriber = new ApplicationCostItemsSubscriber(
       $this->costItemsPersistHandlerMock,
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
     );
   }
 
@@ -105,6 +108,26 @@ final class ApplicationCostItemsSubscriberTest extends TestCase {
       ApplicationFormSubmitResult::createSuccess($validationResult),
     );
 
+    $this->costItemsPersistHandlerMock->expects(static::never())->method('handle');
+    $this->subscriber->onFormSubmitSuccess($event);
+  }
+
+  public function testOnFormSubmitSuccess_DeleteAction(): void {
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create();
+    $costItemsData = ['test' => $this->createCostItem()];
+    $validationResult = ApplicationFormValidationResultFactory::createValid(['_action' => 'test'], [], $costItemsData,);
+    $event = new ApplicationFormSubmitSuccessEvent(
+      $applicationProcessBundle,
+      $applicationProcessBundle->getApplicationProcess()->getRequestData(),
+      ApplicationFormSubmitResult::createSuccess($validationResult),
+    );
+
+    $this->metaDataMock->addApplicationProcessAction(new ApplicationProcessAction([
+      'name' => 'test',
+      'label' => 'Test',
+      'delete' => TRUE,
+    ]));
+    // Cost items must not be persisted on application deletion.
     $this->costItemsPersistHandlerMock->expects(static::never())->method('handle');
     $this->subscriber->onFormSubmitSuccess($event);
   }
