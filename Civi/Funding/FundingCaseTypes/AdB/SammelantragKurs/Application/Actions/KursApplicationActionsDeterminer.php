@@ -40,63 +40,28 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     NULL => [
       'application_create' => ['save', 'save&new', 'save&copy'],
     ],
-    'new' => [
-      'application_modify' => ['save'],
-      'application_apply' => ['apply'],
-      'application_withdraw' => ['withdraw', 'delete'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'applied' => [
-      'application_modify' => ['modify'],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'review' => [
-      'review_calculative' => ['request-change', 'update', 'reject', 'add-comment'],
-      'review_content' => ['request-change', 'update', 'reject', 'add-comment'],
-    ],
-    'draft' => [
-      'application_modify' => ['save'],
-      'application_apply' => ['apply'],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
     'eligible' => [
+      'application_apply' => ['modify'],
       'application_modify' => ['modify'],
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
     ],
     'rework' => [
-      'application_apply' => ['apply'],
+      'application_apply' => ['save'],
       'application_modify' => ['save'],
       'application_withdraw' => ['withdraw-change'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'rework-review-requested' => [
-      'application_modify' => ['modify'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'rework-review' => [
-      'review_calculative' => ['request-change', 'update', 'reject-change', 'add-comment'],
-      'review_content' => ['request-change', 'update', 'reject-change', 'add-comment'],
+      'review_calculative' => ['add-comment'],
+      'review_content' => ['add-comment'],
     ],
     'complete' => [
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
     ],
-    'rejected' => [
-      'review_calculative' => ['reopen'],
-      'review_content' => ['reopen'],
-    ],
     'withdrawn' => [
-      'review_calculative' => ['reopen'],
-      'review_content' => ['reopen'],
+      'review_calculative' => ['reopen', 'add-comment'],
+      'review_content' => ['reopen', 'add-comment'],
     ],
   ];
 

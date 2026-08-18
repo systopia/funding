@@ -19,76 +19,45 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\Actions;
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminerDecorator;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminer;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-final class KursApplicationStatusDeterminer extends AbstractApplicationProcessStatusDeterminerDecorator {
+final class KursApplicationStatusDeterminer extends AbstractApplicationProcessStatusDeterminer {
 
   use KursSupportedFundingCaseTypesTrait;
 
-  public function __construct() {
-    parent::__construct(new DefaultApplicationProcessStatusDeterminer());
-  }
-
   private const STATUS_ACTION_STATUS_MAP = [
-    'new' => [
-      'review' => 'review',
+    NULL => [
+      'save' => 'eligible',
     ],
     'eligible' => [
+      'withdraw' => 'withdrawn',
       'modify' => 'rework',
       'update' => 'eligible',
+      'add-comment' => 'eligible',
+    ],
+    'complete' => [
+      'withdraw' => 'withdrawn',
+      'update' => 'complete',
+      'add-comment' => 'complete',
     ],
     'rework' => [
-      'save' => 'rework',
-      'apply' => 'rework-review-requested',
-      'withdraw-change' => 'applied',
-      'review' => 'rework-review',
+      'save' => 'eligible',
+      'withdraw-change' => 'eligible',
       'add-comment' => 'rework',
-    ],
-    'rework-review-requested' => [
-      'modify' => 'rework',
-      'review' => 'rework-review',
-      'add-comment' => 'rework-review-requested',
-    ],
-    'rework-review' => [
-      'approve-calculative' => 'rework-review',
-      'reject-calculative' => 'rework-review',
-      'approve-content' => 'rework-review',
-      'reject-content' => 'rework-review',
-      'request-change' => 'rework',
-      'approve-change' => 'eligible',
-      'reject-change' => 'eligible',
-      'update' => 'rework-review',
-      'add-comment' => 'rework-review',
-    ],
-    'rejected' => [
-      'reopen' => '@previous',
     ],
     'withdrawn' => [
       'reopen' => '@previous',
+      'add-comment' => 'withdrawn',
     ],
   ];
 
-  public function getStatus(FullApplicationProcessStatus $currentStatus, string $action): FullApplicationProcessStatus {
-    return isset(self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action])
-      ? new FullApplicationProcessStatus(
-        self::STATUS_ACTION_STATUS_MAP[$currentStatus->getStatus()][$action],
-        $this->getIsReviewCalculative($currentStatus, $action),
-        $this->getIsReviewContent($currentStatus, $action)
-      ) : parent::getStatus($currentStatus, $action);
+  public function __construct() {
+    parent::__construct(self::STATUS_ACTION_STATUS_MAP);
   }
 
-  private function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
-    if ('request-change' === $action) {
-      return NULL;
-    }
-
-    if ('reject-change' === $action) {
-      return TRUE;
-    }
-
+  protected function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
     if ('approve-calculative' === $action) {
       return TRUE;
     }
@@ -100,15 +69,7 @@ final class KursApplicationStatusDeterminer extends AbstractApplicationProcessSt
     return $currentStatus->getIsReviewCalculative();
   }
 
-  private function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
-    if ('request-change' === $action) {
-      return NULL;
-    }
-
-    if ('reject-change' === $action) {
-      return TRUE;
-    }
-
+  protected function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
     if ('approve-content' === $action) {
       return TRUE;
     }
@@ -118,6 +79,15 @@ final class KursApplicationStatusDeterminer extends AbstractApplicationProcessSt
     }
 
     return $currentStatus->getIsReviewContent();
+  }
+
+  public function getStatusOnClearingProcessStarted(FullApplicationProcessStatus $currentStatus
+  ): FullApplicationProcessStatus {
+    return new FullApplicationProcessStatus(
+      'complete',
+      $currentStatus->getIsReviewCalculative(),
+      $currentStatus->getIsReviewContent()
+    );
   }
 
 }
