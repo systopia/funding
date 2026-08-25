@@ -1,0 +1,45 @@
+<?php
+/*
+ * Copyright (C) 2025 SYSTOPIA GmbH
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published by
+ *  the Free Software Foundation in version 3.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Civi\Funding\FundingCaseTypes\DVV\SammelantragKurs\FundingCase\UiSchema;
+
+use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
+use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+
+final class KursNewCaseUiSchema extends JsonFormsGroup {
+
+  public const FLAG_SHOW_RECIPIENTS_CONTROL = 1;
+
+  /**
+   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\Control\JsonFormsSubmitButton> $submitButtons
+   */
+  public function __construct(array $submitButtons, int $flags) {
+    parent::__construct('Sammelantrag Kurs', [
+      0 !== ($flags & self::FLAG_SHOW_RECIPIENTS_CONTROL)
+      ? new JsonFormsCloseableGroup('Antragstellende Organisation', [
+        new JsonFormsControl('#/properties/empfaenger', ''),
+      ])
+      : new JsonFormsHidden('#/properties/empfaenger'),
+      ...$submitButtons,
+    ]);
+  }
+
+}
