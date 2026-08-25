@@ -47,9 +47,7 @@ return [
           'having' => [],
         ],
       ],
-      'match' => [
-        'name',
-      ],
+      'match' => ['name'],
     ],
   ],
   [
@@ -158,7 +156,7 @@ return [
               'size' => 'btn-xs',
               'links' => [
                 [
-                  'path' => 'civicrm/a#/funding/application/[id]',
+                  'path' => 'civicrm/funding/application/show?id=[id]',
                   'icon' => 'fa-folder-open',
                   'text' => E::ts('Open application'),
                   'style' => 'default',
@@ -168,22 +166,25 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [],
                 ],
                 [
-                  'path' => 'civicrm/a#/funding/clearing/[FundingApplicationProcess_FundingClearingProcess_application_process_id_01.id]',
+                  'path' => 'civicrm/funding/clearing/show?applicationProcessId=[id]',
                   'icon' => 'fa-folder-open',
                   'text' => E::ts('Open clearing'),
                   'style' => 'default',
-                  'condition' => [
-                    'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:name',
-                    '!=',
-                    'not-started',
-                  ],
                   'task' => '',
                   'entity' => '',
                   'action' => '',
                   'join' => '',
                   'target' => '',
+                  'conditions' => [
+                    [
+                      'FundingApplicationProcess_FundingClearingProcess_application_process_id_01.status:name',
+                      '!=',
+                      'not-started',
+                    ],
+                  ],
                 ],
               ],
               'type' => 'buttons',
@@ -195,15 +196,13 @@ return [
             'civiofficeRender',
             'download',
           ],
-          'classes' => [
-            'table',
-            'table-striped',
-          ],
+          'classes' => ['table', 'table-striped'],
           'headerCount' => TRUE,
           'actions_display_mode' => 'menu',
           'tally' => [
             'label' => E::ts('Total'),
           ],
+          'columnMode' => 'custom',
         ],
       ],
       'match' => [

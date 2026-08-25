@@ -4,6 +4,9 @@
     <li role="presentation" ng-class="{active: tab === 'application'}">
         <a role="tab" ng-click="tab='application'">{{:: ts('Application') }}</a>
     </li>
+    <li role="presentation" ng-class="{active: tab === 'clearing'}" ng-show="clearingProcess && clearingProcess.status != 'not-started'">
+      <a role="tab" ng-click="tab='clearing'">{{:: ts('Clearing') }}</a>
+    </li>
     <li role="presentation" ng-class="{active: tab === 'history'}">
         <a role="tab" ng-click="tab='history'">{{:: ts('History') }}</a>
     </li>
@@ -18,11 +21,27 @@
                                     application-process="applicationProcess"
                                     funding-case="fundingCase"
                                     funding-case-type="fundingCaseType"
-                                    form="form"
+                                    funding-program="fundingProgram"
+                                    form="applicationForm"
                                     status-options="statusOptions"
                                     review-status-labels="reviewStatusLabels"
-                                    on-post-submit="loadActivities()"></funding-application-editor>
+                                    on-post-submit="onPostSubmit()"></funding-application-editor>
     </div>
+
+  <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'clearing'}">
+    <funding-clearing-editor ng-show="tab === 'clearing'"
+                             activities="activities"
+                             clearing-process="clearingProcess"
+                             application-process="applicationProcess"
+                             funding-case="fundingCase"
+                             funding-case-type="fundingCaseType"
+                             funding-program="fundingProgram"
+                             form="clearingForm"
+                             status-options="clearingStatusOptions"
+                             review-status-labels="reviewStatusLabels"
+                             on-post-submit="onPostSubmit()"></funding-clearing-editor>
+  </div>
+
     <div role="tabpanel" class="tab-pane" ng-class="{active: tab === 'history'}">
         <funding-application-process-history ng-show="tab === 'history'"
                                              activities="activities"

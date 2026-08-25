@@ -45,7 +45,7 @@ fundingModule.directive('fundingJfElement', ['$compile', function($compile) {
       }
 
       scope.$watch('uiSchema', function (uiSchema) {
-        if (uiSchema.type) {
+        if (uiSchema && uiSchema.type) {
           const directiveName = 'fundingJf' + _4.upperFirst(uiSchema.type);
           const tagName = snake_case(directiveName, '-');
           const template = '<' + tagName + '></' + tagName + '>';

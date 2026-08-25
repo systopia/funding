@@ -22,12 +22,13 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
     scope: {
       activities: '<',
       applicationProcess: '=',
-      fundingCase: '=',
-      fundingCaseType: '=',
+      fundingCase: '<',
+      fundingCaseType: '<',
+      fundingProgram: '<',
       // Buttons are not shown initially if JSON schema is loaded in controller.
       form: '=',
-      statusOptions: '=',
-      reviewStatusLabels: '=',
+      statusOptions: '<',
+      reviewStatusLabels: '<',
       onPostSubmit: '&',
     },
     template: '',
@@ -43,10 +44,8 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         }
       });
     },
-    controller: ['$scope', 'crmStatus', 'fundingContactService',
-      'fundingProgramService', 'fundingApplicationProcessService', 'fundingCaseService',
-      async function($scope, crmStatus, fundingContactService,
-                     fundingProgramService, fundingApplicationProcessService, fundingCaseService) {
+    controller: ['$scope', 'crmStatus', 'fundingContactService', 'fundingApplicationProcessService',
+      function($scope, crmStatus, fundingContactService, fundingApplicationProcessService) {
         function convertStringsToDates(formOrField) {
           // If we ensure that this function is called for every single field via
           // onStartEdit() we would not need to take care of forms, i.e.
@@ -108,13 +107,22 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         const $ = CRM.$;
         const ts = $scope.ts = CRM.ts('funding');
 
-        $scope.permissions = $scope.fundingCase.permissions;
-        fundingProgramService.get($scope.fundingCase.funding_program_id).then(
-          (fundingProgram) => $scope.currency = fundingProgram.currency
-        );
-        fundingContactService.get($scope.fundingCase.recipient_contact_id).then(
-          (contact) => $scope.recipientContact = contact
-        );
+        const unwatchFundingCase = $scope.$watch('fundingCase', function (fundingCase) {
+          if (fundingCase) {
+            $scope.permissions = fundingCase.permissions;
+            fundingContactService.get($scope.fundingCase.recipient_contact_id).then(
+              (contact) => $scope.recipientContact = contact
+            );
+            unwatchFundingCase();
+          }
+        });
+
+        const unwatchFundingProgram = $scope.$watch('fundingProgram', function (fundingProgram) {
+          if (fundingProgram) {
+            $scope.currency = fundingProgram.currency;
+            unwatchFundingProgram();
+          }
+        });
 
         $scope.errors = {};
         $scope.comment = {text: null};
@@ -122,7 +130,7 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         $scope.editCount = 0;
 
         $scope.isActionAllowed = function (action) {
-          return $scope.jsonSchema.properties._action.enum.includes(action);
+          return $scope.jsonSchema && $scope.jsonSchema.properties._action.enum.includes(action);
         };
 
         $scope.isAnyActionAllowed = function (...actions) {
@@ -145,30 +153,19 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
           return $scope.isActionAllowed('update');
         };
 
-        function reloadApplicationProcess() {
-          return fundingApplicationProcessService.get($scope.applicationProcess.id).then(
-              (applicationProcess) => $scope.applicationProcess = applicationProcess
-          );
-        }
-
-        function reloadFundingCase() {
-          return fundingCaseService.get($scope.fundingCase.id).then(
-            (fundingCase) => $scope.fundingCase = fundingCase
-          );
-        }
-
-        function reloadJsonSchema() {
-          return fundingApplicationProcessService.getJsonSchema($scope.applicationProcess.id).then(
-              (jsonSchema) => $scope.jsonSchema = jsonSchema
-          );
-        }
-
-        $scope.jsonSchema = $scope.form.jsonSchema;
-        $scope.uiSchema = $scope.form.uiSchema;
-        $scope.uiSchema.label = null;
-        $scope.data = $scope.form.data;
-        let originalData = _4.cloneDeep($scope.data);
-        let originalDataString = JSON.stringify(originalData);
+        let originalData = null;
+        let originalDataString = null;
+        const unwatchForm = $scope.$watch('form', function (form) {
+          if (form) {
+            $scope.jsonSchema = $scope.form.jsonSchema;
+            $scope.uiSchema = $scope.form.uiSchema;
+            $scope.uiSchema.label = null;
+            $scope.data = $scope.form.data;
+            originalData = _4.cloneDeep($scope.data);
+            originalDataString = JSON.stringify(originalData);
+            unwatchForm();
+          }
+        });
 
         function handleSetValue(field, value) {
           return function (result) {
@@ -382,13 +379,8 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
 
             if (_4.isEmpty(result.errors)) {
               $scope.comment = {text: null};
-              withOverlay(reloadApplicationProcess());
-              withOverlay(reloadJsonSchema());
-              withOverlay(reloadFundingCase());
-              if ($scope.onPostSubmit) {
-                $scope.$eval($scope.onPostSubmit);
-                //$scope.onPostSubmit(action);
-              }
+              $scope.$eval($scope.onPostSubmit);
+
               originalData = _4.cloneDeep($scope.data);
               originalDataString = JSON.stringify(originalData);
               $scope.isChanged = false;
