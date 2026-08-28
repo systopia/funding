@@ -37,9 +37,6 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         '$resourcesItem' => new JsonSchemaResourcesItem([
           'type' => 'teilnehmerbeitraege',
           'identifier' => 'teilnehmerbeitraege',
-          'clearing' => [
-            'itemLabel' => 'Teilnehmer*innenbeiträge',
-          ],
         ]),
       ]),
       // Abschnitt II.2
@@ -49,9 +46,6 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         '$resourcesItem' => new JsonSchemaResourcesItem([
           'type' => 'eigenmittel',
           'identifier' => 'eigenmittel',
-          'clearing' => [
-            'itemLabel' => 'Eigenmittel',
-          ],
         ]),
       ]),
       'spenden' => new JsonSchemaMoney([
@@ -60,9 +54,6 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
         '$resourcesItem' => new JsonSchemaResourcesItem([
           'type' => 'spenden',
           'identifier' => 'spenden',
-          'clearing' => [
-            'itemLabel' => 'Spenden',
-          ],
         ]),
       ]),
       // Eigenanteil
@@ -103,10 +94,6 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           '$resourcesItem' => new JsonSchemaResourcesItem([
             'type' => 'oeffentlicheMittel/europa',
             'identifier' => 'oeffentlicheMittel.europa',
-            'clearing' => [
-              'itemLabel' => 'Finanzierung durch Europa-Mittel',
-              'paymentPartyLabel' => 'Fördernde Stelle',
-            ],
           ]),
         ]),
         'bundeslaender' => new JsonSchemaMoney([
@@ -115,10 +102,6 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           '$resourcesItem' => new JsonSchemaResourcesItem([
             'type' => 'oeffentlicheMittel/bundeslaender',
             'identifier' => 'oeffentlicheMittel.bundeslaender',
-            'clearing' => [
-              'itemLabel' => 'Finanzierung durch Bundesländer',
-              'paymentPartyLabel' => 'Fördernde Stelle',
-            ],
           ]),
         ]),
         'staedteUndKreise' => new JsonSchemaMoney([
@@ -127,10 +110,6 @@ final class AVK1FinanzierungSchema extends JsonSchemaObject {
           '$resourcesItem' => new JsonSchemaResourcesItem([
             'type' => 'oeffentlicheMittel/staedteUndKreise',
             'identifier' => 'oeffentlicheMittel.staedteUndKreise',
-            'clearing' => [
-              'itemLabel' => 'Finanzierung durch Städte und Kreise',
-              'paymentPartyLabel' => 'Fördernde Stelle',
-            ],
           ]),
         ]),
       ]),

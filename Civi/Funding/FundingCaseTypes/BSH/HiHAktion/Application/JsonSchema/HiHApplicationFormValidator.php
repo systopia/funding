@@ -73,7 +73,6 @@ final class HiHApplicationFormValidator implements ApplicationFormValidatorInter
           'identifier' => $costItem->getIdentifier(),
           'amount' => $costItem->getAmount(),
           'properties' => $costItem->getProperties(),
-          'clearing' => NULL,
           'dataPointer' => $dataPointer,
           'dataType' => 'number',
         ]);

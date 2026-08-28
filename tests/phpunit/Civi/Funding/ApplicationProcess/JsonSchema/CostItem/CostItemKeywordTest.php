@@ -50,7 +50,6 @@ final class CostItemKeywordTest extends TestCase {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'foo',
             'identifier' => 'bar',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ]),
       ]),
@@ -78,7 +77,6 @@ final class CostItemKeywordTest extends TestCase {
           'identifier' => 'bar',
           'amount' => 123.45,
           'properties' => [],
-          'clearing' => ['itemLabel' => 'label'],
           'dataPointer' => '/costs/amount1',
           'dataType' => 'number',
         ]),
@@ -119,7 +117,6 @@ final class CostItemKeywordTest extends TestCase {
           'identifier' => 'bar',
           'amount' => 123.0,
           'properties' => [],
-          'clearing' => NULL,
           'dataPointer' => '/costs/amount1',
           'dataType' => 'integer',
         ]),
@@ -135,7 +132,6 @@ final class CostItemKeywordTest extends TestCase {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'foo',
             'identifier' => 'bar',
-            'clearing' => ['itemLabel' => 'label'],
           ]),
         ], TRUE),
       ]),

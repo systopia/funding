@@ -627,10 +627,6 @@ msgid "Clearing"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/Form/CostItem/ClearingCostItemsJsonFormsGenerator.php
-msgid "Payee"
-msgstr ""
-
-#: Civi/Funding/ClearingProcess/Form/CostItem/ClearingCostItemsJsonFormsGenerator.php
 msgid "Costs"
 msgstr ""
 
@@ -644,10 +640,6 @@ msgstr ""
 
 #: Civi/Funding/ClearingProcess/Form/ReceiptsFormGenerator.php
 msgid "Amount Cleared in %1"
-msgstr ""
-
-#: Civi/Funding/ClearingProcess/Form/ResourcesItem/ClearingResourcesItemsJsonFormsGenerator.php
-msgid "Payer"
 msgstr ""
 
 #: Civi/Funding/ClearingProcess/Form/ResourcesItem/ClearingResourcesItemsJsonFormsGenerator.php
@@ -1026,6 +1018,10 @@ msgstr ""
 msgid "BIC of recipient contact's bank account"
 msgstr ""
 
+#: Civi/Funding/FundingCaseType/MetaData/CostItemType.php
+msgid "Payee"
+msgstr ""
+
 #: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
 msgid "Apply"
 msgstr ""
@@ -1098,6 +1094,10 @@ msgstr ""
 msgid "Withdrawn"
 msgstr ""
 
+#: Civi/Funding/FundingCaseType/MetaData/ResourcesItemType.php
+msgid "Payer"
+msgstr ""
+
 #: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
 msgid "Request rework"
 msgstr ""
@@ -1142,7 +1142,7 @@ msgstr ""
 msgid "Rework in review"
 msgstr ""
 
-#: Civi/Funding/FundingCaseTypes/AdB/SammelantragKurs/KursMetaData.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: Civi/Funding/FundingCaseTypes/AdB/SammelantragKurs/KursMetaData.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php Civi/Funding/FundingCaseTypes/DVV/SammelantragKurs/KursMetaData.php ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
 msgstr ""
 

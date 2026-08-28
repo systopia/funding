@@ -41,9 +41,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'unterkunftUndVerpflegung',
           'identifier' => 'unterkunftUndVerpflegung',
-          'clearing' => [
-            'itemLabel' => 'Unterkunft und Verpflegung',
-          ],
         ]),
       ]),
       'honorare' => new JsonSchemaArray(
@@ -73,9 +70,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
             'type' => 'honorar',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'betrag',
-            'clearing' => [
-              'itemLabel' => 'Honorar {@pos}',
-            ],
           ]),
         ]
       ),
@@ -89,9 +83,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'fahrtkosten/flug',
             'identifier' => 'fahrtkosten.flug',
-            'clearing' => [
-              'itemLabel' => 'Fahrt-/Flugkosten inkl. Transfer zur Unterkunft',
-            ],
           ]),
         ]),
         'anTeilnehmerErstattet' => new JsonSchemaMoney([
@@ -100,9 +91,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'fahrtkosten/anTeilnehmerErstattet',
             'identifier' => 'fahrtkosten.anTeilnehmerErstattet',
-            'clearing' => [
-              'itemLabel' => 'An Teilnehmer*innen erstattete Fahrtkosten',
-            ],
           ]),
         ]),
       ]),
@@ -117,9 +105,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'programmkosten/programmkosten',
             'identifier' => 'programmkosten.programmkosten',
-            'clearing' => [
-              'itemLabel' => 'Programmkosten',
-            ],
           ]),
         ]),
         'arbeitsmaterial' => new JsonSchemaMoney([
@@ -128,9 +113,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'programmkosten/arbeitsmaterial',
             'identifier' => 'programmkosten.arbeitsmaterial',
-            'clearing' => [
-              'itemLabel' => 'Arbeitsmaterial',
-            ],
           ]),
         ]),
         'fahrt' => new JsonSchemaMoney([
@@ -139,9 +121,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'programmkosten/fahrt',
             'identifier' => 'programmkosten.fahrt',
-            'clearing' => [
-              'itemLabel' => 'Programmfahrtkosten',
-            ],
           ]),
         ]),
       ]),
@@ -165,9 +144,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
             'type' => 'sonstigeKosten',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'betrag',
-            'clearing' => [
-              'itemLabel' => 'Sonstige Kosten {@pos}',
-            ],
           ]),
         ]
       ),
@@ -189,9 +165,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
             'type' => 'sonstigeAusgabe',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'betrag',
-            'clearing' => [
-              'itemLabel' => 'Sonstige Ausgabe {@pos}',
-            ],
           ]),
         ]
       ),
@@ -207,9 +180,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'zuschlagsrelevanteKosten/programmabsprachen',
             'identifier' => 'zuschlagsrelevanteKosten.programmabsprachen',
-            'clearing' => [
-              'itemLabel' => 'Programmabsprachen (Telefon, Porto, Kopien, Internet etc.)',
-            ],
           ]),
         ]),
         'vorbereitungsmaterial' => new JsonSchemaMoney([
@@ -218,9 +188,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'zuschlagsrelevanteKosten/vorbereitungsmaterial',
             'identifier' => 'zuschlagsrelevanteKosten.vorbereitungsmaterial',
-            'clearing' => [
-              'itemLabel' => 'Erstellung von Vorbereitungsmaterial',
-            ],
           ]),
         ]),
         'veroeffentlichungen' => new JsonSchemaMoney([
@@ -229,10 +196,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'zuschlagsrelevanteKosten/veroeffentlichungen',
             'identifier' => 'zuschlagsrelevanteKosten.veroeffentlichungen',
-            'clearing' => [
-              'itemLabel' => 'Veröffentlichungen, Publikationen, Videos, Fotos etc. als
-              Dokumentation der Ergebnisse und für die Öffentlichkeitsarbeit',
-            ],
           ]),
         ]),
         'honorare' => new JsonSchemaMoney([
@@ -241,9 +204,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'zuschlagsrelevanteKosten/honorare',
             'identifier' => 'zuschlagsrelevanteKosten.honorare',
-            'clearing' => [
-              'itemLabel' => 'Honorare für Vorträge, die der Vorbereitung der Gruppe dienen (nur im Inland)',
-            ],
           ]),
         ]),
         'fahrtkostenUndVerpflegung' => new JsonSchemaMoney([
@@ -252,9 +212,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'zuschlagsrelevanteKosten/fahrtkostenUndVerpflegung',
             'identifier' => 'zuschlagsrelevanteKosten.fahrtkostenUndVerpflegung',
-            'clearing' => [
-              'itemLabel' => 'Fahrtkosten und Verpflegung, ggf. Übernachtung bei überregionaler TN-Zusammensetzung',
-            ],
           ]),
         ]),
         'reisekosten' => new JsonSchemaMoney([
@@ -263,9 +220,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'zuschlagsrelevanteKosten/reisekosten',
             'identifier' => 'zuschlagsrelevanteKosten.reisekosten',
-            'clearing' => [
-              'itemLabel' => 'Reise-/Fahrtkosten für interne Koordination und Organisation der Vor- und Nachbereitung',
-            ],
           ]),
         ]),
         'miete' => new JsonSchemaMoney([
@@ -274,9 +228,6 @@ final class IJBKostenJsonSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'zuschlagsrelevanteKosten/miete',
             'identifier' => 'zuschlagsrelevanteKosten.miete',
-            'clearing' => [
-              'itemLabel' => 'Raum-, Materialmiete (techn. Geräte, Beamer, Flipchart etc.)',
-            ],
           ]),
         ]),
       ]),

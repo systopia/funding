@@ -38,11 +38,9 @@ final class JsonSchemaStringExtractor {
    * @param array<string, true> $strings
    *
    * @param-out array<string, true> $strings
-   *
-   * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
    */
+  // phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
   private function doExtractStrings(array &$strings, JsonSchema $schema): void {
-  // phpcs:enable
     $validations = $schema['$validations'];
     if (is_array($validations)) {
       foreach ($validations as $validation) {
@@ -71,13 +69,6 @@ final class JsonSchemaStringExtractor {
           $this->doExtractStrings($strings, $property);
         }
       }
-    }
-
-    $financePlanItem = $schema['$costItem'] ?? $schema['$costItems']
-      ?? $schema['$resourcesItem'] ?? $schema['$resourcesItems'];
-    $financePlanItemClearing = $financePlanItem['clearing'] ?? NULL;
-    if ($financePlanItemClearing instanceof JsonSchema) {
-      StringExtractUtil::addStrings($strings, $financePlanItemClearing, ['itemLabel', 'recipientLabel']);
     }
   }
 

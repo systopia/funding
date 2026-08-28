@@ -64,12 +64,36 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getCostItemTypes(): array {
     return $this->costItemTypes ??= [
-      'unterkunftUndVerpflegung' => new CostItemType('unterkunftUndVerpflegung', 'Unterkunft und Verpflegung'),
-      'honorar' => new CostItemType('honorar', 'Honorar'),
-      'fahrtkosten/teilnehmer' => new CostItemType('fahrtkosten/intern', 'Fahrtkosten Teilnehmer*innen'),
-      'fahrtkosten/referenten' => new CostItemType('fahrtkosten/referenten', 'Fahrtkosten Referent*innen'),
-      'sachkosten/ausstattung' => new CostItemType('sachkosten/ausstattung', 'Sachkosten'),
-      'sonstigeAusgabe' => new CostItemType('sonstigeAusgabe', 'Sonstige Ausgabe'),
+      'unterkunftUndVerpflegung' => new CostItemType([
+        'name' => 'unterkunftUndVerpflegung',
+        'label' => 'Unterkunft und Verpflegung',
+        'clearable' => TRUE,
+      ]),
+      'honorar' => new CostItemType([
+        'name' => 'honorar',
+        'label' => 'Honorar',
+        'clearable' => TRUE,
+      ]),
+      'fahrtkosten/teilnehmer' => new CostItemType([
+        'name' => 'fahrtkosten/teilnehmer',
+        'label' => 'Fahrtkosten Teilnehmer*innen',
+        'clearable' => TRUE,
+      ]),
+      'fahrtkosten/referenten' => new CostItemType([
+        'name' => 'fahrtkosten/referenten',
+        'label' => 'Fahrtkosten Referent*innen',
+        'clearable' => TRUE,
+      ]),
+      'sachkosten/ausstattung' => new CostItemType([
+        'name' => 'sachkosten/ausstattung',
+        'label' => 'Sachkosten',
+        'clearable' => TRUE,
+      ]),
+      'sonstigeAusgabe' => new CostItemType([
+        'name' => 'sonstigeAusgabe',
+        'label' => 'Sonstige Ausgabe',
+        'clearable' => TRUE,
+      ]),
     ];
   }
 
@@ -85,21 +109,39 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getResourcesItemTypes(): array {
     return $this->resourcesItemTypes ??= [
-      'teilnehmerbeitraege' => new ResourcesItemType('teilnehmerbeitraege', 'Teilnehmer*innenbeiträge'),
-      'eigenmittel' => new ResourcesItemType('eigenmittel', 'Eigenmittel'),
-      'spenden' => new ResourcesItemType('spenden', 'Spenden'),
-      'oeffentlicheMittel/europa' => new ResourcesItemType(
-        'oeffentlicheMittel/europa',
-        'Finanzierung durch Europa-Mittel'
-      ),
-      'oeffentlicheMittel/bundeslaender' => new ResourcesItemType(
-        'oeffentlicheMittel/bundeslaender',
-        'Finanzierung durch Bundesländer'
-      ),
-      'oeffentlicheMittel/staedteUndKreise' => new ResourcesItemType(
-        'oeffentlicheMittel/staedteUndKreise',
-        'Finanzierung durch Städte und Kreise'
-      ),
+      'teilnehmerbeitraege' => new ResourcesItemType([
+        'name' => 'teilnehmerbeitraege',
+        'label' => 'Teilnehmer*innenbeiträge',
+        'clearable' => TRUE,
+      ]),
+      'eigenmittel' => new ResourcesItemType([
+        'name' => 'eigenmittel',
+        'label' => 'Eigenmittel',
+        'clearable' => TRUE,
+      ]),
+      'spenden' => new ResourcesItemType([
+        'name' => 'spenden',
+        'label' => 'Spenden',
+        'clearable' => TRUE,
+      ]),
+      'oeffentlicheMittel/europa' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/europa',
+        'label' => 'Finanzierung durch Europa-Mittel',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'oeffentlicheMittel/bundeslaender' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/bundeslaender',
+        'label' => 'Finanzierung durch Bundesländer',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
+      'oeffentlicheMittel/staedteUndKreise' => new ResourcesItemType([
+        'name' => 'oeffentlicheMittel/staedteUndKreise',
+        'label' => 'Finanzierung durch Städte und Kreise',
+        'clearable' => TRUE,
+        'paymentPartyLabel' => 'Fördernde Stelle',
+      ]),
     ];
   }
 

@@ -144,7 +144,6 @@ final class ApplicationResourcesItemsSubscriberTest extends TestCase {
       'properties' => [],
       'dataPointer' => '/foo',
       'dataType' => 'number',
-      'clearing' => NULL,
     ]);
   }
 

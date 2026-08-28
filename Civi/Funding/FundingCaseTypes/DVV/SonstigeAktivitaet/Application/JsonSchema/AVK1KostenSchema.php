@@ -43,9 +43,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'unterkunftUndVerpflegung',
           'identifier' => 'unterkunftUndVerpflegung',
-          'clearing' => [
-            'itemLabel' => 'Unterkunft und Verpflegung',
-          ],
         ]),
       ]),
       // Abschnitt I.2
@@ -76,9 +73,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
             'type' => 'honorar',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'betrag',
-            'clearing' => [
-              'itemLabel' => 'Honorar {@pos}',
-            ],
           ]),
         ]
       ),
@@ -93,9 +87,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'fahrtkosten/teilnehmer',
             'identifier' => 'fahrtkosten.teilnehmer',
-            'clearing' => [
-              'itemLabel' => 'Fahrtkosten Teilnehmer*innen',
-            ],
           ]),
         ]),
         'referenten' => new JsonSchemaMoney([
@@ -104,9 +95,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
           '$costItem' => new JsonSchemaCostItem([
             'type' => 'fahrtkosten/referenten',
             'identifier' => 'fahrtkosten.referenten',
-            'clearing' => [
-              'itemLabel' => 'Fahrtkosten Referent*innen',
-            ],
           ]),
         ]),
       ]),
@@ -127,9 +115,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
               'type' => 'sachkosten/ausstattung',
               'identifierProperty' => '_identifier',
               'amountProperty' => 'betrag',
-              'clearing' => [
-                'itemLabel' => 'Sachkosten {@pos}',
-              ],
             ]),
           ]
         ),
@@ -153,9 +138,6 @@ final class AVK1KostenSchema extends JsonSchemaObject {
             'type' => 'sonstigeAusgabe',
             'identifierProperty' => '_identifier',
             'amountProperty' => 'betrag',
-            'clearing' => [
-              'itemLabel' => 'Sonstige Ausgabe {@pos}',
-            ],
           ]),
         ]
       ),

@@ -22,7 +22,7 @@ namespace Civi\Funding\FundingCaseType\MetaData;
 
 /**
  * @phpstan-type applicationProcessActionT array{
- *   name: string,
+ *   name: non-empty-string,
  *   label: string,
  *   confirmMessage?: string|null,
  *   batchPossible?: bool,
@@ -59,6 +59,9 @@ final class ApplicationProcessAction {
     $this->values = $values;
   }
 
+  /**
+   * @return non-empty-string
+   */
   public function getName(): string {
     return $this->values['name'];
   }

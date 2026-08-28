@@ -59,8 +59,17 @@ final class DvvPersonalkostenMetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getCostItemTypes(): array {
     return [
-      'personalkosten' => new CostItemType('personalkosten', 'Personalkosten'),
-      'sachkosten' => new CostItemType('sachkosten', 'Sachkostenpauschale'),
+      'personalkosten' => new CostItemType([
+        'name' => 'personalkosten',
+        'label' => 'Personalkosten',
+        'clearable' => TRUE,
+        'clearingLabel' => 'Beantragte Personalkosten',
+      ]),
+      'sachkosten' => new CostItemType([
+        'name' => 'sachkosten',
+        'label' => 'Sachkostenpauschale',
+        'clearable' => TRUE,
+      ]),
     ];
   }
 

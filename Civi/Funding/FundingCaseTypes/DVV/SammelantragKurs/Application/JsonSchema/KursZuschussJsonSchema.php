@@ -54,9 +54,6 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'teilnehmerkosten',
           'identifier' => 'teilnehmerkosten',
-          'clearing' => [
-            'itemLabel' => 'Unterkunft und Verpflegung',
-          ],
         ]),
       ], TRUE),
       'fahrtkostenMax' => new JsonSchemaCalculate(
@@ -76,9 +73,6 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'fahrtkosten',
           'identifier' => 'fahrtkosten',
-          'clearing' => [
-            'itemLabel' => 'Fahrtkosten',
-          ],
         ]),
       ], TRUE),
       'honorarkostenMax' => new JsonSchemaCalculate(
@@ -99,9 +93,6 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'honorarkosten',
           'identifier' => 'honorarkosten',
-          'clearing' => [
-            'itemLabel' => 'Honorarkosten',
-          ],
         ]),
       ], TRUE),
       // Not displayed, but used to have a cost item so receipts for previously
@@ -112,9 +103,6 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'sonstigeAusgaben',
           'identifier' => 'sonstigeAusgaben',
-          'clearing' => [
-            'itemLabel' => 'Sonstige Ausgaben',
-          ],
         ]),
       ]),
       'gesamtMax' => new JsonSchemaCalculate(

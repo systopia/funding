@@ -63,7 +63,11 @@ final class TestCaseTypeMetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getCostItemTypes(): array {
     return $this->costItemTypes ??= [
-      'amount' => new CostItemType('amount', 'Amount requested'),
+      'amount' => new CostItemType([
+        'name' => 'amount',
+        'label' => 'Amount requested',
+        'clearable' => TRUE,
+      ]),
     ];
   }
 
@@ -79,7 +83,11 @@ final class TestCaseTypeMetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getResourcesItemTypes(): array {
     return $this->resourcesItemTypes ??= [
-      'testResources' => new ResourcesItemType('testResources', 'Test resources'),
+      'testResources' => new ResourcesItemType([
+        'name' => 'testResources',
+        'label' => 'Test resources',
+        'clearable' => TRUE,
+      ]),
     ];
   }
 

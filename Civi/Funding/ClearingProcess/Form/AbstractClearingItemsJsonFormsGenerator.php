@@ -29,11 +29,13 @@ use Civi\Funding\Form\JsonFormsFormInterface;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsElement;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCloseableGroup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTable;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTableRow;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -197,6 +199,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
     foreach ($group->elements as $scope => $applicationFormElement) {
       $applicationPropertySchema = $clearableItems[$scope]->propertySchema;
       $financePlanItemSchema = $clearableItems[$scope]->financePlanItemSchema;
+      $financePlanItemType = $clearableItems[$scope]->financePlanItemType;
       $items = $clearableItems[$scope]->items;
 
       foreach ($items as $index => $item) {
@@ -243,12 +246,18 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
           ),
         ], ['required' => ['records'], 'additionalProperties' => FALSE]);
 
-        $itemLabel = $financePlanItemSchema->getKeywordValueAt('clearing/itemLabel');
-        Assert::string($itemLabel);
+        $itemLabel = $financePlanItemType->getClearingLabel();
 
         // If the group label is NULL, it contains only one item and its label
         // shall be used as group label.
         $group->label ??= $itemLabel;
+
+        if ('array' === $applicationPropertySchema->getKeywordValue('type')) {
+          // Append item index + 1 to item label.
+          if (!str_contains($itemLabel, '{@pos')) {
+            $itemLabel .= ' {@pos}';
+          }
+        }
 
         $groupElements[] = new JsonFormsTable(
           [
@@ -258,7 +267,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
             E::ts('Amount Admitted in %1', [1 => $currency]),
           ], [
             new JsonFormsTableRow([
-              new JsonFormsMarkup($this->formatLabel($itemLabel, $index)),
+              $this->createLabelElement($itemLabel, $index),
               new JsonFormsMarkup($this->format->money($item->getAmount(), $currency)),
               new JsonFormsControl(sprintf(
                 '#/properties/%s/properties/%s/properties/amountRecordedTotal',
@@ -283,10 +292,6 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
           );
         }
 
-        /** @var string $paymentPartyLabel */
-        $paymentPartyLabel = $financePlanItemSchema['clearing']['paymentPartyLabel']
-          ?? $this->getPaymentPartyLabel();
-
         $groupElements[] =
           new JsonFormsCloseableGroup(E::ts('Receipts'), [
             new JsonFormsArray(
@@ -307,7 +312,7 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
                   '#/properties/paymentDate',
                   str_replace('/', "/\u{200B}", E::ts('Payment/Posting Date'))
                 ),
-                new JsonFormsControl('#/properties/paymentParty', $paymentPartyLabel),
+                new JsonFormsControl('#/properties/paymentParty', $financePlanItemType->getPaymentPartyLabel()),
                 new JsonFormsControl(
                   '#/properties/reason',
                   str_replace('/', "/\u{200B}", E::ts('Reason for Payment/Payment Reference'))
@@ -325,14 +330,24 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
     $this->formElements[] = new JsonFormsGroup($group->label, $groupElements);
   }
 
-  abstract protected function getPaymentPartyLabel(): string;
-
   abstract protected function getPropertyKeyword(): string;
 
   abstract protected function getTitle(): string;
 
-  private function formatLabel(string $itemLabel, int $index): string {
-    return str_replace('{@pos}', (string) ($index + 1), $itemLabel);
+  private function createLabelElement(string $itemLabel, int $index): JsonFormsElement {
+    if (str_contains($itemLabel, '{@pos')) {
+      // Make form translation possible.
+      return new JsonFormsElement(
+      'Markup', [
+        'content' => JsonSchema::fromArray([
+          'text' => $itemLabel,
+          'values' => ['@pos' => $index + 1],
+        ]),
+        'contentMediaType' => 'text/html',
+      ]);
+    }
+
+    return new JsonFormsMarkup($itemLabel);
   }
 
 }
