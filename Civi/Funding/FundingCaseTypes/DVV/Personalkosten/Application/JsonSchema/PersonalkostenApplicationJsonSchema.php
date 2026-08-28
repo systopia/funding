@@ -96,9 +96,6 @@ final class PersonalkostenApplicationJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'personalkosten',
           'identifier' => 'personalkosten',
-          'clearing' => [
-            'itemLabel' => 'Beantragte Personalkosten',
-          ],
         ]),
       ]),
       'sachkostenpauschale' => new JsonSchemaMoney([
@@ -107,9 +104,6 @@ final class PersonalkostenApplicationJsonSchema extends JsonSchemaObject {
         '$costItem' => new JsonSchemaCostItem([
           'type' => 'sachkostenpauschale',
           'identifier' => 'sachkostenpauschale',
-          'clearing' => [
-            'itemLabel' => 'Sachkostenpauschale',
-          ],
         ]),
       ]),
       // Store in request data to know which Förderquote was applied for application snapshot.

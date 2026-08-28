@@ -21,6 +21,9 @@ namespace Civi\Funding\ClearingProcess\Form\CostItem;
 
 use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ClearingProcess\Form\AbstractClearableItemsLoader;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
+use Civi\Funding\FundingCaseType\MetaData\FinancePlanItemTypeInterface;
+use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -28,8 +31,12 @@ use Psr\Log\LoggerInterface;
  */
 class ClearableCostItemsLoader extends AbstractClearableItemsLoader {
 
-  public function __construct(ApplicationCostItemManager $itemManager, LoggerInterface $logger) {
-    parent::__construct($itemManager, $logger);
+  public function __construct(
+    ApplicationCostItemManager $itemManager,
+    LoggerInterface $logger,
+    FundingCaseTypeMetaDataProviderInterface $metaDataProvider
+  ) {
+    parent::__construct($itemManager, $logger, $metaDataProvider);
   }
 
   protected function getFinancePlanArrayItemKeyword(): string {
@@ -38,6 +45,13 @@ class ClearableCostItemsLoader extends AbstractClearableItemsLoader {
 
   protected function getFinancePlanNumberItemKeyword(): string {
     return '$costItem';
+  }
+
+  protected function getFinancePlanItemMetaData(
+    FundingCaseTypeMetaDataInterface $fundingCaseTypeMetaData,
+    string $type
+  ): ?FinancePlanItemTypeInterface {
+    return $fundingCaseTypeMetaData->getCostItemType($type);
   }
 
 }

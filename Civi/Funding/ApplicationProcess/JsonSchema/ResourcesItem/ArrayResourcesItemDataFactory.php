@@ -32,8 +32,6 @@ use Webmozart\Assert\Assert;
 
 /**
  * ResourcesItemData factory for array items.
- *
- * @phpstan-type clearingT array{itemLabel: string}
  */
 final class ArrayResourcesItemDataFactory {
 
@@ -49,11 +47,6 @@ final class ArrayResourcesItemDataFactory {
   private string $amountProperty;
 
   private ExpressionVariablesContainer $propertiesContainer;
-
-  /**
-   * @phpstan-var clearingT|null
-   */
-  private ?array $clearing;
 
   /**
    * @param \stdClass $arraySchema
@@ -109,9 +102,7 @@ final class ArrayResourcesItemDataFactory {
     }
     $propertiesContainer = ExpressionVariablesContainer::parse((object) $properties, $parser);
 
-    $clearing = self::parseClearing($resourcesItemsSchema);
-
-    return new self($resourcesItemsSchema->type, $identifierProperty, $amountProperty, $propertiesContainer, $clearing);
+    return new self($resourcesItemsSchema->type, $identifierProperty, $amountProperty, $propertiesContainer);
   }
 
   private static function getPropertyDataType(\stdClass $properties, string $propertyName): ?string {
@@ -128,25 +119,6 @@ final class ArrayResourcesItemDataFactory {
     return is_string($dataType) ? $dataType : NULL;
   }
 
-  /**
-   * @phpstan-return clearingT|null
-   *
-   * @throws \Opis\JsonSchema\Exceptions\ParseException
-   */
-  private static function parseClearing(\stdClass $data): ?array {
-    if (!property_exists($data, 'clearing')) {
-      return NULL;
-    }
-
-    if (!self::propertyIsNonEmptyString($data->clearing, 'itemLabel')) {
-      throw new ParseException('If clearing is enabled, an item label has to be set');
-    }
-
-    return [
-      'itemLabel' => $data->clearing->itemLabel,
-    ];
-  }
-
   private static function propertyIsNonEmptyString(\stdClass $data, string $propertyName): bool {
     return property_exists($data, $propertyName)
       && is_string($data->{$propertyName})
@@ -155,21 +127,17 @@ final class ArrayResourcesItemDataFactory {
 
   /**
    * @phpstan-param non-empty-string $type
-   * @phpstan-param clearingT|null $clearing
-   *   NULL if no clearing is required.
    */
   private function __construct(
     string $type,
     string $identifierProperty,
     string $amountProperty,
     ExpressionVariablesContainer $propertiesContainer,
-    ?array $clearing
   ) {
     $this->type = $type;
     $this->identifierProperty = $identifierProperty;
     $this->amountProperty = $amountProperty;
     $this->propertiesContainer = $propertiesContainer;
-    $this->clearing = $clearing;
   }
 
   /**
@@ -210,7 +178,6 @@ final class ArrayResourcesItemDataFactory {
       'identifier' => $identifier,
       'amount' => (float) $amount,
       'properties' => $properties,
-      'clearing' => $this->clearing,
       'dataPointer' => $dataPointer,
       'dataType' => $dataType,
     ]);

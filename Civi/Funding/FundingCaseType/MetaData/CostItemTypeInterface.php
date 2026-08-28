@@ -19,10 +19,5 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseType\MetaData;
 
-interface CostItemTypeInterface {
-
-  public function getName(): string;
-
-  public function getLabel(): string;
-
+interface CostItemTypeInterface extends FinancePlanItemTypeInterface {
 }

@@ -34,10 +34,6 @@ final class JsonSchemaCostItem extends JsonSchema {
    * @phpstan-param array{
    *   type: non-empty-string,
    *   identifier: non-empty-string,
-   *   clearing?: array{
-   *     itemLabel: non-empty-string,
-   *     paymentPartyLabel?: non-empty-string,
-   *   },
    * } $config
    */
   public function __construct(array $config) {
@@ -47,13 +43,7 @@ final class JsonSchemaCostItem extends JsonSchema {
       );
     }
 
-    $keywords = $config;
-    if (isset($keywords['clearing'])) {
-      $keywords['clearing'] = JsonSchema::fromArray($keywords['clearing']);
-    }
-
-    // @phpstan-ignore-next-line 'clearing' is now of type JsonSchema
-    parent::__construct($keywords);
+    parent::__construct($config);
   }
 
 }

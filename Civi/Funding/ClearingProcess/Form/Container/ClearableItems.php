@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Form\Container;
 
+use Civi\Funding\FundingCaseType\MetaData\FinancePlanItemTypeInterface;
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 /**
@@ -26,30 +27,15 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
  */
 final class ClearableItems {
 
-  public string $scope;
-
-  public JsonSchema $propertySchema;
-
-  public JsonSchema $financePlanItemSchema;
-
   /**
-   * @phpstan-var array<T>
-   */
-  public array $items;
-
-  /**
-   * @phpstan-param array<T> $items
+   * @param array<T> $items
    */
   public function __construct(
-    string $scope,
-    JsonSchema $propertySchema,
-    JsonSchema $financePlanItemSchema,
-    array $items = []
-  ) {
-    $this->scope = $scope;
-    $this->propertySchema = $propertySchema;
-    $this->financePlanItemSchema = $financePlanItemSchema;
-    $this->items = $items;
-  }
+    public string $scope,
+    public JsonSchema $propertySchema,
+    public JsonSchema $financePlanItemSchema,
+    public FinancePlanItemTypeInterface $financePlanItemType,
+    public array $items = []
+  ) {}
 
 }

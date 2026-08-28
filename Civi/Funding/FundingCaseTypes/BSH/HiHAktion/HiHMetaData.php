@@ -127,20 +127,62 @@ final class HiHMetaData extends AbstractFundingCaseTypeMetaData {
    */
   public function getCostItemTypes(): array {
     return $this->costItemTypes ??= [
-      'personalkosten' => new CostItemType('personalkosten', 'Personalkosten'),
-      'honorar' => new CostItemType('honorar', 'Honorar'),
-      'sachkosten.materialien' => new CostItemType('sachkosten.materialien', 'Sachkosten (Materialien)'),
-      'sachkosten.ehrenamtspauschalen' => new CostItemType(
-        'sachkosten.ehrenamtspauschalen', 'Sachkosten (Ehrenamtspauschalen)'
-      ),
-      'sachkosten.verpflegung' => new CostItemType('sachkosten.verpflegung', 'Sachkosten (Verpflegung)'),
-      'sachkosten.fahrtkosten' => new CostItemType('sachkosten.fahrtkosten', 'Sachkosten (Fahrtkosten)'),
-      'sachkosten.oeffentlichkeitsarbeit' => new CostItemType(
-        'sachkosten.oeffentlichkeitsarbeit', 'Sachkosten (Öffentlichkeitsarbeit)'
-      ),
-      'sachkosten.investitionen' => new CostItemType('sachkosten.investitionen', 'Sachkosten (Investitionen)'),
-      'sachkosten.mieten' => new CostItemType('sachkosten.mieten', 'Sachkosten (Mieten)'),
-      'sachkosten.sonstige' => new CostItemType('sachkosten.sonstige', 'Sachkosten (Sonstige)'),
+      'personalkosten' => new CostItemType([
+        'name' => 'personalkosten',
+        'label' => 'Personalkosten',
+        'clearable' => FALSE,
+      ]),
+      'honorar' => new CostItemType([
+        'name' => 'honorar',
+        'label' => 'Honorar',
+        'clearable' => FALSE,
+      ]),
+      'sachkosten.materialien' => new CostItemType([
+        'name' => 'sachkosten.materialien',
+        'label' => 'Sachkosten (Materialien)',
+        'clearable' => FALSE,
+      ]),
+      'sachkosten.ehrenamtspauschalen' => new CostItemType([
+        'name' => 'sachkosten.ehrenamtspauschalen',
+        'label' => 'Sachkosten (Ehrenamtspauschalen)',
+        'clearable' => FALSE,
+      ]),
+      'sachkosten.verpflegung' => new CostItemType([
+        'name' => 'sachkosten.verpflegung',
+        'label' => 'Sachkosten (Verpflegung)',
+        'clearable' => FALSE,
+      ]),
+      'sachkosten.fahrtkosten' => new CostItemType([
+        'name' => 'sachkosten.fahrtkosten',
+        'label' => 'Sachkosten (Fahrtkosten)',
+        'clearable' => FALSE,
+      ]),
+      'sachkosten.oeffentlichkeitsarbeit' => new CostItemType([
+        'name' => 'sachkosten.oeffentlichkeitsarbeit',
+        'label' => 'Sachkosten (Öffentlichkeitsarbeit)',
+        'clearable' => FALSE,
+      ]),
+      'sachkosten.investitionen' => new CostItemType([
+        'name' => 'sachkosten.investitionen',
+        'label' => 'Sachkosten (Investitionen)',
+        'clearable' => FALSE,
+      ]),
+      'sachkosten.mieten' => new CostItemType([
+        'name' => 'sachkosten.mieten',
+        'label' => 'Sachkosten (Mieten)',
+        'clearable' => FALSE,
+      ]),
+      'sachkosten.sonstige' => new CostItemType([
+        'name' => 'sachkosten.sonstige',
+        'label' => 'Sachkosten (Sonstige)',
+        'clearable' => FALSE,
+      ]),
+      // Special type used in JSON schema only for admins only.
+      'bewilligt' => new CostItemType([
+        'name' => 'bewilligt',
+        'label' => 'Bewilligt',
+        'clearable' => TRUE,
+      ]),
     ];
   }
 

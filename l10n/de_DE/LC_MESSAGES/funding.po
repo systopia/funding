@@ -1065,10 +1065,6 @@ msgid "Clearing"
 msgstr "Verwendungsnachweis"
 
 #: Civi/Funding/ClearingProcess/Form/CostItem/ClearingCostItemsJsonFormsGenerator.php
-msgid "Payee"
-msgstr "Zahlungsempfänger*in"
-
-#: Civi/Funding/ClearingProcess/Form/CostItem/ClearingCostItemsJsonFormsGenerator.php
 msgid "Costs"
 msgstr "Kosten"
 
@@ -1085,10 +1081,6 @@ msgstr "Nein"
 #: Civi/Funding/ClearingProcess/Form/ReceiptsFormGenerator.php
 msgid "Amount Cleared in %1"
 msgstr "Abgerechneter Betrag in %1"
-
-#: Civi/Funding/ClearingProcess/Form/ResourcesItem/ClearingResourcesItemsJsonFormsGenerator.php
-msgid "Payer"
-msgstr "Zahlende*r"
 
 #: Civi/Funding/ClearingProcess/Form/ResourcesItem/ClearingResourcesItemsJsonFormsGenerator.php
 msgid "Resources"
@@ -1545,6 +1537,10 @@ msgstr "Bankkontoreferenz (z. B. IBAN) des Bankkontos des Empfängerkontakts"
 msgid "BIC of recipient contact's bank account"
 msgstr "BIC des Bankkontos des Empfängerkontakts"
 
+#: Civi/Funding/FundingCaseType/MetaData/CostItemType.php
+msgid "Payee"
+msgstr "Zahlungsempfänger*in"
+
 #: Civi/Funding/FundingCaseType/MetaData/DefaultApplicationProcessActions.php
 msgid "Apply"
 msgstr "Beantragen"
@@ -1631,6 +1627,10 @@ msgstr "In Prüfung"
 msgid "Withdrawn"
 msgstr "Zurückgezogen"
 
+#: Civi/Funding/FundingCaseType/MetaData/ResourcesItemType.php
+msgid "Payer"
+msgstr "Zahlende*r"
+
 #: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
 msgid "Request rework"
 msgstr "Überarbeitung beantragen"
@@ -1681,6 +1681,7 @@ msgstr "Überarbeitung in Prüfung"
 
 #: Civi/Funding/FundingCaseTypes/AdB/SammelantragKurs/KursMetaData.php
 #: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php
+#: Civi/Funding/FundingCaseTypes/DVV/SammelantragKurs/KursMetaData.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
 msgstr "Wieder öffnen"
