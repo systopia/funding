@@ -69,6 +69,8 @@ class AVK1JsonSchemaTest extends TestCase {
 
     $data = [
       'grunddaten' => [
+        'schutzkonzept' => FALSE,
+        'keinSchutzkonzeptBegruendung' => 'abc',
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
         'internerBezeichner' => 'interne id',
@@ -244,6 +246,8 @@ class AVK1JsonSchemaTest extends TestCase {
 
     $data = [
       'grunddaten' => [
+        'schutzkonzept' => TRUE,
+        'keinSchutzkonzeptBegruendung' => '',
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
         'internerBezeichner' => 'interne id',
@@ -417,6 +421,57 @@ class AVK1JsonSchemaTest extends TestCase {
     static::assertCount(0, $partnerSchuleErrors);
     $artDerKooperationErrors = $errorCollector->getErrorsAt('/beschreibung/artDerKooperation');
     static::assertCount(0, $artDerKooperationErrors);
+  }
+
+  /**
+   * Test that grunddaten/keinSchutzkonzeptBegruendung is
+   * only required if grunddaten/schutzkonzept is false.
+   */
+  public function testSchutzkonzept(): void {
+    $possibleRecipients = [
+      1 => 'Organization 1',
+    ];
+    $jsonSchema = new AVK1JsonSchema(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      $possibleRecipients,
+    );
+
+    $validator = OpisValidatorFactory::getValidator();
+    $validator->setMaxErrors(20);
+
+    $data = (object) [
+      'grunddaten' => (object) [
+        'schutzkonzept' => FALSE,
+        'keinSchutzkonzeptBegruendung' => '',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $keinSchutzkonzeptBegruendungErrors = $errorCollector->getErrorsAt('/grunddaten/keinSchutzkonzeptBegruendung');
+    static::assertCount(1, $keinSchutzkonzeptBegruendungErrors);
+    static::assertSame('minLength', $keinSchutzkonzeptBegruendungErrors[0]->keyword());
+
+    $data = (object) [
+      'grunddaten' => (object) [
+        'mitSchuleKooperiert' => FALSE,
+        'keinSchutzkonzeptBegruendung' => '',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $keinSchutzkonzeptBegruendungErrors = $errorCollector->getErrorsAt('/grunddaten/keinSchutzkonzeptBegruendung');
+
+    $data = (object) [
+      'grunddaten' => (object) [
+        'schutzkonzept' => TRUE,
+        'keinSchutzkonzeptBegruendung' => '',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $keinSchutzkonzeptBegruendungErrors = $errorCollector->getErrorsAt('/grunddaten/keinSchutzkonzeptBegruendung');
+    static::assertCount(0, $keinSchutzkonzeptBegruendungErrors);
   }
 
   public function testNotAllowedDates(): void {

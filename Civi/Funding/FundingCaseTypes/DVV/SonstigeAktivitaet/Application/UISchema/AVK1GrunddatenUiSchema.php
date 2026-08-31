@@ -21,13 +21,34 @@ namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\UISch
 
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
 
   public function __construct(string $scopePrefix) {
     $elements = [
+      new JsonFormsControl(
+        "$scopePrefix/schutzkonzept",
+        'Schutzkonzept',
+        NULL,
+        ['format' => 'radio']
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/keinSchutzkonzeptBegruendung",
+        'Wir möchten trotzdem einen Antrag auf Förderung stellen, weil:',
+        NULL,
+        ['multi' => TRUE],
+        [
+          'rule' => new JsonFormsRule(
+            'SHOW',
+            "$scopePrefix/schutzkonzept",
+            JsonSchema::fromArray(['const' => FALSE])
+          ),
+        ]
+      ),
       new JsonFormsControl(
         "$scopePrefix/internerBezeichner",
         'Interner Bezeichner'

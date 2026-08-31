@@ -21,12 +21,14 @@ namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\JsonS
 
 use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class AVK1GrunddatenSchema extends JsonSchemaObject {
 
@@ -36,6 +38,24 @@ final class AVK1GrunddatenSchema extends JsonSchemaObject {
     bool $report = FALSE
   ) {
     $properties = [
+      'schutzkonzept' => new JsonSchemaBoolean([
+        'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
+          'Ja, unsere vhs hat ein Schutzkonzept für Kinder und Jugendliche gegen sexualisierte Gewalt.' => TRUE,
+          'Nein, wir haben kein Schutzkonzept.' => FALSE,
+        ]),
+      ]),
+      'keinSchutzkonzeptBegruendung' => new JsonSchemaString([
+        'minLength' => 1,
+        'maxLength' => 10000,
+        '$limitValidation' => JsonSchema::fromArray([
+          'condition' => [
+            'evaluate' => [
+              'expression' => 'schutzkonzept',
+              'variables' => ['schutzkonzept' => new JsonSchemaDataPointer('1/schutzkonzept')],
+            ],
+          ],
+        ]),
+      ]),
       'titel' => new JsonSchemaString([
         'minLength' => 1,
         '$limitValidation' => FALSE,
