@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\FundingCase\FundingCaseStatus;
@@ -34,43 +35,53 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     'eligible' => [
       'application_modify' => [],
-      'application_request_rework' => ['request-rework'],
+      'application_request_rework' => ['request-rework', 'add-applicant-comment'],
       'application_apply' => [],
       'application_withdraw' => [],
       'review_calculative' => [],
       'review_content' => [],
+      ClearingProcessPermissions::CLEARING_APPLY => [],
+      ClearingProcessPermissions::CLEARING_MODIFY => [],
     ],
     'rework-requested' => [
-      'application_modify' => [],
-      'application_request_rework' => ['withdraw-rework-request'],
-      'application_apply' => [],
+      'application_modify' => ['add-applicant-comment'],
+      'application_request_rework' => ['withdraw-rework-request', 'add-applicant-comment'],
+      'application_apply' => ['add-applicant-comment'],
       'application_withdraw' => [],
       'review_calculative' => ['approve-rework-request', 'reject-rework-request', 'add-comment'],
       'review_content' => ['approve-rework-request', 'reject-rework-request', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'rework' => [
-      'application_modify' => ['save'],
+      'application_modify' => ['save', 'add-applicant-comment'],
       'application_request_rework' => [],
-      'application_apply' => ['apply'],
+      'application_apply' => ['apply', 'add-applicant-comment'],
       'application_withdraw' => ['withdraw-change'],
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'rework-review-requested' => [
-      'application_modify' => ['request-rework'],
+      'application_modify' => ['request-rework', 'add-applicant-comment'],
       'application_request_rework' => [],
-      'application_apply' => [],
+      'application_apply' => ['add-applicant-comment'],
       'application_withdraw' => [],
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'rework-review' => [
-      'application_modify' => [],
+      'application_modify' => ['add-applicant-comment'],
       'application_request_rework' => [],
-      'application_apply' => [],
+      'application_apply' => ['add-applicant-comment'],
       'application_withdraw' => [],
       'review_calculative' => ['request-change', 'update', 'reject-change', 'add-comment', 'approve-calculative', 'reject-calculative'],
       'review_content' => ['request-change', 'update', 'reject-change', 'add-comment', 'approve-content', 'reject-content'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'complete' => [
       'application_modify' => [],
@@ -79,6 +90,8 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
       'application_withdraw' => [],
       'review_calculative' => [],
       'review_content' => [],
+      ClearingProcessPermissions::CLEARING_APPLY => [],
+      ClearingProcessPermissions::CLEARING_MODIFY => [],
     ],
   ];
   // phpcs:enable

@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
@@ -36,12 +37,13 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
       'application_apply' => ['apply'],
     ],
     'new' => [
-      'application_modify' => ['save'],
-      'application_apply' => ['apply'],
+      'application_modify' => ['save', 'add-applicant-comment'],
+      'application_apply' => ['apply', 'add-applicant-comment'],
       'application_withdraw' => ['delete'],
     ],
     'applied' => [
-      'application_modify' => ['modify'],
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['modify', 'add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
@@ -51,6 +53,8 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
       'review_content' => ['move-to-new-funding-case'],
     ],
     'review' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
       'review_calculative' => ['request-change', 'update', 'reject', 'add-comment'],
       'review_content' => ['request-change', 'update', 'reject', 'add-comment'],
     ],
@@ -59,25 +63,33 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
       'review_content' => ['move-to-new-funding-case'],
     ],
     'draft' => [
-      'application_modify' => ['save'],
-      'application_apply' => ['apply'],
+      'application_modify' => ['save', 'add-applicant-comment'],
+      'application_apply' => ['apply', 'add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
     ],
     'eligible' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'open&eligible' => [
       'review_calculative' => ['move-to-new-funding-case'],
       'review_content' => ['move-to-new-funding-case'],
     ],
     'complete' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
   ];
 

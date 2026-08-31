@@ -36,6 +36,8 @@ final class ActivityTypeNames {
 
   public const FUNDING_APPLICATION_STATUS_CHANGE = 'funding_application_status_change';
 
+  public const FUNDING_APPLICATION_COMMENT_APPLICANT = 'funding_application_comment_applicant';
+
   public const FUNDING_APPLICATION_COMMENT_INTERNAL = 'funding_application_comment_internal';
 
   public const FUNDING_APPLICATION_REVIEW_STATUS_CHANGE = 'funding_application_review_status_change';

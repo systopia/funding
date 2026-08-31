@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\AbstractRemoteFundingHeadlessTestCase;
-use Civi\Funding\ActivityTypeIds;
+use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Fixtures\ActivityFixture;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -67,31 +67,37 @@ final class RemoteFundingApplicationProcessActivityTest extends AbstractRemoteFu
 
     $createActivity = ActivityFixture::addApplicationProcessFixture(
       $applicationProcess->getId(),
-      ActivityTypeIds::FUNDING_APPLICATION_CREATE,
+      ActivityTypeNames::FUNDING_APPLICATION_CREATE,
       $creationContact['id']
     );
 
     $statusChangeActivity = ActivityFixture::addApplicationProcessFixture(
       $applicationProcess->getId(),
-      ActivityTypeIds::FUNDING_APPLICATION_STATUS_CHANGE,
+      ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE,
       $creationContact['id']
+    );
+
+    $applicantCommentActivity = ActivityFixture::addApplicationProcessFixture(
+      $applicationProcess->getId(),
+      ActivityTypeNames::FUNDING_APPLICATION_COMMENT_APPLICANT,
+      $contact['id']
     );
 
     $externalCommentActivity = ActivityFixture::addApplicationProcessFixture(
       $applicationProcess->getId(),
-      ActivityTypeIds::FUNDING_APPLICATION_COMMENT_EXTERNAL,
+      ActivityTypeNames::FUNDING_APPLICATION_COMMENT_EXTERNAL,
       $contact['id']
     );
 
     ActivityFixture::addApplicationProcessFixture(
       $applicationProcess->getId(),
-      ActivityTypeIds::FUNDING_APPLICATION_COMMENT_INTERNAL,
+      ActivityTypeNames::FUNDING_APPLICATION_COMMENT_INTERNAL,
       $contact['id']
     );
 
     ActivityFixture::addApplicationProcessFixture(
       $applicationProcess->getId(),
-      ActivityTypeIds::FUNDING_APPLICATION_REVIEW_STATUS_CHANGE,
+      ActivityTypeNames::FUNDING_APPLICATION_REVIEW_STATUS_CHANGE,
       $contact['id']
     );
 
@@ -103,6 +109,7 @@ final class RemoteFundingApplicationProcessActivityTest extends AbstractRemoteFu
     static::assertArrayHasSameValues([
       $createActivity['id'],
       $statusChangeActivity['id'],
+      $applicantCommentActivity['id'],
       $externalCommentActivity['id'],
     ], $activities->column('id'));
   }

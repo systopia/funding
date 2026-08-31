@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -36,28 +37,41 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends AbstractAp
 
   private const STATUS_PERMISSIONS_ACTION_MAP = [
     'eligible' => [
-      'application_request_rework' => ['request-rework'],
+      'application_request_rework' => ['request-rework', 'add-applicant-comment'],
     ],
     'rework-requested' => [
-      'application_request_rework' => ['withdraw-rework-request'],
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
+      'application_request_rework' => ['withdraw-rework-request', 'add-applicant-comment'],
       'review_calculative' => ['approve-rework-request', 'reject-rework-request', 'add-comment'],
       'review_content' => ['approve-rework-request', 'reject-rework-request', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'rework' => [
-      'application_apply' => ['apply'],
-      'application_modify' => ['save'],
+      'application_apply' => ['apply', 'add-applicant-comment'],
+      'application_modify' => ['save', 'add-applicant-comment'],
       'application_withdraw' => ['withdraw-change'],
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'rework-review-requested' => [
-      'application_modify' => ['request-rework'],
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['request-rework', 'add-applicant-comment'],
       'review_calculative' => ['review', 'add-comment'],
       'review_content' => ['review', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'rework-review' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
       'review_calculative' => ['request-change', 'update', 'reject-change', 'add-comment'],
       'review_content' => ['request-change', 'update', 'reject-change', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
   ];
 

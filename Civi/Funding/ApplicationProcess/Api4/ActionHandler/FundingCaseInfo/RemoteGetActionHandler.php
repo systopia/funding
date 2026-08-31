@@ -19,16 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler\FundingCaseInfo;
 
-use Civi\Api4\FundingCaseInfo;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler;
 
 final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler {
 
   public const ENTITY_NAME = 'RemoteFundingCaseInfo';
-
-  protected function getEntityName(): string {
-    // @phpstan-ignore staticMethod.deprecatedClass
-    return FundingCaseInfo::getEntityName();
-  }
 
 }

@@ -20,7 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Api4;
 
 use Civi\Funding\Api4\AbstractRemoteFundingEntity;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\AddApplicantCommentAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAddFormAction;
+use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAllowedActionNamesAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetAllowedActionsInitialByFundingCaseAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetFormAction;
 use Civi\Funding\Api4\Action\Remote\ApplicationProcess\GetTemplateRenderUriAction;
@@ -37,6 +39,10 @@ use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
  */
 final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntity {
 
+  public static function addApplicantComment(): AddApplicantCommentAction {
+    return new AddApplicantCommentAction();
+  }
+
   public static function get(): RemoteFundingGetAction {
     return new RemoteFundingGetAction(self::getEntityName(), __FUNCTION__);
   }
@@ -45,6 +51,10 @@ final class RemoteFundingApplicationProcess extends AbstractRemoteFundingEntity 
     bool $checkPermissions = TRUE
   ): GetAllowedActionsInitialByFundingCaseAction {
     return (new GetAllowedActionsInitialByFundingCaseAction())->setCheckPermissions($checkPermissions);
+  }
+
+  public static function getAllowedActionNames(bool $checkPermissions = TRUE): GetAllowedActionNamesAction {
+    return (new GetAllowedActionNamesAction())->setCheckPermissions($checkPermissions);
   }
 
   public static function getTemplateRenderUri(): GetTemplateRenderUriAction {

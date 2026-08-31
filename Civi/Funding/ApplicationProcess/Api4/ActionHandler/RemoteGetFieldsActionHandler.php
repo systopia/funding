@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 
-use Civi\Api4\FundingApplicationProcess;
 use Civi\Api4\FundingCase;
 use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
@@ -177,10 +176,6 @@ final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsA
     ];
 
     return $fields;
-  }
-
-  protected function getEntityName(): string {
-    return FundingApplicationProcess::getEntityName();
   }
 
   /**
