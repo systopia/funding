@@ -21,12 +21,13 @@ namespace Civi\Funding\EventSubscriber\CiviOffice;
 
 use Civi\Api4\FundingClearingProcess;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
+use Civi\Funding\ClearingProcess\Token\ClearingProcessTokenResolver;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
-use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Entity\ClearingProcessEntity;
+use CRM_Funding_ExtensionUtil as E;
 
 /**
  * @phpstan-extends AbstractCiviOfficeTokenSubscriber<\Civi\Funding\Entity\ClearingProcessEntity>
@@ -40,13 +41,10 @@ class ClearingProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
     return ApplicationProcessTokenSubscriber::getPriority() + 1;
   }
 
-  /**
-   * @phpstan-param TokenResolverInterface<\Civi\Funding\Entity\ClearingProcessEntity> $tokenResolver
-   */
   public function __construct(
     ClearingProcessManager $clearingProcessManager,
     CiviOfficeContextDataHolder $contextDataHolder,
-    TokenResolverInterface $tokenResolver,
+    ClearingProcessTokenResolver $tokenResolver,
     TokenNameExtractorInterface $tokenNameExtractor
   ) {
     parent::__construct(
@@ -55,6 +53,10 @@ class ClearingProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
       $tokenNameExtractor
     );
     $this->clearingProcessManager = $clearingProcessManager;
+    $this->tokenNames['costs_table'] = E::ts('Costs Table');
+    $this->tokenNames['resources_table'] = E::ts('Resources Table');
+    $this->tokenNames['cost_receipts_table'] = E::ts('Cost Receipts Table');
+    $this->tokenNames['resources_receipts_table'] = E::ts('Resources Receipts Table');
   }
 
   protected function getApiEntityName(): string {
