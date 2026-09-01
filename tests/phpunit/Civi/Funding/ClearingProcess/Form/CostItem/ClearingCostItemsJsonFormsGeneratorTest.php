@@ -871,9 +871,9 @@ final class ClearingCostItemsJsonFormsGeneratorTest extends TestCase {
                       'type' => 'Markup',
                       'contentMediaType' => 'text/html',
                       'content' => [
-                        'text' => 'TestItemLabel {@pos}',
+                        'text' => 'TestItemLabel {pos}',
                         'values' => [
-                          '@pos' => 1,
+                          'pos' => 1,
                         ],
                       ],
                     ],

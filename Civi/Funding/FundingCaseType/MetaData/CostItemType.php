@@ -33,7 +33,11 @@ use CRM_Funding_ExtensionUtil as E;
  *     - clearingLabel: The value of label
  *     - paymentPartyLabel: E::ts('Payee')
  *
- * "clearingLabel" is used in the generated receipt form.
+ * "clearingLabel" is used in the generated receipt form. It may contain the
+ *    placeholder "{pos}" if multiple items of this type are possible.It'll be
+ *    replaced by an ascending number starting at 1 for each item of this type.
+ *    If it's not part of the string, it'll be automatically appended when
+ *    necessary.
  * "paymentPartyLabel" is used in the generated receipt form.
  */
 final class CostItemType implements CostItemTypeInterface {
