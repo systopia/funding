@@ -23,7 +23,7 @@ use Civi\Funding\Entity\ClearingResourcesItemEntity;
 
 /**
  * @phpstan-type clearingResourcesItemT array{
- *   id?: int,
+ *   id?: ?int,
  *   clearing_process_id?: int,
  *   app_resources_item_id?: int,
  *   status?: string,
@@ -41,11 +41,16 @@ use Civi\Funding\Entity\ClearingResourcesItemEntity;
  */
 final class ClearingResourcesItemFactory {
 
+  public const DEFAULT_ID = 77;
+
+  private static int $id = self::DEFAULT_ID;
+
   /**
    * @phpstan-param clearingResourcesItemT $values
    */
   public static function create(array $values = []): ClearingResourcesItemEntity {
     $values += [
+      'id' => self::$id++,
       'clearing_process_id' => ClearingProcessFactory::DEFAULT_ID,
       'app_resources_item_id' => ApplicationResourcesItemFactory::DEFAULT_ID,
       'status' => 'new',
@@ -60,6 +65,10 @@ final class ClearingResourcesItemFactory {
       'properties' => NULL,
       'form_key' => 'foo/bar',
     ];
+
+    if (NULL === $values['id']) {
+      unset($values['id']);
+    }
 
     return ClearingResourcesItemEntity::fromArray($values)->reformatDates();
   }

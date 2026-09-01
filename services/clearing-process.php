@@ -53,6 +53,11 @@ use Civi\Funding\ClearingProcess\Handler\Helper\ClearingResourcesItemsFormDataPe
 use Civi\Funding\ClearingProcess\JsonSchema\Validator\ClearingSchemaValidator;
 use Civi\Funding\ClearingProcess\JsonSchema\Validator\OpisClearingValidator;
 use Civi\Funding\ClearingProcess\JsonSchema\Validator\OpisClearingValidatorFactory;
+use Civi\Funding\ClearingProcess\Token\ClearingCostReceiptsTableGenerator;
+use Civi\Funding\ClearingProcess\Token\ClearingCostsTableGenerator;
+use Civi\Funding\ClearingProcess\Token\ClearingResourcesReceiptsTableGenerator;
+use Civi\Funding\ClearingProcess\Token\ClearingResourcesTableGenerator;
+use Civi\Funding\ClearingProcess\Token\ClearingProcessTokenResolver;
 use Civi\Funding\DependencyInjection\Compiler\ClearingFormValidatorPass;
 use Civi\Funding\DependencyInjection\Compiler\ClearingReceiptsFormFactoryPass;
 use Civi\Funding\DependencyInjection\Compiler\ClearingReportDataLoaderPass;
@@ -109,6 +114,12 @@ $container->autowire(ClearingFormSubmitHandlerInterface::class, ClearingFormSubm
 $container->register(OpisClearingValidator::class, OpisClearingValidator::class)
   ->setFactory([OpisClearingValidatorFactory::class, 'getValidator']);
 $container->autowire(ClearingSchemaValidator::class);
+
+$container->autowire(ClearingProcessTokenResolver::class);
+$container->autowire(ClearingCostReceiptsTableGenerator::class);
+$container->autowire(ClearingCostsTableGenerator::class);
+$container->autowire(ClearingResourcesReceiptsTableGenerator::class);
+$container->autowire(ClearingResourcesTableGenerator::class);
 
 ServiceRegistrator::autowireAllImplementing(
   $container,

@@ -27,6 +27,7 @@ use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\AutoUpdateAmountApproved;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseAction;
+use Civi\Funding\FundingCaseType\MetaData\ResourcesItemType;
 
 final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData {
 
@@ -119,6 +120,10 @@ final class FundingCaseTypeMetaDataMock extends AbstractFundingCaseTypeMetaData 
    */
   public function getFundingCaseActions(): array {
     return $this->fundingCaseActions;
+  }
+
+  public function addResourcesItemType(ResourcesItemType $resourcesItemType): void {
+    $this->resourcesItemTypes[$resourcesItemType->getName()] = $resourcesItemType;
   }
 
   /**
