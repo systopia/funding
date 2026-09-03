@@ -21,17 +21,27 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
-use Civi\Funding\Api4\Action\Traits\FundingCaseIdsParameterTrait;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessIdParameterTrait;
+use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
 /**
- * @see \Civi\Funding\ApplicationProcess\Api4\ActionHandler\RemoteGetAllowedActionsInitialByFundingCaseActionHandler
+ * @method string getText()
+ * @method $this setText(string $text)
+ *
+ * @see \Civi\Funding\ApplicationProcess\Api4\ActionHandler\AddApplicantCommentActionHandler
  */
-final class GetAllowedActionsInitialByFundingCaseAction extends AbstractRemoteFundingAction {
+final class AddApplicantCommentAction extends AbstractRemoteFundingAction {
 
-  use FundingCaseIdsParameterTrait;
+  use ApplicationProcessIdParameterTrait;
 
-  public function __construct() {
-    parent::__construct('RemoteFundingApplicationProcess', 'getAllowedActionsInitialByFundingCase');
+  /**
+   * @var string
+   * @required
+   */
+  protected ?string $text = NULL;
+
+  public function __construct(?ActionHandlerInterface $actionHandler = NULL) {
+    parent::__construct('RemoteFundingApplicationProcess', 'addApplicantComment', $actionHandler);
   }
 
 }

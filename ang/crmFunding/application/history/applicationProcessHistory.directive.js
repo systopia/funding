@@ -52,6 +52,7 @@ fundingModule.directive('fundingApplicationProcessHistory', [function() {
           case 'funding_clearing_create':
           case 'funding_application_snapshot_creation':
             return $scope.workflowActivitiesHidden;
+          case 'funding_application_comment_applicant':
           case 'funding_application_comment_external':
           case 'funding_application_comment_internal':
             return $scope.commentsHidden;

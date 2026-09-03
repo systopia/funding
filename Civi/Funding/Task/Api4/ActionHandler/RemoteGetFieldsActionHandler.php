@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Task\Api4\ActionHandler;
 
-use Civi\Api4\FundingTask;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
 use Civi\RemoteTools\Api4\Action\AbstractRemoteGetFieldsAction;
 use CRM_Funding_ExtensionUtil as E;
@@ -27,10 +26,6 @@ use CRM_Funding_ExtensionUtil as E;
 final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {
 
   public const ENTITY_NAME = 'RemoteFundingTask';
-
-  protected function getEntityName(): string {
-    return FundingTask::getEntityName();
-  }
 
   public function getFields(AbstractRemoteGetFieldsAction $action): array {
     $fields = parent::getFields($action);

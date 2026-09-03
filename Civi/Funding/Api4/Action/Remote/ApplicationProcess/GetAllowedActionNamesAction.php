@@ -18,23 +18,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\FundingApplicationProcess;
+namespace Civi\Funding\Api4\Action\Remote\ApplicationProcess;
 
-use Civi\Api4\Generic\AbstractAction;
-use Civi\Funding\Api4\Action\Traits\FundingCaseIdsParameterTrait;
-use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
+use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
 
 /**
- * @see \Civi\Funding\ApplicationProcess\Api4\ActionHandler\GetAllowedActionsInitialByFundingCaseActionHandler
+ * @see \Civi\Funding\ApplicationProcess\Api4\ActionHandler\RemoteGetAllowedActionsInitialByFundingCaseActionHandler
  */
-final class GetAllowedActionsInitialByFundingCaseAction extends AbstractAction {
+final class GetAllowedActionNamesAction extends AbstractRemoteFundingAction {
 
-  use ActionHandlerRunTrait;
-
-  use FundingCaseIdsParameterTrait;
+  use IdsParameterTrait;
 
   public function __construct() {
-    parent::__construct('FundingApplicationProcess', 'getAllowedActionsInitialByFundingCase');
+    parent::__construct('RemoteFundingApplicationProcess', 'getAllowedActionNames');
   }
 
 }

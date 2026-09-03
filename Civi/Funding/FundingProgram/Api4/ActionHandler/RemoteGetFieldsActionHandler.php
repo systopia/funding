@@ -19,15 +19,10 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingProgram\Api4\ActionHandler;
 
-use Civi\Api4\FundingProgram;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
 
 final class RemoteGetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {
 
   public const ENTITY_NAME = 'RemoteFundingProgram';
-
-  protected function getEntityName(): string {
-    return FundingProgram::getEntityName();
-  }
 
 }

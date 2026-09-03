@@ -23,6 +23,7 @@ use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
 abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInterface {
 
@@ -43,13 +44,27 @@ abstract class AbstractRemoteFundingGetActionHandler implements ActionHandlerInt
       $params['join'] = $join;
     }
 
-    return $this->api4->execute($this->getEntityName(), 'get', $params);
+    return $this->api4->execute($this->getEntityName($action), 'get', $params);
   }
 
   /**
+   * phpcs:ignore Drupal.Commenting.FunctionComment.ParamNameNoMatch
+   * @param \Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction $action
+   *
    * @return string The non-remote entity name.
+   *
+   * @phpstan-ignore parameter.notFound (Backward compatible implementation)
    */
-  abstract protected function getEntityName(): string;
+  protected function getEntityName(/* RemoteFundingGetAction $action */): string {
+    $action = func_get_args()[0];
+    assert($action instanceof RemoteFundingGetAction);
+    $entityName = $action->getEntityName();
+    if (str_starts_with($entityName, 'Remote')) {
+      return substr($entityName, 6);
+    }
+
+    throw new \InvalidArgumentException(sprintf('Expected entity name "%s" to start with "Remote"', $entityName));
+  }
 
   /**
    * @phpstan-return array<mixed>

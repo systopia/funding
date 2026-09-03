@@ -22,6 +22,7 @@ namespace Civi\Funding\Api4\ActionHandler;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Action\AbstractRemoteGetFieldsAction;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Webmozart\Assert\Assert;
 
 abstract class AbstractRemoteFundingGetFieldsActionHandler implements ActionHandlerInterface {
 
@@ -44,7 +45,7 @@ abstract class AbstractRemoteFundingGetFieldsActionHandler implements ActionHand
    */
   public function getFields(AbstractRemoteGetFieldsAction $action): array {
     /** @phpstan-var array<string, array<string, mixed>> $remoteFields */
-    $remoteFields = $this->api4->execute($this->getEntityName(), 'getFields', [
+    $remoteFields = $this->api4->execute($this->getEntityName($action), 'getFields', [
       'loadOptions' => $action->getLoadOptions(),
       'action' => $action->getAction(),
       'values' => $action->getValues(),
@@ -79,9 +80,23 @@ abstract class AbstractRemoteFundingGetFieldsActionHandler implements ActionHand
   }
 
   /**
+   * phpcs:ignore Drupal.Commenting.FunctionComment.ParamNameNoMatch
+   * @param \Civi\RemoteTools\Api4\Action\AbstractRemoteGetFieldsAction $action
+   *
    * @return string The non-remote entity name.
+   *
+   * @phpstan-ignore parameter.notFound (Backward compatible implementation)
    */
-  abstract protected function getEntityName(): string;
+  protected function getEntityName(/* AbstractRemoteGetFieldsAction $action */): string {
+    $action = func_get_args()[0];
+    assert($action instanceof AbstractRemoteGetFieldsAction);
+    $entityName = $action->getEntityName();
+    if (str_starts_with($entityName, 'Remote')) {
+      return substr($entityName, 6);
+    }
+
+    throw new \InvalidArgumentException(sprintf('Expected entity name "%s" to start with "Remote"', $entityName));
+  }
 
   /**
    * @phpstan-param array<string, mixed> $field

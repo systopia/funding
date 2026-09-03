@@ -789,6 +789,12 @@ msgstr "Förderprogramm erlaubt keine Anträge nach %1"
 msgid "Contact %1"
 msgstr "Kontakt %1"
 
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/AddApplicantCommentActionHandler.php
+#: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
+#: managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Funding Application Comment"
+msgstr "Förderantragskommentar"
+
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/ApplyActionMultipleActionHandler.php
 msgid "Application process with ID %1 not found."
 msgstr "Antragsprozess mit ID %1 nicht gefunden."
@@ -841,11 +847,6 @@ msgstr "Gespeichert (Status: %1)"
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationDeleteHandler.php
 msgid "Permission to delete application is missing."
 msgstr "Berechtigung zum Löschen des Antrags fehlt."
-
-#: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php
-#: managed/CustomGroupFundingApplicationComment.mgd.php
-msgid "Funding Application Comment"
-msgstr "Förderantragskommentar"
 
 #: Civi/Funding/ApplicationProcess/JsonSchema/CostItem/CostItemKeywordValidator.php
 #: Civi/Funding/ApplicationProcess/JsonSchema/CostItem/CostItemsKeywordValidator.php
@@ -1059,8 +1060,9 @@ msgid "There are no receipts necessary."
 msgstr "Es sind keine Belege erforderlich."
 
 #: Civi/Funding/ClearingProcess/Form/ClearingFormGenerator.php
-#: ang/crmFunding/clearing/clearing.template.html
+#: ang/crmFunding/application/defaultApplicationPage.template.html
 #: ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js
+#: ang/crmFundingHiH/hihApplicationPage.template.html
 msgid "Clearing"
 msgstr "Verwendungsnachweis"
 
@@ -1275,26 +1277,23 @@ msgstr "Zu rechnerische Prüfung: %1"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php
-#: ang/crmFunding/application/application.js
+#: ang/crmFunding/application/application.component.js
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
-#: ang/crmFunding/clearing/clearing.js
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Passed"
 msgstr "Erfolgreich"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php
-#: ang/crmFunding/application/application.js
+#: ang/crmFunding/application/application.component.js
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
-#: ang/crmFunding/clearing/clearing.js
 #: ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Failed"
 msgstr "Nicht erfolgreich"
 
 #: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php
 #: Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php
-#: ang/crmFunding/application/application.js
-#: ang/crmFunding/clearing/clearing.js
+#: ang/crmFunding/application/application.component.js
 msgid "Undecided"
 msgstr "Nicht entschieden"
 
@@ -2036,7 +2035,7 @@ msgid "Tasks (Pending)"
 msgstr "Aufgaben (unerledigt)"
 
 # Nicht benötigt, solange nur zur Initialisierung der ts Funktion in JavaScript verwendet.
-#: ang/crmFunding/application/application.js
+#: ang/crmFunding/application/application.component.js
 #: ang/crmFunding/application/applicationEditor.directive.js
 #: ang/crmFunding/application/applicationReviewer.directive.js
 #: ang/crmFunding/application/applicationReviewers.directive.js
@@ -2052,7 +2051,6 @@ msgstr "Aufgaben (unerledigt)"
 #: ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js
 #: ang/crmFunding/case/recipientContact.directive.js
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js
-#: ang/crmFunding/clearing/clearing.js
 #: ang/crmFunding/clearing/clearingEditor.directive.js
 #: ang/crmFunding/clearing/clearingReviewer.directive.js
 #: ang/crmFunding/clearing/clearingReviewers.directive.js
@@ -2196,7 +2194,6 @@ msgid "Application %1"
 msgstr "Antrag %1"
 
 #: ang/crmFunding/application/defaultApplicationPage.template.html
-#: ang/crmFunding/clearing/clearing.template.html
 #: ang/crmFundingHiH/hihApplicationPage.template.html
 msgid "History"
 msgstr "Verlauf"
@@ -2317,6 +2314,10 @@ msgstr "Rechnerische Prüfung des Verwendungsnachweises: %status"
 #: ang/crmFunding/application/history/activities/clearingStatusChange.template.html
 msgid "Clearing status: %status"
 msgstr "Status des Verwendungsnachweises: %status"
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "Comment by Applicant"
+msgstr "Kommentar von Antragsteller*in"
 
 #: ang/crmFunding/application/history/activities/comment.template.html
 msgid "Internal Comment"
@@ -2619,6 +2620,14 @@ msgid ""
 msgstr ""
 "Zugriff auf administrative und nicht-administrative API des Funding Program "
 "Managers"
+
+#: managed/ActivityTypeFundingApplicationCommentApplicant.mgd.php
+msgid "Funding Application Comment by Applicant"
+msgstr "Förderantragskommentar von Antragsteller*in"
+
+#: managed/ActivityTypeFundingApplicationCommentApplicant.mgd.php
+msgid "Activity type for funding application comments by applicants"
+msgstr "Aktivitätsart für Förderantragskommentare von Antragsteller*innen"
 
 #: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php
 msgid "External Funding Application Comment"

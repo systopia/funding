@@ -422,6 +422,10 @@ msgstr ""
 msgid "Contact %1"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Api4/ActionHandler/AddApplicantCommentActionHandler.php Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php managed/CustomGroupFundingApplicationComment.mgd.php
+msgid "Funding Application Comment"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/ApplyActionMultipleActionHandler.php
 msgid "Application process with ID %1 not found."
 msgstr ""
@@ -452,10 +456,6 @@ msgstr ""
 
 #: Civi/Funding/ApplicationProcess/Handler/ApplicationDeleteHandler.php
 msgid "Permission to delete application is missing."
-msgstr ""
-
-#: Civi/Funding/ApplicationProcess/Handler/ApplicationFormCommentPersistHandler.php managed/CustomGroupFundingApplicationComment.mgd.php
-msgid "Funding Application Comment"
 msgstr ""
 
 #: Civi/Funding/ApplicationProcess/JsonSchema/CostItem/CostItemKeywordValidator.php Civi/Funding/ApplicationProcess/JsonSchema/CostItem/CostItemsKeywordValidator.php
@@ -622,7 +622,7 @@ msgstr ""
 msgid "There are no receipts necessary."
 msgstr ""
 
-#: Civi/Funding/ClearingProcess/Form/ClearingFormGenerator.php ang/crmFunding/clearing/clearing.template.html ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js
+#: Civi/Funding/ClearingProcess/Form/ClearingFormGenerator.php ang/crmFunding/application/defaultApplicationPage.template.html ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js ang/crmFundingHiH/hihApplicationPage.template.html
 msgid "Clearing"
 msgstr ""
 
@@ -786,15 +786,15 @@ msgstr ""
 msgid "To review calculative: %1"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/clearing/clearing.js ang/crmFunding/clearing/clearingSidebar.template.html
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php ang/crmFunding/application/application.component.js ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Passed"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/clearing/clearing.js ang/crmFunding/clearing/clearingSidebar.template.html
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php ang/crmFunding/application/application.component.js ang/crmFunding/application/defaultApplicationSidebar.template.html ang/crmFunding/clearing/clearingSidebar.template.html
 msgid "Failed"
 msgstr ""
 
-#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php ang/crmFunding/application/application.js ang/crmFunding/clearing/clearing.js
+#: Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessReviewStatusSubscriber.php Civi/Funding/EventSubscriber/ClearingProcess/ClearingProcessReviewStatusSubscriber.php ang/crmFunding/application/application.component.js
 msgid "Undecided"
 msgstr ""
 
@@ -1422,7 +1422,7 @@ msgstr ""
 msgid "Tasks (Pending)"
 msgstr ""
 
-#: ang/crmFunding/application/application.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/applicationSearchTasksMenu.decorator.js ang/crmFunding/application/applicationSnapshot.factory.js ang/crmFunding/application/applicationSubmitModal.component.js ang/crmFunding/application/defaultApplicationSidebar.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/case/recipientContact.directive.js ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js ang/crmFunding/clearing/clearing.js ang/crmFunding/clearing/clearingEditor.directive.js ang/crmFunding/clearing/clearingReviewer.directive.js ang/crmFunding/clearing/clearingReviewers.directive.js ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js ang/crmFunding/clearing/clearingSidebar.directive.js ang/crmFunding/clearing/clearingSubmitModal.component.js ang/crmFunding/diff/fundingJsonDiff.directive.js ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/editorTrait.factory.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/jsonForms/jfControlArray.directive.js ang/crmFunding/jsonForms/jfControlFile.directive.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js ang/crmFundingHiH/hihApplicationSidebar.directive.js
+#: ang/crmFunding/application/application.component.js ang/crmFunding/application/applicationEditor.directive.js ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/application/applicationReviewers.directive.js ang/crmFunding/application/applicationSearchTasksMenu.decorator.js ang/crmFunding/application/applicationSnapshot.factory.js ang/crmFunding/application/applicationSubmitModal.component.js ang/crmFunding/application/defaultApplicationSidebar.directive.js ang/crmFunding/application/history/applicationProcessActivity.directive.js ang/crmFunding/application/history/applicationProcessHistory.directive.js ang/crmFunding/case/fundingCase.js ang/crmFunding/case/fundingCasePermissions.js ang/crmFunding/case/notificationContacts.directive.js ang/crmFunding/case/permissions/fundingCaseContactRelation.directive.js ang/crmFunding/case/recipientContact.directive.js ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.ctrl.js ang/crmFunding/clearing/clearingEditor.directive.js ang/crmFunding/clearing/clearingReviewer.directive.js ang/crmFunding/clearing/clearingReviewers.directive.js ang/crmFunding/clearing/clearingSearchTasksMenu.decorator.js ang/crmFunding/clearing/clearingSidebar.directive.js ang/crmFunding/clearing/clearingSubmitModal.component.js ang/crmFunding/diff/fundingJsonDiff.directive.js ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js ang/crmFunding/form/editableField.directive.js ang/crmFunding/form/editorTrait.factory.js ang/crmFunding/form/fundingAddRowButton.directive.js ang/crmFunding/form/fundingSelectPermissions.directive.js ang/crmFunding/form/fundingValidationErrors.directive.js ang/crmFunding/fundingDate.filter.js ang/crmFunding/jsonForms/jfControlArray.directive.js ang/crmFunding/jsonForms/jfControlFile.directive.js ang/crmFunding/program/fundingNewCasePermissions.js ang/crmFunding/program/fundingProgramPermissions.js ang/crmFunding/program/newCasePermissions/fundingNewCasePermissions.directive.js ang/crmFunding/program/permissions/fundingProgramContactRelation.directive.js ang/crmFunding/program/recipientRelations.js ang/crmFunding/program/recipients/recipientRelation.directive.js ang/crmFundingHiH/hihApplicationSidebar.directive.js
 msgid "funding"
 msgstr ""
 
@@ -1494,7 +1494,7 @@ msgstr ""
 msgid "Application %1"
 msgstr ""
 
-#: ang/crmFunding/application/defaultApplicationPage.template.html ang/crmFunding/clearing/clearing.template.html ang/crmFundingHiH/hihApplicationPage.template.html
+#: ang/crmFunding/application/defaultApplicationPage.template.html ang/crmFundingHiH/hihApplicationPage.template.html
 msgid "History"
 msgstr ""
 
@@ -1580,6 +1580,10 @@ msgstr ""
 
 #: ang/crmFunding/application/history/activities/clearingStatusChange.template.html
 msgid "Clearing status: %status"
+msgstr ""
+
+#: ang/crmFunding/application/history/activities/comment.template.html
+msgid "Comment by Applicant"
 msgstr ""
 
 #: ang/crmFunding/application/history/activities/comment.template.html
@@ -1816,6 +1820,14 @@ msgstr ""
 
 #: funding.php
 msgid "Access administrative and non-administrative API of the Funding Program Manager"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationCommentApplicant.mgd.php
+msgid "Funding Application Comment by Applicant"
+msgstr ""
+
+#: managed/ActivityTypeFundingApplicationCommentApplicant.mgd.php
+msgid "Activity type for funding application comments by applicants"
 msgstr ""
 
 #: managed/ActivityTypeFundingApplicationCommentExternal.mgd.php

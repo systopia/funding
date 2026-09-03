@@ -59,6 +59,7 @@ fundingModule.directive('fundingApplicationProcessActivity', ['crmApi4', 'fundin
             return '~/crmFunding/application/history/activities/create.template.html';
           case 'funding_application_move':
             return '~/crmFunding/application/history/activities/move.template.html';
+          case 'funding_application_comment_applicant':
           case 'funding_application_comment_external':
           case 'funding_application_comment_internal':
             return '~/crmFunding/application/history/activities/comment.template.html';

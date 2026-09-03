@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler\ApplicationProcessActivity;
 
-use Civi\Api4\FundingApplicationProcessActivity;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\ActivityTypeNames;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
@@ -29,15 +28,12 @@ final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler
 
   public const ENTITY_NAME = 'RemoteFundingApplicationProcessActivity';
 
-  protected function getEntityName(): string {
-    return FundingApplicationProcessActivity::getEntityName();
-  }
-
   public function get(RemoteFundingGetAction $action): Result {
     $action->addClause('OR',
       ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_CREATE],
       ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_MOVE],
       ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_STATUS_CHANGE],
+      ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_COMMENT_APPLICANT],
       ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_APPLICATION_COMMENT_EXTERNAL],
       ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CLEARING_CREATE],
       ['activity_type_id:name', '=', ActivityTypeNames::FUNDING_CLEARING_STATUS_CHANGE],

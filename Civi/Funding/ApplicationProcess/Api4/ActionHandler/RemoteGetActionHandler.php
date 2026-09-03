@@ -19,7 +19,6 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\Api4\ActionHandler;
 
-use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler;
 use Civi\Funding\Api4\Util\WhereUtil;
@@ -27,10 +26,6 @@ use Civi\Funding\Api4\Util\WhereUtil;
 final class RemoteGetActionHandler extends AbstractRemoteFundingGetActionHandler {
 
   public const ENTITY_NAME = 'RemoteFundingApplicationProcess';
-
-  protected function getEntityName(): string {
-    return FundingApplicationProcess::getEntityName();
-  }
 
   protected function getJoin(RemoteFundingGetAction $action): array {
     if ($this->isClearingProcessFieldSelected($action)
