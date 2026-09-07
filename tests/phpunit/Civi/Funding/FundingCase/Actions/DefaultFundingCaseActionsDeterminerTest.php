@@ -48,8 +48,19 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
       'review_case_finish' => [],
     ],
     'ongoing' => [
-      'review_calculative' => ['recreate-transfer-contract', 'update-amount-approved', 'set-notification-contacts'],
-      'review_content' => ['recreate-transfer-contract', 'update-amount-approved', 'set-notification-contacts'],
+      'review_calculative' => [
+        'recreate-transfer-contract',
+        'update-amount-approved',
+        'review-amount-approved-change-request',
+        'set-notification-contacts',
+      ],
+      'review_content' => [
+        'recreate-transfer-contract',
+        'update-amount-approved',
+        'review-amount-approved-change-request',
+        'set-notification-contacts',
+      ],
+      'amount_approved_change_request_create' => ['create-amount-review-change-request'],
       'review_clearing_calculative' => ['set-notification-contacts'],
       'review_clearing_content' => ['set-notification-contacts'],
       'review_drawdown' => ['set-notification-contacts'],

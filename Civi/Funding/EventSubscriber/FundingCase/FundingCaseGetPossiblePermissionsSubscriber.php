@@ -47,6 +47,8 @@ final class FundingCaseGetPossiblePermissionsSubscriber implements EventSubscrib
       FundingCasePermissions::CONTRACT_VIEW => E::ts('Contract: view (applicant)'),
       FundingCasePermissions::REVIEW_FINISH => E::ts('Review: finish case'),
       FundingCasePermissions::REVIEW_DRAWDOWN_CREATE => E::ts('Review: drawdown create'),
+      // phpcs:ignore Generic.Files.LineLength.TooLong
+      FundingCasePermissions::AMOUNT_APPROVED_CHANGE_REQUEST_CREATE => E::ts('Application: amount approved change request create'),
       'drawdown_create' => E::ts('Drawdown: create'),
       ClearingProcessPermissions::CLEARING_MODIFY => E::ts('Clearing: modify'),
       ClearingProcessPermissions::CLEARING_APPLY => E::ts('Clearing: apply'),

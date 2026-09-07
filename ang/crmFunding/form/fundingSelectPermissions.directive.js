@@ -42,7 +42,8 @@ fundingModule.directive('fundingSelectPermissions', [function() {
 
           for (let permission of newValue || []) {
             if (permission.startsWith('application_') || permission.startsWith('drawdown_') ||
-              permission.startsWith('clearing_') || permission.startsWith('contract_')
+              permission.startsWith('clearing_') || permission.startsWith('contract_') ||
+              permission.startsWith('amount_approved_change_request_')
             ) {
               containsApplication = true;
             } else {

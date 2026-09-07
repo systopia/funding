@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2025 SYSTOPIA GmbH
+ * Copyright (C) 2026 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,18 +17,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase;
+namespace Civi\Api4;
 
-final class FundingCasePermissions {
+use Civi\Funding\Api4\AbstractRemoteFundingEntity;
+use Civi\Funding\Api4\Action\Remote\AmountApprovedChangeRequest\CreateAction;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 
-  public const AUTO_UPDATE_AMOUNT_APPROVED = 'auto_update_amount_approved';
+final class RemoteFundingAmountApprovedChangeRequest extends AbstractRemoteFundingEntity {
 
-  public const CONTRACT_VIEW = 'contract_view';
+  public static function get(): RemoteFundingGetAction {
+    return new RemoteFundingGetAction(self::getEntityName(), __FUNCTION__);
+  }
 
-  public const REVIEW_FINISH = 'review_case_finish';
-
-  public const REVIEW_DRAWDOWN_CREATE = 'review_drawdown_create';
-
-  public const AMOUNT_APPROVED_CHANGE_REQUEST_CREATE = 'amount_approved_change_request_create';
+  public static function create(): CreateAction {
+    return new CreateAction(self::getEntityName(), __FUNCTION__);
+  }
 
 }

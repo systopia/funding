@@ -27,6 +27,7 @@ final class PermissionPrefixes {
     'drawdown_',
     'clearing_',
     'contract_',
+    'amount_approved_change_request_',
   ];
 
   public static function isApplicantPermission(string $permission): bool {
