@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.9\n"
 
 #: CRM/Funding/BAO/FundingCase.php
 #: managed/CustomGroup_funding_case_task.mgd.php
@@ -23,6 +23,7 @@ msgstr "Förderfall"
 #: managed/OptionValueCgExtendsFundingProgram.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
@@ -66,6 +67,24 @@ msgid ""
 msgstr ""
 "Vergleicht zwei JSON-Dokumente und gibt wahr zurück, wenn sie überlappen. "
 "Siehe https://mariadb.com/kb/en/json_overlaps/"
+
+#: Civi/Funding/Api4/Action/FundingAmountApprovedChangeRequest/AbstractFundingAmountApprovedChangeRequestAction.php
+#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php
+#: Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php
+#: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/RejectActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/ResetPermissionsActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/SetNotificationContactsActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php
+#: Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
+msgid "Funding case with ID \"%1\" not found"
+msgstr "Förderfall mit ID \"%1\" nicht gefunden"
+
+#: Civi/Funding/Api4/Action/FundingAmountApprovedChangeRequest/AbstractFundingAmountApprovedChangeRequestAction.php
+msgid "Not authorized to review this change request."
+msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
@@ -114,19 +133,6 @@ msgstr "Anerkannter Betrag"
 msgid "No such application or missing permission."
 msgstr "Kein passender Antrag oder fehlende Berechtigung."
 
-#: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php
-#: Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php
-#: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
-#: Civi/Funding/FundingCase/Api4/ActionHandler/FinishClearingActionHandler.php
-#: Civi/Funding/FundingCase/Api4/ActionHandler/GetPossibleRecipientsActionHandler.php
-#: Civi/Funding/FundingCase/Api4/ActionHandler/RejectActionHandler.php
-#: Civi/Funding/FundingCase/Api4/ActionHandler/ResetPermissionsActionHandler.php
-#: Civi/Funding/FundingCase/Api4/ActionHandler/SetNotificationContactsActionHandler.php
-#: Civi/Funding/FundingCase/Api4/ActionHandler/SetRecipientContactActionHandler.php
-#: Civi/Funding/FundingCase/Api4/ActionHandler/UpdateAmountApprovedActionHandler.php
-msgid "Funding case with ID \"%1\" not found"
-msgstr "Förderfall mit ID \"%1\" nicht gefunden"
-
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
@@ -134,9 +140,12 @@ msgstr "Förderfall mit ID \"%1\" nicht gefunden"
 #: ang/crmFundingHiH/hihApplicationEditor.template.html
 #: ang/crmFundingIJB/ijbApplicationEditor.template.html
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 #: schema/ApplicationProcess.entityType.php
 #: schema/ApplicationSnapshot.entityType.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
 msgid "Amount Requested"
 msgstr "Beantragter Betrag"
 
@@ -389,6 +398,7 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
 msgid "Funding Case Identifier"
 msgstr "Förderfallnummer"
 
@@ -426,8 +436,10 @@ msgstr "Förderfalländerungsdatum"
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
 #: ang/crmFunding/case/fundingCase.template.html
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 #: managed/SavedSearch_funding_program_controlling.mgd.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
 #: schema/FundingCase.entityType.php
 msgid "Amount Approved"
 msgstr "Bewilligter Betrag"
@@ -444,6 +456,7 @@ msgstr "Bewilligter Betrag"
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearch_Clearings.mgd.php
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_Funding_Tasks_Pending.mgd.php
 #: managed/SavedSearch_MyFundingTasks.mgd.php
@@ -501,6 +514,8 @@ msgstr "Kurzbeschreibung"
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
@@ -509,6 +524,7 @@ msgstr "Kurzbeschreibung"
 #: schema/ApplicationSnapshot.entityType.php
 #: schema/ClearingCostItem.entityType.php schema/ClearingProcess.entityType.php
 #: schema/ClearingResourcesItem.entityType.php schema/Drawdown.entityType.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
 #: schema/FundingCase.entityType.php schema/PayoutProcess.entityType.php
 msgid "Status"
 msgstr "Status"
@@ -523,12 +539,15 @@ msgstr "Status"
 #: ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
 #: schema/ApplicationProcess.entityType.php
 #: schema/ApplicationSnapshot.entityType.php
 #: schema/ClearingProcess.entityType.php schema/Drawdown.entityType.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
 #: schema/FundingCase.entityType.php schema/PayoutProcess.entityType.php
 msgid "Creation Date"
 msgstr "Erstellungsdatum"
@@ -655,6 +674,8 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
 msgid "Amount Accepted"
 msgstr "Akzeptierter Betrag"
 
@@ -722,6 +743,8 @@ msgstr "Aufgabenberechtigungen ignorieren"
 
 #: Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
 msgid "Creation Contact"
 msgstr "Erstellerkontakt"
 
@@ -782,6 +805,10 @@ msgstr "d.m.Y"
 #: Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Funding program does not allow applications after %1"
 msgstr "Förderprogramm erlaubt keine Anträge nach %1"
+
+#: Civi/Funding/Api4/ActionHandler/RemoteAmountApprovedChangeRequest/CreateActionHandler.php
+msgid "Not authorized to create this change request."
+msgstr ""
 
 #: Civi/Funding/Api4/Util/ContactUtil.php
 #: ang/crmFunding/application/applicationReviewer.directive.js
@@ -989,8 +1016,11 @@ msgstr "Annehmen"
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/drawdown/drawdownSearchTasksMenu.decorator.js
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 #: ang/crmFundingHiH/hihApplicationSidebar.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Reject"
 msgstr "Ablehnen"
@@ -1384,6 +1414,10 @@ msgid "Review: drawdown create"
 msgstr "Prüfung: Mittelabruf erstellen"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
+msgid "Application: amount approved change request create"
+msgstr "Antrag: Mehr-/Minderbedarf beantragen"
+
+#: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
 msgstr "Mittelabruf: erstellen"
 
@@ -1561,6 +1595,9 @@ msgstr "Fachlich genehmigen"
 #: Civi/Funding/FundingCaseType/MetaData/ReworkApplicationProcessActions.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 #: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
 msgid "Approve"
 msgstr "Bewilligen"
 
@@ -1678,6 +1715,14 @@ msgstr "Offen"
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Closed"
 msgstr "Geschlossen"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Approved"
+msgstr "Bewilligt"
+
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Approved partial"
+msgstr "Teilweise bewilligt"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Ongoing"
@@ -1966,6 +2011,13 @@ msgstr "Controlling Mittelabrufe"
 msgid "Drawdowns"
 msgstr "Mittelabrufe"
 
+#: ang/afsearchFundingAmountApprovedChangeRequests.aff.php
+#: managed/NavigationFunding.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
+msgid "Funding Amount Approved Change Requests"
+msgstr "Mehr-/Minderbedarfsmeldungen"
+
 #: ang/afsearchFundingCaseApplicationProcesses.aff.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 msgid "Funding Applications"
@@ -2035,6 +2087,7 @@ msgstr "Aufgaben (unerledigt)"
 #: ang/crmFunding/form/fundingAddRowButton.directive.js
 #: ang/crmFunding/form/fundingSelectPermissions.directive.js
 #: ang/crmFunding/form/fundingValidationErrors.directive.js
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 #: ang/crmFunding/fundingDate.filter.js
 #: ang/crmFunding/jsonForms/jfControlArray.directive.js
 #: ang/crmFunding/jsonForms/jfControlFile.directive.js
@@ -2097,6 +2150,9 @@ msgstr "Schließen"
 
 #: ang/crmFunding/application/applicationSubmitModal.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -2109,6 +2165,7 @@ msgstr "Kommentarart"
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
 #: ang/crmFunding/clearing/clearingSubmitModal.template.html
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 #: ang/crmFundingHiH/hihApplicationApproveModal.template.html
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -2388,6 +2445,10 @@ msgstr "Weiterleitungsvertrag"
 msgid "Recreate Transfer Contract"
 msgstr "Weiterleitungsvertrag erneut erstellen"
 
+#: ang/crmFunding/case/fundingCase.template.html
+msgid "Amount Approved Change Requests"
+msgstr "Mehr-/Minderbedarfsmeldungen"
+
 #: ang/crmFunding/case/fundingCasePermissions.html
 msgid "Funding Case Permissions"
 msgstr "Förderfallberechtigungen"
@@ -2524,9 +2585,55 @@ msgstr ""
 "Die Kombination von Antragsberechtigungen mit anderen Berechtigungen ist "
 "nicht möglich."
 
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Change Request"
+msgstr "Mehr-/Minderbedarfsmeldung"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Change Requests"
+msgstr "Mehr-/Minderbedarfsmeldungen"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Do you want to approve the selected change requests?"
+msgstr "Möchten Sie die ausgewählten Mehr-/Minderbedarfsmeldungen bewilligen?"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Approve with change"
+msgstr "Mit Änderungen bewilligen"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Do you want to approve the selected change requests with changes?"
+msgstr "Möchten Sie die ausgewählten Mehr-/Minderbedarfsmeldungen bewilligen?"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Do you want to reject the selected change requests?"
+msgstr "Möchten Sie die ausgewählten Mehr-/Minderbedarfsmeldungen ablehnen?"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "No change requests selected or found."
+msgstr "Keine Mehr-/Minderbedarfsmeldungen ausgewählt oder gefunden."
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Notice"
+msgstr "Hinweis"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Approved amount"
+msgstr "Bewilligter Betrag"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
+msgid "Continue"
+msgstr "Fortfahren"
+
 #: ang/crmFunding/jsonForms/jfControlArray.template.html
 #: managed/SavedSearchFundingDrawdowns.mgd.php
 #: managed/SavedSearch_Clearings.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 #: managed/SavedSearch_funding_application_processes.mgd.php
 #: managed/SavedSearch_funding_case_application_processes.mgd.php
@@ -2939,6 +3046,32 @@ msgstr "Akzeptierte Mittelabrufe"
 msgid "Open Drawdowns"
 msgstr "Offene Mittelabrufe"
 
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+msgid "Funding Amount Approved Change Requests Table"
+msgstr ""
+
+#: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
+msgid "Approve Partial"
+msgstr "Mit Änderungen annehmen"
+
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
+msgid "Funding Amount Approved Change Requests (Case)"
+msgstr ""
+
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
+msgid "Funding Amount Approved Change Requests Table (Case)"
+msgstr ""
+
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
+msgid "Decision Date"
+msgstr "Datum der Entscheidung"
+
+#: managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php
+msgid "Decision Contact"
+msgstr "Entscheider*in"
+
 #: managed/SavedSearch_FundingDrawdownsAll.mgd.php
 msgid "Open Case"
 msgstr "Fall öffnen"
@@ -3069,6 +3202,7 @@ msgstr ""
 #: schema/ApplicationSnapshot.entityType.php
 #: schema/ClearingCostItem.entityType.php schema/ClearingProcess.entityType.php
 #: schema/ClearingResourcesItem.entityType.php schema/Drawdown.entityType.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
 #: schema/FundingCase.entityType.php
 #: schema/FundingCaseContactRelation.entityType.php
 #: schema/FundingCasePermissionsCache.entityType.php
@@ -3164,6 +3298,7 @@ msgid "Unique generated identifier"
 msgstr ""
 
 #: schema/ApplicationProcess.entityType.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
 #: schema/FundingCaseContactRelation.entityType.php
 #: schema/FundingCasePermissionsCache.entityType.php
 #: schema/PayoutProcess.entityType.php
@@ -3171,6 +3306,7 @@ msgid "Funding Case ID"
 msgstr "Förderfall-ID"
 
 #: schema/ApplicationProcess.entityType.php
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
 #: schema/FundingCaseContactRelation.entityType.php
 #: schema/FundingCasePermissionsCache.entityType.php
 #: schema/PayoutProcess.entityType.php
@@ -3413,6 +3549,23 @@ msgstr "Anfordererkontakt-ID"
 msgid "Reviewer Contact ID"
 msgstr "Prüferkontakt-ID"
 
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
+msgid "Funding Amount Approved Change Request"
+msgstr "Mehr-/Minderbedarfsmeldung"
+
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
+msgid "Unique FundingAmountApprovedChangeRequest ID"
+msgstr ""
+
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
+#: schema/FundingCase.entityType.php
+msgid "Creation Contact ID"
+msgstr "Ersteller*in Kontakt-ID"
+
+#: schema/FundingAmountApprovedChangeRequest.entityType.php
+msgid "Decision Contact ID"
+msgstr "Entscheider*in Kontakt-ID"
+
 #: schema/FundingCase.entityType.php
 msgid "Unique FundingCase ID"
 msgstr ""
@@ -3430,10 +3583,6 @@ msgstr ""
 #: schema/FundingCase.entityType.php
 msgid "Funding Case Type ID"
 msgstr "Förderfalltyp-ID"
-
-#: schema/FundingCase.entityType.php
-msgid "Creation Contact ID"
-msgstr "Erstellerkontakt-ID"
 
 #: schema/FundingCase.entityType.php
 msgid "Notification Contact Ids"

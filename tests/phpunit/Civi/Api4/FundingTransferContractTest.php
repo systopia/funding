@@ -107,6 +107,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       'funding_program_title' => $fundingProgram->getTitle(),
       'CAN_create_drawdown' => FALSE,
       'CAN_view_contract' => FALSE,
+      'CAN_create_amount_approved_change_request' => FALSE,
     ];
     static::assertEquals($expected, $values);
 
@@ -141,6 +142,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       'application_process_titles' => 'title1, title2',
       'CAN_create_drawdown' => FALSE,
       'CAN_view_contract' => FALSE,
+      'CAN_create_amount_approved_change_request' => FALSE,
     ];
     static::assertEquals($expected, $values);
 
@@ -181,7 +183,7 @@ final class FundingTransferContractTest extends AbstractFundingHeadlessTestCase 
       static::assertTrue($field['readonly'], $message);
     }
 
-    static::assertCount(23, $result);
+    static::assertCount(24, $result);
   }
 
 }

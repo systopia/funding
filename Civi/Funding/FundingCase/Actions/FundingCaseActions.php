@@ -31,6 +31,10 @@ final class FundingCaseActions {
 
   public const REJECT = 'reject';
 
+  public const REVIEW_AMOUNT_APPROVED_CHANGE_REQUEST = 'review-amount-approved-change-request';
+
+  public const CREATE_AMOUNT_REVIEW_CHANGE_REQUEST = 'create-amount-review-change-request';
+
   public const SET_NOTIFICATION_CONTACTS = 'set-notification-contacts';
 
   public const SET_RECIPIENT_CONTACT = 'set-recipient-contact';

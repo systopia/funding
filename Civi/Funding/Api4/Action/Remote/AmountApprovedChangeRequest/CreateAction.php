@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2026 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,31 +17,35 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Traits;
+namespace Civi\Funding\Api4\Action\Remote\AmountApprovedChangeRequest;
 
-use Webmozart\Assert\Assert;
+use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
 
 /**
- * @phpstan-method array<int> getIds()
+ * @method int getFundingCaseId()
+ * @method $this setFundingCaseId(int $fundingCaseId)
+ * @method float getAmountRequested()
+ * @method $this setAmountRequested(float $amountRequested)
+ * @method string getComment()
+ * @method $this setComment(string $comment)
  */
-trait IdsParameterTrait {
+final class CreateAction extends AbstractRemoteFundingAction {
 
   /**
-   * @var array
-   * @phpstan-var array<int>
+   * @var int
    * @required
    */
-  protected array $ids = [];
+  protected int $fundingCaseId;
 
   /**
-   * @phpstan-param array<int> $ids
-   * @return $this
+   * @var float
+   * @required
    */
-  public function setIds(array $ids): self {
-    Assert::allInteger($ids);
-    $this->ids = $ids;
+  protected float $amountRequested;
 
-    return $this;
-  }
+  /**
+   * @var string|null
+   */
+  protected ?string $comment = NULL;
 
 }

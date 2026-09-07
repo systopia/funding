@@ -214,6 +214,18 @@ final class FundingPseudoConstants {
   }
 
   /**
+   * @phpstan-return array<string, string>
+   */
+  public static function getFundingAmountApprovedChangeRequestStatus(): array {
+    return [
+      'new' => E::ts('New'),
+      'approved' => E::ts('Approved'),
+      'approved_partial' => E::ts('Approved partial'),
+      'rejected' => E::ts('Rejected'),
+    ];
+  }
+
+  /**
    * @phpstan-return list<optionT>
    */
   public static function getFundingCaseStatus(): array {

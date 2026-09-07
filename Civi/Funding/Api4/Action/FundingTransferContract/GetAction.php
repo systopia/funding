@@ -139,6 +139,9 @@ final class GetAction extends AbstractGetAction {
       'CAN_create_drawdown'
       => $fundingCase->hasPermission('drawdown_create') && 'closed' !== $payoutProcess->getStatus(),
       'CAN_view_contract' => $fundingCase->hasPermission(FundingCasePermissions::CONTRACT_VIEW),
+      'CAN_create_amount_approved_change_request' => $fundingCase->hasPermission(
+        FundingCasePermissions::AMOUNT_APPROVED_CHANGE_REQUEST_CREATE
+      ),
     ];
 
     if ($this->isFieldExplicitlySelected('creation_contact_display_name')) {

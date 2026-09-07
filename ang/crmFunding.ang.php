@@ -29,5 +29,6 @@ return [
     'ui.select',
     'skApplicationProcessTable',
     'skDrawdownTable',
+    'skFundingAmountApprovedChangeRequestTable',
   ],
 ];
