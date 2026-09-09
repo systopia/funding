@@ -124,9 +124,9 @@ class ApplicationJsonSchemaCreateHelper {
     $properties['_action'] = new JsonSchemaString(['enum' => $allowedActions]);
 
     /** @phpstan-var list<string> $required */
-    $required = $jsonSchema['_required'] ?? [];
+    $required = $jsonSchema['required'] ?? [];
     $required[] = '_action';
-    $jsonSchema['_required'] = $required;
+    $jsonSchema['required'] = $required;
   }
 
 }
