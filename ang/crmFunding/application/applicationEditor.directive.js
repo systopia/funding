@@ -157,7 +157,10 @@ fundingModule.directive('fundingApplicationEditor', ['$compile', function($compi
         let originalDataString = null;
         const unwatchForm = $scope.$watch('form', function (form) {
           if (form) {
-            $scope.jsonSchema = $scope.form.jsonSchema;
+            $scope.$watch('form.jsonSchema', function (jsonSchema) {
+              // form.jsonSchema gets updated after submit in fundingApplication component.
+              $scope.jsonSchema = jsonSchema;
+            });
             $scope.uiSchema = $scope.form.uiSchema;
             $scope.uiSchema.label = null;
             $scope.data = $scope.form.data;
