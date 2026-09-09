@@ -2,6 +2,13 @@
 
 const fundingModule = angular.module('crmFunding', CRM.angRequires('crmFunding'));
 
+fundingModule.config(function($rootScopeProvider) {
+  // Increase digest TTL to avoid
+  // Uncaught Error: [$rootScope:infdig] 10 $digest() iterations reached. Aborting!
+  // The default of 10 is sometimes not enough when a JSON Forms is rendered.
+  $rootScopeProvider.digestTtl(15);
+});
+
 // Configure xeditable
 fundingModule.run(['editableOptions', 'editableThemes', function(editableOptions, editableThemes) {
   editableThemes.bs3.inputClass = 'input-sm';
