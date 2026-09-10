@@ -20,18 +20,70 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\DVV\Kurs\Application\Actions;
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationActionsDeterminerDecorator;
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCaseTypes\DVV\Kurs\Traits\KursSupportedFundingCaseTypesTrait;
 
 final class KursApplicationActionsDeterminer extends AbstractApplicationActionsDeterminerDecorator {
 
   use KursSupportedFundingCaseTypesTrait;
 
+  private const STATUS_PERMISSION_ACTIONS_MAP = [
+    NULL => [
+      'application_create' => ['save'],
+      'application_apply' => ['apply'],
+    ],
+    'new' => [
+      'application_modify' => ['save', 'add-applicant-comment'],
+      'application_apply' => ['apply', 'add-applicant-comment'],
+      'application_withdraw' => ['delete'],
+    ],
+    'review' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
+      'review_calculative' => ['request-change', 'update', 'reject', 'add-comment'],
+      'review_content' => ['request-change', 'update', 'reject', 'add-comment'],
+    ],
+    'open&review' => [
+      'review_calculative' => ['move-to-new-funding-case'],
+      'review_content' => ['move-to-new-funding-case'],
+    ],
+    'draft' => [
+      'application_modify' => ['save', 'add-applicant-comment'],
+      'application_apply' => ['apply', 'add-applicant-comment'],
+      'application_withdraw' => ['withdraw'],
+      'review_calculative' => ['review', 'add-comment'],
+      'review_content' => ['review', 'add-comment'],
+    ],
+    'eligible' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
+      'application_withdraw' => ['withdraw'],
+      'review_calculative' => ['update', 'add-comment'],
+      'review_content' => ['update', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
+    ],
+    'open&eligible' => [
+      'review_calculative' => ['move-to-new-funding-case'],
+      'review_content' => ['move-to-new-funding-case'],
+    ],
+    'complete' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
+      'application_withdraw' => ['withdraw'],
+      'review_calculative' => ['update', 'add-comment'],
+      'review_content' => ['update', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
+    ],
+  ];
+
   public function __construct() {
     parent::__construct(
       new ReworkPossibleApplicationProcessActionsDeterminer(
-        new DefaultApplicationProcessActionsDeterminer()
+        new ApplicationProcessActionsDeterminer(self::STATUS_PERMISSION_ACTIONS_MAP)
     ));
   }
 

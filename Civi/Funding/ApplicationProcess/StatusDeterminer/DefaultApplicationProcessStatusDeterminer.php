@@ -19,9 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\StatusDeterminer;
 
-use Civi\Funding\Entity\FullApplicationProcessStatus;
-
-final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicationProcessStatusDeterminer {
+final class DefaultApplicationProcessStatusDeterminer extends ApplicationProcessStatusDeterminer {
 
   private const STATUS_ACTION_STATUS_MAP = [
     NULL => [
@@ -73,47 +71,6 @@ final class DefaultApplicationProcessStatusDeterminer extends AbstractApplicatio
 
   public function __construct() {
     parent::__construct(self::STATUS_ACTION_STATUS_MAP);
-  }
-
-  protected function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
-    if ('request-change' === $action) {
-      return NULL;
-    }
-
-    if ('approve-calculative' === $action) {
-      return TRUE;
-    }
-
-    if ('reject-calculative' === $action) {
-      return FALSE;
-    }
-
-    return $currentStatus->getIsReviewCalculative();
-  }
-
-  protected function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
-    if ('request-change' === $action) {
-      return NULL;
-    }
-
-    if ('approve-content' === $action) {
-      return TRUE;
-    }
-
-    if ('reject-content' === $action) {
-      return FALSE;
-    }
-
-    return $currentStatus->getIsReviewContent();
-  }
-
-  public function getStatusOnClearingProcessStarted(FullApplicationProcessStatus $currentStatus
-  ): FullApplicationProcessStatus {
-    return new FullApplicationProcessStatus(
-      'complete',
-      $currentStatus->getIsReviewCalculative(),
-      $currentStatus->getIsReviewContent()
-    );
   }
 
 }
