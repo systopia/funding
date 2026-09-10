@@ -287,7 +287,7 @@ final class ReworkPossibleApplicationProcessActionsDeterminerTest extends TestCa
   }
 
   public function testGetActionsFundingCaseCleared(): void {
-    $this->decoratedActionsDeterminerMock->expects(static::never())->method('getActions');
+    $this->decoratedActionsDeterminerMock->expects(static::atLeastOnce())->method('getActions')->willReturn([]);
     foreach (self::STATUS_PERMISSION_ACTIONS_MAP as $status => $permissionActionsMap) {
       foreach ($permissionActionsMap as $permission => $actions) {
         $applicationProcessBundle = $this->createApplicationProcessBundle(

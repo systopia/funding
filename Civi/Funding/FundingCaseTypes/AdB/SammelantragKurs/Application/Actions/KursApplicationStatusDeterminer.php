@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\Actions;
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
-final class KursApplicationStatusDeterminer extends AbstractApplicationProcessStatusDeterminer {
+final class KursApplicationStatusDeterminer extends ApplicationProcessStatusDeterminer {
 
   use KursSupportedFundingCaseTypesTrait;
 
@@ -54,39 +54,16 @@ final class KursApplicationStatusDeterminer extends AbstractApplicationProcessSt
   ];
 
   public function __construct() {
-    parent::__construct(self::STATUS_ACTION_STATUS_MAP);
-  }
-
-  protected function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
-    if ('approve-calculative' === $action) {
-      return TRUE;
-    }
-
-    if ('reject-calculative' === $action) {
-      return FALSE;
-    }
-
-    return $currentStatus->getIsReviewCalculative();
-  }
-
-  protected function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
-    if ('approve-content' === $action) {
-      return TRUE;
-    }
-
-    if ('reject-content' === $action) {
-      return FALSE;
-    }
-
-    return $currentStatus->getIsReviewContent();
-  }
-
-  public function getStatusOnClearingProcessStarted(FullApplicationProcessStatus $currentStatus
-  ): FullApplicationProcessStatus {
-    return new FullApplicationProcessStatus(
-      'complete',
-      $currentStatus->getIsReviewCalculative(),
-      $currentStatus->getIsReviewContent()
+    parent::__construct(
+      self::STATUS_ACTION_STATUS_MAP,
+      [
+        'approve-calculative' => TRUE,
+        'reject-calculative' => FALSE,
+      ],
+      [
+        'approve-content' => TRUE,
+        'reject-content' => FALSE,
+      ]
     );
   }
 

@@ -23,7 +23,7 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminer
+ * @covers \Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminer
  * @covers \Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer
  */
 final class DefaultApplicationProcessStatusDeterminerTest extends TestCase {
