@@ -23,20 +23,31 @@ use Civi\Funding\Entity\FullApplicationProcessStatus;
 
 /**
  * @phpstan-type statusActionStatusMapT array<string|null, array<string, string>>
+ * @phpstan-type actionReviewFlagMapT array<string, bool|null>
+ *    Mapping of action name to review flag status. For actions that aren't in
+ *    the mapping, the review flag keeps unchanged.
  */
-abstract class AbstractApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
-
-  /**
-   * @phpstan-var statusActionStatusMapT
-   */
-  private $statusActionStatusMap;
+class ApplicationProcessStatusDeterminer implements ApplicationProcessStatusDeterminerInterface {
 
   /**
    * @phpstan-param statusActionStatusMapT $statusActionStatusMap
+   * @phpstan-param actionReviewFlagMapT $isReviewCalculativeActionStatusMap
+   * @phpstan-param actionReviewFlagMapT $isReviewContentActionStatusMap
    */
-  public function __construct(array $statusActionStatusMap) {
-    $this->statusActionStatusMap = $statusActionStatusMap;
-  }
+  public function __construct(
+    private readonly array $statusActionStatusMap,
+    private readonly array $isReviewCalculativeActionStatusMap = [
+      'approve-calculative' => TRUE,
+      'reject-calculative' => FALSE,
+      'request-change' => NULL,
+    ],
+    private readonly array $isReviewContentActionStatusMap = [
+      'approve-content' => TRUE,
+      'reject-content' => FALSE,
+      'request-change' => NULL,
+    ],
+    private readonly string $onClearingProcessStartedStatus = 'complete',
+  ) {}
 
   public function getInitialStatus(string $action): string {
     $status = $this->statusActionStatusMap[NULL][$action] ?? NULL;
@@ -73,11 +84,29 @@ abstract class AbstractApplicationProcessStatusDeterminer implements Application
     );
   }
 
-  abstract protected function getIsReviewCalculative(
-    FullApplicationProcessStatus $currentStatus,
-    string $action
-  ): ?bool;
+  public function getStatusOnClearingProcessStarted(FullApplicationProcessStatus $currentStatus
+  ): FullApplicationProcessStatus {
+    return new FullApplicationProcessStatus(
+      $this->onClearingProcessStartedStatus,
+      $currentStatus->getIsReviewCalculative(),
+      $currentStatus->getIsReviewContent()
+    );
+  }
 
-  abstract protected function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool;
+  protected function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
+    if (array_key_exists($action, $this->isReviewCalculativeActionStatusMap)) {
+      return $this->isReviewCalculativeActionStatusMap[$action];
+    }
+
+    return $currentStatus->getIsReviewCalculative();
+  }
+
+  protected function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
+    if (array_key_exists($action, $this->isReviewContentActionStatusMap)) {
+      return $this->isReviewContentActionStatusMap[$action];
+    }
+
+    return $currentStatus->getIsReviewContent();
+  }
 
 }

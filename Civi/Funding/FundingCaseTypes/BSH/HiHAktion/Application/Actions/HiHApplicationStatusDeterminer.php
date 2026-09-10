@@ -19,11 +19,11 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Application\Actions;
 
-use Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminer;
 use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\FundingCaseTypes\BSH\HiHAktion\Traits\HiHSupportedFundingCaseTypesTrait;
 
-final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessStatusDeterminer {
+final class HiHApplicationStatusDeterminer extends ApplicationProcessStatusDeterminer {
 
   use HiHSupportedFundingCaseTypesTrait;
 
@@ -87,7 +87,17 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
   ];
 
   public function __construct() {
-    parent::__construct(self::STATUS_ACTION_STATUS_MAP);
+    parent::__construct(
+      self::STATUS_ACTION_STATUS_MAP,
+      [
+        'request-change' => NULL,
+        'release' => TRUE,
+      ],
+      [
+        'request-change' => NULL,
+        'release' => TRUE,
+      ],
+    );
   }
 
   public function getStatusOnClearingProcessStarted(FullApplicationProcessStatus $currentStatus
@@ -96,35 +106,19 @@ final class HiHApplicationStatusDeterminer extends AbstractApplicationProcessSta
   }
 
   protected function getIsReviewCalculative(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
-    if ('request-change' === $action) {
-      return NULL;
-    }
-
-    if ('release' === $action) {
-      return TRUE;
-    }
-
     if ('reject' === $action) {
       return $currentStatus->getIsReviewCalculative() ?? FALSE;
     }
 
-    return $currentStatus->getIsReviewCalculative();
+    return parent::getIsReviewCalculative($currentStatus, $action);
   }
 
   protected function getIsReviewContent(FullApplicationProcessStatus $currentStatus, string $action): ?bool {
-    if ('request-change' === $action) {
-      return NULL;
-    }
-
-    if ('release' === $action) {
-      return TRUE;
-    }
-
     if ('reject' === $action) {
       return $currentStatus->getIsReviewContent() ?? FALSE;
     }
 
-    return $currentStatus->getIsReviewContent();
+    return parent::getIsReviewContent($currentStatus, $action);
   }
 
 }

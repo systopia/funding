@@ -20,7 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\DVV\Kurs\Application\Actions;
 
 use Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminerDecorator;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminer;
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
 use Civi\Funding\FundingCaseTypes\DVV\Kurs\Traits\KursSupportedFundingCaseTypesTrait;
 
@@ -28,9 +28,50 @@ final class KursApplicationStatusDeterminer extends AbstractApplicationProcessSt
 
   use KursSupportedFundingCaseTypesTrait;
 
+  private const STATUS_ACTION_STATUS_MAP = [
+    NULL => [
+      'save' => 'new',
+      'apply' => 'review',
+    ],
+    'new' => [
+      'save' => 'new',
+      'apply' => 'review',
+      'reject' => 'rejected',
+    ],
+    'review' => [
+      'approve-calculative' => 'review',
+      'reject-calculative' => 'review',
+      'approve-content' => 'review',
+      'reject-content' => 'review',
+      'request-change' => 'draft',
+      'approve' => 'eligible',
+      'reject' => 'rejected',
+      'update' => 'review',
+      'add-comment' => 'review',
+    ],
+    'draft' => [
+      'save' => 'draft',
+      'apply' => 'review',
+      'withdraw' => 'withdrawn',
+      'review' => 'review',
+      'add-comment' => 'draft',
+      'reject' => 'rejected',
+    ],
+    'eligible' => [
+      'withdraw' => 'withdrawn',
+      'update' => 'eligible',
+      'add-comment' => 'eligible',
+    ],
+    'complete' => [
+      'withdraw' => 'withdrawn',
+      'update' => 'complete',
+      'add-comment' => 'complete',
+    ],
+  ];
+
   public function __construct() {
     parent::__construct(new ReworkPossibleApplicationProcessStatusDeterminer(
-      new DefaultApplicationProcessStatusDeterminer()
+      new ApplicationProcessStatusDeterminer(self::STATUS_ACTION_STATUS_MAP)
     ));
   }
 
