@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcessActionsDeterminer
+ * @covers \Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminer
  * @covers \Civi\Funding\ApplicationProcess\ActionsDeterminer\DefaultApplicationProcessActionsDeterminer
  */
 final class DefaultApplicationProcessActionsDeterminerTest extends TestCase {

@@ -19,21 +19,15 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\DVV\SammelantragKurs\Application\Actions;
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcessActionsDeterminer;
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
+use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminer;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCaseTypes\DVV\SammelantragKurs\KursMetaData;
 use Civi\Funding\FundingCaseTypes\DVV\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
-use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
-final class KursApplicationActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
-
-  use HasReviewPermissionTrait;
+final class KursApplicationActionsDeterminer extends ApplicationProcessActionsDeterminer {
 
   use KursSupportedFundingCaseTypesTrait;
-
-  private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     NULL => [
@@ -99,39 +93,31 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     ],
   ];
 
-  private DetermineApproveRejectActionsHelper $determineApproveRejectActionsHelper;
-
   private KursMetaData $metaData;
 
   public function __construct(KursMetaData $metaData) {
-    parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
-    $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper(
-      ['review', 'rework-review'],
-      ['approve' => ['review' => 'approve', 'rework-review' => 'approve-change']]
+    parent::__construct(
+      self::STATUS_PERMISSION_ACTIONS_MAP,
+      [FundingCaseStatus::CLEARED],
+      reviewStatuses: ['review', 'rework-review'],
+      actionNames: ['approve' => ['review' => 'approve', 'rework-review' => 'approve-change']]
     );
 
     $this->metaData = $metaData;
   }
 
-  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
-    if ($applicationProcessBundle->getFundingCase()->isStatusIn(self::FUNDING_CASE_FINAL_STATUS_LIST)) {
-      return [];
-    }
-
-    $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
-
-    if (!$this->hasReviewPermission($permissions) && $this->isAnyApplicationInReview($statusList)) {
-      return [];
-    }
-
-    return array_merge(
-      parent::getActions($applicationProcessBundle, $statusList),
-      $this->determineApproveRejectActionsHelper->getActions(
-        $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-        $this->hasReviewCalculativePermission($permissions),
-        $this->hasReviewContentPermission($permissions)
-      ),
-    );
+  /**
+   * @inheritDoc
+   */
+  protected function isStatusMapApplicable(
+    ApplicationProcessEntityBundle $applicationProcessBundle,
+    array $statusList
+  ): bool {
+    return parent::isStatusMapApplicable($applicationProcessBundle, $statusList)
+      && (
+        $this->hasReviewPermission($applicationProcessBundle->getFundingCase()->getPermissions())
+        || !$this->isAnyApplicationInReview($statusList)
+      );
   }
 
   /**

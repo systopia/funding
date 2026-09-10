@@ -36,6 +36,16 @@ final class DvvKursMetaData extends AbstractFundingCaseTypeMetaData {
   }
 
   /**
+   * @var non-empty-array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>|null
+   */
+  private ?array $applicationProcessActions = NULL;
+
+  /**
+   * @var non-empty-array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus>|null
+   */
+  private ?array $applicationProcessStatuses = NULL;
+
+  /**
    * @phpstan-var array<string, CostItemType>
    */
   private ?array $costItemTypes = NULL;
@@ -49,14 +59,41 @@ final class DvvKursMetaData extends AbstractFundingCaseTypeMetaData {
    * @inheritDoc
    */
   public function getApplicationProcessActions(): array {
-    return DefaultApplicationProcessActions::getAll() + ReworkApplicationProcessActions::getAll();
+    return $this->applicationProcessActions ??= [
+      // Applicant actions.
+      'save' => DefaultApplicationProcessActions::save(),
+      'apply' => DefaultApplicationProcessActions::apply(
+          'Einreichen',
+          'Eingereichte Anträge können nicht mehr verändert werden. Wollen Sie fortfahren?'
+      ),
+      'withdraw' => DefaultApplicationProcessActions::withdraw(),
+      'delete' => DefaultApplicationProcessActions::delete(),
+        // Reviewer actions.
+      'review' => DefaultApplicationProcessActions::review(),
+      'approve-calculative' => DefaultApplicationProcessActions::approveCalculative(),
+      'reject-calculative' => DefaultApplicationProcessActions::rejectCalculative(),
+      'approve-content' => DefaultApplicationProcessActions::approveContent(),
+      'reject-content' => DefaultApplicationProcessActions::rejectContent(),
+      'request-change' => DefaultApplicationProcessActions::requestChange(),
+      'approve' => DefaultApplicationProcessActions::approve(),
+      'reject' => DefaultApplicationProcessActions::reject(),
+      'move-to-new-funding-case' => DefaultApplicationProcessActions::moveToNewFundingCase(),
+    ] + ReworkApplicationProcessActions::getAll();
   }
 
   /**
    * @inheritDoc
    */
   public function getApplicationProcessStatuses(): array {
-    return DefaultApplicationProcessStatuses::getAll() + ReworkApplicationProcessStatuses::getAll();
+    return $this->applicationProcessStatuses ??= [
+      'complete' => DefaultApplicationProcessStatuses::complete(),
+      'draft' => DefaultApplicationProcessStatuses::draft(),
+      'eligible' => DefaultApplicationProcessStatuses::eligible(),
+      'new' => DefaultApplicationProcessStatuses::new(),
+      'rejected' => DefaultApplicationProcessStatuses::rejected(),
+      'review' => DefaultApplicationProcessStatuses::review(),
+      'withdrawn' => DefaultApplicationProcessStatuses::withdrawn(),
+    ] + ReworkApplicationProcessStatuses::getAll();
   }
 
   /**

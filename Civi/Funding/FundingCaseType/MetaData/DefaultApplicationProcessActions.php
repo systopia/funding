@@ -38,10 +38,11 @@ final class DefaultApplicationProcessActions {
     ]);
   }
 
-  public static function apply(?string $label = NULL): ApplicationProcessAction {
+  public static function apply(?string $label = NULL, ?string $confirmMessage = NULL): ApplicationProcessAction {
     return new ApplicationProcessAction([
       'name' => __FUNCTION__,
       'label' => $label ?? E::ts('Apply'),
+      'confirmMessage' => $confirmMessage,
     ]);
   }
 

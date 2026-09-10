@@ -28,13 +28,10 @@ use Civi\Funding\FundingCase\Actions\SetRecipientContactActionsDeterminer;
 use Civi\Funding\Mock\FundingCaseType\Application\Actions\TestApplicationStatusDeterminer;
 use Civi\Funding\Mock\FundingCaseType\TestCaseTypeMetaData;
 use Civi\Funding\Mock\FundingCaseType\Traits\TestSupportedFundingCaseTypesTrait;
-use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
 final class TestCaseActionsDeterminer extends AbstractFundingCaseActionsDeterminerDecorator {
 
   use TestSupportedFundingCaseTypesTrait;
-
-  use HasReviewPermissionTrait;
 
   public function __construct(
     TestApplicationStatusDeterminer $applicationStatusDeterminer,
@@ -56,6 +53,27 @@ final class TestCaseActionsDeterminer extends AbstractFundingCaseActionsDetermin
     }
 
     return $actions;
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewPermission(array $permissions): bool {
+    return $this->hasReviewCalculativePermission($permissions) || $this->hasReviewContentPermission($permissions);
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewCalculativePermission(array $permissions): bool {
+    return in_array('review_calculative', $permissions, TRUE);
+  }
+
+  /**
+   * @phpstan-param array<string> $permissions
+   */
+  private function hasReviewContentPermission(array $permissions): bool {
+    return in_array('review_content', $permissions, TRUE);
   }
 
 }
