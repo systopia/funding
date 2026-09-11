@@ -128,10 +128,7 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
                 }).on('crmConfirm:yes', function () {
                   const amount = document.getElementById('change-request-approved-amount').value;
                   executeTask(name, targetIds, {
-                    amount_approved: amount,
-                    amount_accepted: amount,
                     amountApproved: amount,
-                    amount: amount,
                   });
                 });
               } else {

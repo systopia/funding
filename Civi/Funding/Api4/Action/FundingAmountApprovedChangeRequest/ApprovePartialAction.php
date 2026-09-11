@@ -25,21 +25,14 @@ use Webmozart\Assert\Assert;
 
 /**
  * @method float getAmountApproved()
- * @method float getAmountAccepted()
  * @method $this setIds(list<int> $ids)
  */
 class ApprovePartialAction extends AbstractFundingAmountApprovedChangeRequestAction {
 
   protected ?float $amountApproved = NULL;
-  protected ?float $amountAccepted = NULL;
 
   public function setAmountApproved(?float $amount): self {
     $this->amountApproved = $amount;
-    return $this;
-  }
-
-  public function setAmountAccepted(?float $amount): self {
-    $this->amountAccepted = $amount;
     return $this;
   }
 
@@ -55,9 +48,6 @@ class ApprovePartialAction extends AbstractFundingAmountApprovedChangeRequestAct
    */
   protected function processRequest(int $id, array $request): array {
     $amount = $this->amountApproved;
-    if ($amount === NULL) {
-      $amount = $this->amountAccepted;
-    }
 
     Assert::greaterThan($amount, 0);
 
