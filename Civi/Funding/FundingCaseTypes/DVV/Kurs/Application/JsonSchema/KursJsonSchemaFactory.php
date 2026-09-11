@@ -48,13 +48,9 @@ class KursJsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
     ApplicationProcessEntityBundle $applicationProcessBundle,
     array $applicationProcessStatusList
   ): JsonSchema {
-    $fundingCase = $applicationProcessBundle->getFundingCase();
-    $fundingProgram = $applicationProcessBundle->getFundingProgram();
-
-    return new KursJsonSchema(
-      $fundingProgram->getStartDate(),
-      $fundingProgram->getEndDate(),
-      $this->existingCaseRecipientLoader->getRecipient($fundingCase),
+    return $this->createJsonSchema(
+      $applicationProcessBundle->getFundingProgram(),
+      $this->existingCaseRecipientLoader->getRecipient($applicationProcessBundle->getFundingCase())
     );
   }
 
@@ -63,10 +59,9 @@ class KursJsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
     FundingCaseTypeEntity $fundingCaseType,
     FundingProgramEntity $fundingProgram
   ): JsonSchema {
-    return new KursJsonSchema(
-      $fundingProgram->getStartDate(),
-      $fundingProgram->getEndDate(),
-      $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
+    return $this->createJsonSchema(
+      $fundingProgram,
+      $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram)
     );
   }
 
@@ -74,10 +69,23 @@ class KursJsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonSchema {
+    return $this->createJsonSchema($fundingProgram, []);
+  }
+
+  /**
+   * @param array<int, string> $possibleRecipients
+   */
+  private function createJsonSchema(FundingProgramEntity $fundingProgram, array $possibleRecipients): JsonSchema {
     return new KursJsonSchema(
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
-      [],
+      $possibleRecipients,
+      // @phpstan-ignore argument.type
+      $fundingProgram->get('funding_program_dvv.grundbetrag_reisekosten'),
+      // @phpstan-ignore argument.type
+      $fundingProgram->get('funding_program_dvv.grundbetrag_teilnehmer'),
+      // @phpstan-ignore argument.type
+      $fundingProgram->get('funding_program_dvv.grundbetrag_honorar'),
     );
   }
 
