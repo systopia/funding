@@ -129,10 +129,10 @@ EOD,
       ]);
     }
 
-    $required = array_filter(
+    $required = array_values(array_filter(
       array_keys($properties),
       static fn (string $key) => $key !== 'internerBezeichner',
-    );
+    ));
 
     parent::__construct($properties, [
       'required' => $required,
