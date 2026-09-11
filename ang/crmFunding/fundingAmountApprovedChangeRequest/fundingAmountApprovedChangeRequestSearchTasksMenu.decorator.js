@@ -123,7 +123,7 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
                 CRM.confirm({
                   title: ts('Approve with change'),
                   width: '400px',
-                  message: '<div class="form-group"><label style="display: block; margin-bottom: 5px;">' + ts('Approved amount') + '</label><input type="number" id="change-request-approved-amount" class="form-control" style="width: 100%; border: 1px solid #ccc !important; box-shadow: none !important;" /></div>',
+                  message: '<div class="form-group"><label for="change-request-approved-amount">' + ts('Approved amount') + '</label><input type="number" id="change-request-approved-amount" class="form-control" /></div>',
                   options: { no: ts('Cancel'), yes: ts('Confirm') },
                 }).on('crmConfirm:yes', function () {
                   const amount = document.getElementById('change-request-approved-amount').value;
