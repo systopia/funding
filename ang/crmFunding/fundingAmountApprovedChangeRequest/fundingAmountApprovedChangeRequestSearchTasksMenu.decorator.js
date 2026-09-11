@@ -74,25 +74,21 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
                 name: 'approve',
                 title: ts('Approve'),
                 confirm: ts('Do you want to approve the selected change requests?'),
-                number: '>= 0',
                 _isChangeRequestTask: true,
               },
               approvePartial: {
                 name: 'approvePartial',
                 title: ts('Approve with change'),
                 confirm: ts('Do you want to approve the selected change requests with changes?'),
-                number: '>= 0',
                 _isChangeRequestTask: true,
               },
               reject: {
                 name: 'reject',
                 title: ts('Reject'),
                 confirm: ts('Do you want to reject the selected change requests?'),
-                number: '>= 0',
                 _isChangeRequestTask: true,
               },
             };
-
             taskManager.tasks = searchKitTasks.map(task => {
               const taskName = task.name || task;
               if (definedTasks[taskName]) {
