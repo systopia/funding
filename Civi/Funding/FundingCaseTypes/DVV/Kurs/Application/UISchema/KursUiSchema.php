@@ -94,6 +94,18 @@ final class KursUiSchema extends JsonFormsGroup {
           // Abschnitt II.3
           new KursOeffentlicheMittelUiSchema($currency),
           new JsonFormsGroup('Finanzierung und beantragter KJP-Zuschuss', [
+            new JsonFormsControl(
+              '#/properties/finanzierung/properties/festbetragReisekosten', 'Reisekostenfestbetrag in ' . $currency
+            ),
+            new JsonFormsControl(
+              '#/properties/finanzierung/properties/festbetragTeilnehmer', 'Teilnehmer*innenfestbetrag in ' . $currency
+            ),
+            new JsonFormsControl(
+              '#/properties/finanzierung/properties/festbetragHonorar', 'Honorarfestbetrag in ' . $currency
+            ),
+            new JsonFormsControl(
+              '#/properties/finanzierung/properties/maximalerZuschuss', 'Maximaler KJP-Zuschuss in ' . $currency
+            ),
             // Abschnitt II.5
             new JsonFormsControl(
               '#/properties/finanzierung/properties/beantragterZuschuss', 'Beantragter KJP-Zuschuss in ' . $currency

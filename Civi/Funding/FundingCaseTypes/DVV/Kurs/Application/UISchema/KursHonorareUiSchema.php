@@ -46,6 +46,10 @@ final class KursHonorareUiSchema extends JsonFormsGroup {
         '#/properties/kosten/properties/honorareGesamt',
         'Honorarkosten gesamt in ' . $currency
       ),
+      new JsonFormsControl(
+        '#/properties/kosten/properties/honorartage',
+        'Tage, an denen Honorare anfallen'
+      ),
     ];
 
     parent::__construct(
