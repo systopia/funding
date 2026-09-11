@@ -1,0 +1,569 @@
+<?php
+/*
+ * Copyright (C) 2026 SYSTOPIA GmbH
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Civi\Funding\FundingCaseTypes\DVV\Kurs\JsonSchema;
+
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\ApplicationSchemaValidator;
+use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
+use Civi\Funding\Form\JsonSchema\JsonSchemaRecipient;
+use Civi\Funding\Form\MappedData\MappedDataLoader;
+use Civi\Funding\Form\Traits\AssertFormTrait;
+use Civi\Funding\FundingCaseTypes\DVV\Kurs\Application\JsonSchema\KursJsonSchema;
+use Civi\Funding\Validation\Traits\AssertValidationResultTrait;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\Validation\OpisValidatorFactory;
+use Civi\RemoteTools\Util\JsonConverter;
+use PHPUnit\Framework\TestCase;
+use Systopia\JsonSchema\Errors\ErrorCollector;
+use Systopia\JsonSchema\Translation\NullTranslator;
+
+/**
+ * @covers \Civi\Funding\FundingCaseTypes\DVV\Kurs\Application\JsonSchema\KursJsonSchema
+ */
+class KursJsonSchemaTest extends TestCase {
+
+  use AssertFormTrait;
+
+  use AssertValidationResultTrait;
+
+  private ApplicationSchemaValidator $validator;
+
+  protected function setUp(): void {
+    parent::setUp();
+    $this->validator = new ApplicationSchemaValidator(
+      new NullTranslator(),
+      OpisApplicationValidatorFactory::getValidator()
+    );
+  }
+
+  public function testJsonSchema(): void {
+    $possibleRecipients = [
+      1 => 'Organization 1',
+      2 => 'Organization 2',
+    ];
+    $festbetragReisekosten = 60.0;
+    $festbetragTeilnahmetag = 40.0;
+    $festbetragHonorartag = 305.0;
+    $jsonSchema = new KursJsonSchema(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      $possibleRecipients,
+      $festbetragReisekosten,
+      $festbetragTeilnahmetag,
+      $festbetragHonorartag
+    );
+
+    $properties = $jsonSchema->getKeywordValue('properties');
+    static::assertInstanceOf(JsonSchema::class, $properties);
+    static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
+
+    $honorartage = 1;
+    $teilnehmerGesamt = 5;
+    $data = [
+      'grunddaten' => [
+        'schutzkonzept' => FALSE,
+        'keinSchutzkonzeptBegruendung' => 'abc',
+        'titel' => 'Test',
+        'kurzbeschreibungDesInhalts' => 'foo bar',
+        'internerBezeichner' => 'interne id',
+        'zeitraeume' => [
+          [
+            'beginn' => '2022-08-25',
+            'ende' => '2022-08-25',
+          ],
+          [
+            'beginn' => '2022-08-24',
+            'ende' => '2022-08-24',
+          ],
+        ],
+        'teilnehmer' => [
+          'gesamt' => $teilnehmerGesamt,
+          'weiblich' => 4,
+          'divers' => 3,
+          'unter27' => 2,
+          'inJugendhilfeEhrenamtlichTaetig' => 1,
+          'inJugendhilfeHauptamtlichTaetig' => 0,
+          'referenten' => 0,
+        ],
+      ],
+      'empfaenger' => 2,
+      'kosten' => [
+        'honorare' => [
+          [
+            'berechnungsgrundlage' => 'tagessatz',
+            'dauer' => 11.1,
+            'verguetung' => 22.22,
+            'leistung' => 'Leistung 1',
+            'qualifikation' => 'Qualifikation 1',
+          ],
+          [
+            'berechnungsgrundlage' => 'stundensatz',
+            'dauer' => 9.9,
+            'verguetung' => 10,
+            'leistung' => 'Leistung 2',
+            'qualifikation' => 'Qualifikation 2',
+          ],
+        ],
+        'honorartage' => $honorartage,
+        'unterkunftUndVerpflegung' => 222.22,
+        'fahrtkosten' => [
+          'teilnehmer' => 2.2,
+          'referenten' => 3.3,
+        ],
+        'sachkosten' => [
+          'ausstattung' => [
+            [
+              'gegenstand' => 'Thing1',
+              'betrag' => 5.5,
+            ],
+            [
+              'gegenstand' => 'Thing2',
+              'betrag' => 6.6,
+            ],
+          ],
+        ],
+        'sonstigeAusgaben' => [
+          [
+            'betrag' => 12.34,
+            'zweck' => 'Sonstige Ausgaben 1',
+          ],
+          [
+            'betrag' => 56.78,
+            'zweck' => 'Sonstige Ausgaben 2',
+          ],
+        ],
+      ],
+      'finanzierung' => [
+        'teilnehmerbeitraege' => 100.00,
+        'eigenmittel' => 10.00,
+        'spenden' => 3.0,
+        'oeffentlicheMittel' => [
+          'europa' => 1.11,
+          'bundeslaender' => 2.22,
+          'staedteUndKreise' => 3.33,
+        ],
+      ],
+      'beschreibung' => [
+        'thematischeSchwerpunkte' => 'Schwerpunkte',
+        'geplanterAblauf' => 'Ablauf',
+        'beitragZuPolitischerJugendbildung' => 'Beitrag',
+        'zielgruppe' => 'Zielgruppe',
+        'ziele' => [
+          'persoenlichkeitsbildung',
+        ],
+        'bildungsanteil' => 22,
+        'veranstaltungsort' => 'Veranstaltungsort',
+        'mitSchuleKooperiert' => TRUE,
+        'partnerschule' => 'Partner',
+        'artDerKooperation' => 'Art der Kooperation',
+      ],
+      'projektunterlagen' => [
+        [
+          'datei' => 'https://example.org/test.txt',
+          'beschreibung' => 'Test',
+        ],
+      ],
+      'foo' => 'baz',
+    ];
+
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame([], $result->getLeafErrorMessages());
+    static::assertCount(9, $result->getCostItemsData());
+    static::assertCount(6, $result->getResourcesItemsData());
+
+    $resultData = JsonConverter::toStdClass($result->getData());
+
+    static::assertSame(2, $resultData->grunddaten->programmtage);
+
+    $unterkunftUndVerpflegung = 222.22;
+    $honorar1 = round(11.1 * 22.22, 2);
+    static::assertSame($honorar1, $resultData->kosten->honorare[0]->betrag);
+    $honorar2 = round(9.9 * 10, 2);
+    static::assertSame($honorar2, $resultData->kosten->honorare[1]->betrag);
+    $honorareGesamt = $honorar1 + $honorar2;
+    static::assertSame($honorareGesamt, $resultData->kosten->honorareGesamt);
+    $fahrtkostenGesamt = 2.2 + 3.3;
+    static::assertSame($fahrtkostenGesamt, $resultData->kosten->fahrtkostenGesamt);
+    $sachkostenGesamt = 5.5 + 6.6;
+    static::assertSame($sachkostenGesamt, $resultData->kosten->sachkostenGesamt);
+    $sonstigeAusgabenGesamt = 12.34 + 56.78;
+    static::assertSame($sonstigeAusgabenGesamt, $resultData->kosten->sonstigeAusgabenGesamt);
+    $gesamtkosten = $unterkunftUndVerpflegung
+      + $honorareGesamt
+      + $fahrtkostenGesamt
+      + $sachkostenGesamt
+      + $sonstigeAusgabenGesamt;
+    static::assertSame($gesamtkosten, $resultData->kosten->gesamtkosten);
+
+    $oeffentlicheMittelGesamt = 1.11 + 2.22 + 3.33;
+    static::assertSame($oeffentlicheMittelGesamt, $resultData->finanzierung->oeffentlicheMittelGesamt);
+    $spenden = 3.0;
+    $gesamtmittel = 100.00 + 10.00 + $spenden + $oeffentlicheMittelGesamt;
+    static::assertSame($gesamtmittel, $resultData->finanzierung->gesamtmittel);
+
+    $programmtage = 2;
+    $maximalerZuschuss = round(
+      $teilnehmerGesamt * $festbetragReisekosten
+      + $programmtage * $teilnehmerGesamt * $festbetragTeilnahmetag
+      + $honorartage * $festbetragHonorartag, 2);
+    static::assertSame($maximalerZuschuss, $resultData->finanzierung->maximalerZuschuss);
+
+    $beantragterZuschuss = round($gesamtkosten - $gesamtmittel, 2);
+    static::assertSame($beantragterZuschuss, $resultData->finanzierung->beantragterZuschuss);
+
+    $resultData->foo = 'bar';
+    static::assertAllPropertiesSet($jsonSchema->toStdClass(), $resultData);
+
+    $mappedDataLoader = new MappedDataLoader();
+    $mappedData = $mappedDataLoader->getMappedData($result->getTaggedData());
+    static::assertEquals([
+      'title' => 'Test',
+      'short_description' => 'foo bar',
+      'funding_application_process_extra.internal_identifier' => 'interne id',
+      'recipient_contact_id' => 2,
+      'start_date' => '2022-08-24',
+      'end_date' => '2022-08-25',
+      'amount_requested' => $beantragterZuschuss,
+    ], $mappedData);
+  }
+
+  public function testFinanzierungNichtAusgeglichen(): void {
+    $possibleRecipients = [
+      1 => 'Organization 1',
+      2 => 'Organization 2',
+    ];
+    $jsonSchema = new KursJsonSchema(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      $possibleRecipients,
+      1.0,
+      2.0,
+      3.0
+    );
+
+    $maximalerZuschuss = 5 * 1.0 + 2 * 5 * 2.0 + 2 * 3.0; // = 26.0;
+
+    $properties = $jsonSchema->getKeywordValue('properties');
+    static::assertInstanceOf(JsonSchema::class, $properties);
+    static::assertEquals(new JsonSchemaRecipient($possibleRecipients), $properties->getKeywordValue('empfaenger'));
+
+    $data = [
+      'grunddaten' => [
+        'schutzkonzept' => TRUE,
+        'keinSchutzkonzeptBegruendung' => '',
+        'titel' => 'Test',
+        'kurzbeschreibungDesInhalts' => 'foo bar',
+        'internerBezeichner' => 'interne id',
+        'zeitraeume' => [
+          [
+            'beginn' => '2022-08-25',
+            'ende' => '2022-08-25',
+          ],
+          [
+            'beginn' => '2022-08-24',
+            'ende' => '2022-08-24',
+          ],
+        ],
+        'teilnehmer' => [
+          'gesamt' => 5,
+          'weiblich' => 4,
+          'divers' => 3,
+          'unter27' => 2,
+          'inJugendhilfeEhrenamtlichTaetig' => 1,
+          'inJugendhilfeHauptamtlichTaetig' => 0,
+          'referenten' => 0,
+        ],
+      ],
+      'empfaenger' => 2,
+      'kosten' => [
+        'honorare' => [
+          [
+            'berechnungsgrundlage' => 'tagessatz',
+            'dauer' => 11.1,
+            'verguetung' => 22.22,
+            'leistung' => 'Leistung 1',
+            'qualifikation' => 'Qualifikation 1',
+          ],
+          [
+            'berechnungsgrundlage' => 'stundensatz',
+            'dauer' => 9.9,
+            'verguetung' => 10,
+            'leistung' => 'Leistung 2',
+            'qualifikation' => 'Qualifikation 2',
+          ],
+        ],
+        'honorartage' => 2,
+        'unterkunftUndVerpflegung' => 222.22,
+        'fahrtkosten' => [
+          'teilnehmer' => 2.2,
+          'referenten' => 3.3,
+        ],
+        'sachkosten' => [
+          'ausstattung' => [
+            [
+              'gegenstand' => 'Thing1',
+              'betrag' => 5.5,
+            ],
+            [
+              'gegenstand' => 'Thing2',
+              'betrag' => 6.6,
+            ],
+          ],
+        ],
+        'sonstigeAusgaben' => [
+          [
+            'betrag' => 12.34,
+            'zweck' => 'Sonstige Ausgaben 1',
+          ],
+          [
+            'betrag' => 56.78,
+            'zweck' => 'Sonstige Ausgaben 2',
+          ],
+        ],
+      ],
+      'finanzierung' => [
+        'teilnehmerbeitraege' => 100.00,
+        'eigenmittel' => 10.00,
+        'spenden' => 3.0,
+        'oeffentlicheMittel' => [
+          'europa' => 1.11,
+          'bundeslaender' => 2.22,
+          'staedteUndKreise' => 3.33,
+        ],
+      ],
+      'beschreibung' => [
+        'thematischeSchwerpunkte' => 'Schwerpunkte',
+        'geplanterAblauf' => 'Ablauf',
+        'beitragZuPolitischerJugendbildung' => 'Beitrag',
+        'zielgruppe' => 'Zielgruppe',
+        'ziele' => [
+          'persoenlichkeitsbildung',
+        ],
+        'bildungsanteil' => 22,
+        'veranstaltungsort' => 'Veranstaltungsort',
+        'mitSchuleKooperiert' => TRUE,
+        'partnerschule' => 'Partner',
+        'artDerKooperation' => 'Art der Kooperation',
+      ],
+      'projektunterlagen' => [
+        [
+          'datei' => 'https://example.org/test.txt',
+          'beschreibung' => 'Test',
+        ],
+      ],
+      'foo' => 'baz',
+    ];
+
+    $result = $this->validator->validate($jsonSchema, $data);
+    static::assertSame(
+      ['/finanzierung/gesamtfinanzierung' => ['Die Finanzierung ist nicht ausgeglichen.']],
+      $result->getLeafErrorMessages()
+    );
+  }
+
+  /**
+   * Test that beschreibung/partnerschule and beschreibung/artDerKooperation are
+   * only required if beschreibung/mitSchuleKooperiert is true.
+   */
+  public function testMitSchuleKooperiert(): void {
+    $possibleRecipients = [
+      1 => 'Organization 1',
+    ];
+    $jsonSchema = new KursJsonSchema(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      $possibleRecipients,
+      1.0,
+      2.0,
+      3.0
+    );
+
+    $validator = OpisValidatorFactory::getValidator();
+    $validator->setMaxErrors(20);
+
+    $data = (object) [
+      'beschreibung' => (object) [
+        'mitSchuleKooperiert' => TRUE,
+        'partnerschule' => '',
+        'artDerKooperation' => '',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $partnerSchuleErrors = $errorCollector->getErrorsAt('/beschreibung/partnerschule');
+    static::assertCount(1, $partnerSchuleErrors);
+    static::assertSame('minLength', $partnerSchuleErrors[0]->keyword());
+    $artDerKooperationErrors = $errorCollector->getErrorsAt('/beschreibung/artDerKooperation');
+    static::assertCount(1, $artDerKooperationErrors);
+    static::assertSame('minLength', $artDerKooperationErrors[0]->keyword());
+
+    $data = (object) [
+      'beschreibung' => (object) [
+        'mitSchuleKooperiert' => TRUE,
+        'partnerschule' => 'q',
+        'artDerKooperation' => 'w',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $partnerSchuleErrors = $errorCollector->getErrorsAt('/beschreibung/partnerschule');
+    static::assertCount(0, $partnerSchuleErrors);
+    $artDerKooperationErrors = $errorCollector->getErrorsAt('/beschreibung/artDerKooperation');
+    static::assertCount(0, $artDerKooperationErrors);
+
+    $data = (object) [
+      'beschreibung' => (object) [
+        'mitSchuleKooperiert' => FALSE,
+        'partnerschule' => '',
+        'artDerKooperation' => '',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $partnerSchuleErrors = $errorCollector->getErrorsAt('/beschreibung/partnerschule');
+    static::assertCount(0, $partnerSchuleErrors);
+    $artDerKooperationErrors = $errorCollector->getErrorsAt('/beschreibung/artDerKooperation');
+    static::assertCount(0, $artDerKooperationErrors);
+  }
+
+  /**
+   * Test that grunddaten/keinSchutzkonzeptBegruendung is
+   * only required if grunddaten/schutzkonzept is false.
+   */
+  public function testSchutzkonzept(): void {
+    $possibleRecipients = [
+      1 => 'Organization 1',
+    ];
+    $jsonSchema = new KursJsonSchema(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      $possibleRecipients,
+      1.0,
+      2.0,
+      3.0
+    );
+
+    $validator = OpisValidatorFactory::getValidator();
+    $validator->setMaxErrors(20);
+
+    $data = (object) [
+      'grunddaten' => (object) [
+        'schutzkonzept' => FALSE,
+        'keinSchutzkonzeptBegruendung' => '',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $keinSchutzkonzeptBegruendungErrors = $errorCollector->getErrorsAt('/grunddaten/keinSchutzkonzeptBegruendung');
+    static::assertCount(1, $keinSchutzkonzeptBegruendungErrors);
+    static::assertSame('minLength', $keinSchutzkonzeptBegruendungErrors[0]->keyword());
+
+    $data = (object) [
+      'grunddaten' => (object) [
+        'mitSchuleKooperiert' => FALSE,
+        'keinSchutzkonzeptBegruendung' => '',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $keinSchutzkonzeptBegruendungErrors = $errorCollector->getErrorsAt('/grunddaten/keinSchutzkonzeptBegruendung');
+
+    $data = (object) [
+      'grunddaten' => (object) [
+        'schutzkonzept' => TRUE,
+        'keinSchutzkonzeptBegruendung' => '',
+      ],
+    ];
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+    $keinSchutzkonzeptBegruendungErrors = $errorCollector->getErrorsAt('/grunddaten/keinSchutzkonzeptBegruendung');
+    static::assertCount(0, $keinSchutzkonzeptBegruendungErrors);
+  }
+
+  public function testNotAllowedDates(): void {
+    $possibleRecipients = [
+      1 => 'Organization 1',
+      2 => 'Organization 2',
+    ];
+    $jsonSchema = new KursJsonSchema(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      $possibleRecipients,
+      1.0,
+      2.0,
+      3.0
+    );
+
+    $data = (object) [
+      'grunddaten' => (object) [
+        'zeitraeume' => [
+          (object) [
+            'beginn' => '2022-08-23',
+            'ende' => '2022-08-26',
+          ],
+        ],
+      ],
+    ];
+
+    $validator = OpisValidatorFactory::getValidator();
+    $validator->setMaxErrors(20);
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+
+    $beginnErrors = $errorCollector->getErrorsAt('/grunddaten/zeitraeume/0/beginn');
+    static::assertCount(1, $beginnErrors);
+    static::assertSame('minDate', $beginnErrors[0]->keyword());
+    $endeErrors = $errorCollector->getErrorsAt('/grunddaten/zeitraeume/0/ende');
+    static::assertCount(1, $endeErrors);
+    static::assertSame('maxDate', $endeErrors[0]->keyword());
+  }
+
+  public function testEndeBeforeBeginn(): void {
+    $jsonSchema = new KursJsonSchema(
+      new \DateTime('2022-08-24'),
+      new \DateTime('2022-08-25'),
+      [],
+      1.0,
+      2.0,
+      3.0
+    );
+
+    $data = (object) [
+      'grunddaten' => (object) [
+        'zeitraeume' => [
+          (object) [
+            'beginn' => '2022-08-25',
+            'ende' => '2022-08-24',
+          ],
+        ],
+      ],
+    ];
+
+    $validator = OpisValidatorFactory::getValidator();
+    $errorCollector = new ErrorCollector();
+    $validator->validate($data, \json_encode($jsonSchema), ['errorCollector' => $errorCollector]);
+
+    static::assertFalse($errorCollector->hasErrorAt('/grunddaten/zeitraeume/0/beginn'));
+    $endeErrors = $errorCollector->getErrorsAt('/grunddaten/zeitraeume/0/ende');
+    static::assertCount(1, $endeErrors);
+    static::assertSame('minDate', $endeErrors[0]->keyword());
+  }
+
+}

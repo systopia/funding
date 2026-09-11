@@ -111,7 +111,7 @@ EOD,
         'inJugendhilfeEhrenamtlichTaetig' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
         'inJugendhilfeHauptamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'referenten' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-      ]),
+      ], ['required' => ['gesamt']]),
     ];
 
     if ($report) {

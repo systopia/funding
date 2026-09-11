@@ -33,7 +33,10 @@ final class KursJsonSchema extends JsonSchemaObject {
   public function __construct(
     \DateTimeInterface $applicationBegin,
     \DateTimeInterface $applicationEnd,
-    array $possibleRecipients
+    array $possibleRecipients,
+    float $festbetragReisekosten,
+    float $festbetragTeilnahmetag,
+    float $festbetragHonorartag,
   ) {
     $properties = [
       'grunddaten' => new KursGrunddatenSchema($applicationBegin, $applicationEnd),
@@ -41,7 +44,7 @@ final class KursJsonSchema extends JsonSchemaObject {
       // Abschnitt I
       'kosten' => new KursKostenSchema(),
       // Abschnitt II
-      'finanzierung' => new KursFinanzierungSchema(),
+      'finanzierung' => new KursFinanzierungSchema($festbetragReisekosten, $festbetragTeilnahmetag, $festbetragHonorartag),
       // Beschreibung des Vorhabens (not part of default "AV-K1")
       'beschreibung' => new KursBeschreibungSchema(),
       'projektunterlagen' => new JsonSchemaArray(new JsonSchemaObject([

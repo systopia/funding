@@ -26,6 +26,7 @@ use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaMoney;
 use Civi\RemoteTools\JsonSchema\JsonSchemaNumber;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
@@ -79,6 +80,7 @@ final class KursKostenSchema extends JsonSchemaObject {
       'honorareGesamt' => new JsonSchemaCalculate('number', 'round(sum(map(honorare, "value.betrag")), 2)', [
         'honorare' => new JsonSchemaDataPointer('1/honorare'),
       ]),
+      'honorartage' => new JsonSchemaInteger(['minimum' => 0]),
       // Abschnitt I.4
       'fahrtkosten' => new JsonSchemaObject([
         'teilnehmer' => new JsonSchemaMoney([
@@ -172,6 +174,7 @@ final class KursKostenSchema extends JsonSchemaObject {
     ], [
       'required' => [
         'honorare',
+        'honorartage',
         'fahrtkosten',
         'sachkosten',
         'sonstigeAusgaben',

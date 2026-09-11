@@ -55,6 +55,9 @@ class KursJsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
       $this->existingCaseRecipientLoader->getRecipient($fundingCase),
+      $fundingProgram->get('funding_program_dvv.festbetrag_reisekosten'),
+      $fundingProgram->get('funding_program_dvv.festbetrag_teilnahmetag'),
+      $fundingProgram->get('funding_program_dvv.festbetrag_honorartag'),
     );
   }
 
@@ -67,6 +70,9 @@ class KursJsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
       $this->possibleRecipientsLoader->getPossibleRecipients($contactId, $fundingProgram),
+      $fundingProgram->get('funding_program_dvv.festbetrag_reisekosten'),
+      $fundingProgram->get('funding_program_dvv.festbetrag_teilnahmetag'),
+      $fundingProgram->get('funding_program_dvv.festbetrag_honorartag'),
     );
   }
 
@@ -78,6 +84,9 @@ class KursJsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
       [],
+      $fundingProgram->get('funding_program_dvv.festbetrag_reisekosten'),
+      $fundingProgram->get('funding_program_dvv.festbetrag_teilnahmetag'),
+      $fundingProgram->get('funding_program_dvv.festbetrag_honorartag'),
     );
   }
 

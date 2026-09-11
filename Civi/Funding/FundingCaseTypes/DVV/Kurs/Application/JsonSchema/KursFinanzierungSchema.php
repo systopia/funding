@@ -28,7 +28,11 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class KursFinanzierungSchema extends JsonSchemaObject {
 
-  public function __construct() {
+  public function __construct(
+    float $festbetragReisekosten,
+    float $festbetragTeilnahmetag,
+    float $festbetragHonorartag,
+  ) {
     parent::__construct([
       // Abschnitt II.1
       'teilnehmerbeitraege' => new JsonSchemaMoney([
@@ -103,15 +107,77 @@ final class KursFinanzierungSchema extends JsonSchemaObject {
           'oeffentlicheMittelGesamt' => new JsonSchemaDataPointer('1/oeffentlicheMittelGesamt'),
         ],
       ),
+      // Festbeträge
+      'honorarkostenFestbetrag' => new JsonSchemaCalculate(
+        'number',
+        'round(honorartage * honorartagFestbetrag, 2)',
+        [
+          'honorartage' => new JsonSchemaDataPointer('2/kosten/honorartage', 0),
+          'honorartagFestbetrag' => $festbetragHonorartag,
+        ],
+      ),
+      'reisekostenFestbetrag' => new JsonSchemaCalculate(
+        'number',
+        'round(teilnehmerzahl * reisekostenFestbetrag, 2)',
+        [
+          'teilnehmerzahl' => new JsonSchemaDataPointer('2/grunddaten/teilnehmer/gesamt', 0),
+          'reisekostenFestbetrag' => $festbetragReisekosten,
+        ],
+      ),
+      'teilnahmeFestbetrag' => new JsonSchemaCalculate(
+        'number',
+        'round(programmtage * teilnehmerzahl * teilnahmetagFestbetrag, 2)',
+        [
+          'programmtage' => new JsonSchemaDataPointer('2/grunddaten/programmtage', 0),
+          'teilnehmerzahl' => new JsonSchemaDataPointer('2/grunddaten/teilnehmer/gesamt', 0),
+          'teilnahmetagFestbetrag' => $festbetragTeilnahmetag,
+        ],
+      ),
+      // Maximaler Zuschuss
+      'maximalerZuschuss' => new JsonSchemaCalculate(
+        'number',
+        'round(honorarkostenFestbetrag + reisekostenFestbetrag + teilnahmeFestbetrag, 2)',
+        [
+          'honorarkostenFestbetrag' => new JsonSchemaDataPointer('1/honorarkostenFestbetrag'),
+          'reisekostenFestbetrag' => new JsonSchemaDataPointer('1/reisekostenFestbetrag'),
+          'teilnahmeFestbetrag' => new JsonSchemaDataPointer('1/teilnahmeFestbetrag'),
+        ]
+      ),
       // Beantragter Zuschuss
-      'beantragterZuschuss' => new JsonSchemaCalculate('number', 'round(max(gesamtkosten - gesamtmittel, 0), 2)', [
-        'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
-        'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
-      ], NULL, ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])]),
-      'gesamtfinanzierung' => new JsonSchemaCalculate('number', 'round(beantragterZuschuss + gesamtmittel, 2)', [
-        'beantragterZuschuss' => new JsonSchemaDataPointer('1/beantragterZuschuss'),
-        'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
-      ]),
+      'beantragterZuschuss' => new JsonSchemaCalculate(
+        'number',
+        'min(round(max(gesamtkosten - gesamtmittel, 0), 2), maximalerZuschuss)',
+        [
+          'gesamtkosten' => new JsonSchemaDataPointer('/kosten/gesamtkosten'),
+          'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
+          'maximalerZuschuss' => new JsonSchemaDataPointer('1/maximalerZuschuss'),
+        ],
+        NULL,
+        ['$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']])]
+      ),
+      'gesamtfinanzierung' => new JsonSchemaCalculate(
+        'number',
+        'round(beantragterZuschuss + gesamtmittel, 2)',
+        [
+          'beantragterZuschuss' => new JsonSchemaDataPointer('1/beantragterZuschuss'),
+          'gesamtmittel' => new JsonSchemaDataPointer('1/gesamtmittel'),
+        ],
+        0,
+        [
+          '$validations' => [
+            JsonSchema::fromArray([
+              'keyword' => 'evaluate',
+              'value' => [
+                'expression' => 'round(gesamtkosten - data, 2) == 0',
+                'variables' => [
+                  'gesamtkosten' => new JsonSchemaDataPointer('2/kosten/gesamtkosten'),
+                ],
+              ],
+              'message' => 'Die Finanzierung ist nicht ausgeglichen.',
+            ]),
+          ],
+        ]
+      ),
     ], [
       'required' => [
         'oeffentlicheMittel',
