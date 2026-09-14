@@ -6,7 +6,6 @@ namespace Civi\Funding\Api4\ActionHandler\RemoteAmountApprovedChangeRequest;
 
 use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
-use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
 // phpcs:ignore Generic.Files.LineLength.TooLong
 final class GetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {

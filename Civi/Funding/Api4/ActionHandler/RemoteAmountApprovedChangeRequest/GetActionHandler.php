@@ -6,7 +6,6 @@ namespace Civi\Funding\Api4\ActionHandler\RemoteAmountApprovedChangeRequest;
 
 use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler;
-use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
 final class GetActionHandler extends AbstractRemoteFundingGetActionHandler {
 
