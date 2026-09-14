@@ -23,13 +23,25 @@ use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\Result;
 use Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction;
+use Civi\Funding\FundingCase\FundingCaseManager;
+use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
-class GetAction extends AbstractReferencingDAOGetAction {
+final class GetAction extends AbstractReferencingDAOGetAction {
 
   private bool $canReviewSelected;
 
-  public function __construct() {
-    parent::__construct(FundingAmountApprovedChangeRequest::getEntityName(), NULL);
+  public function __construct(
+    ?Api4Interface $api4 = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?RequestContextInterface $requestContext = NULL
+  ) {
+    parent::__construct(
+      FundingAmountApprovedChangeRequest::getEntityName(),
+      $api4,
+      $fundingCaseManager,
+      $requestContext
+    );
   }
 
   public function _run(Result $result): void {
@@ -80,9 +92,9 @@ class GetAction extends AbstractReferencingDAOGetAction {
       return FALSE;
     }
 
-    $possibleActions = FundingCase::getPossibleActions()
-      ->setId($fundingCaseId)
-      ->execute();
+    $possibleActions = $this->getApi4()->executeAction(
+      FundingCase::getPossibleActions()->setId($fundingCaseId)
+    );
 
     return in_array('review-amount-approved-change-request', (array) $possibleActions, TRUE);
   }

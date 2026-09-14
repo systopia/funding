@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\ActionHandler\RemoteAmountApprovedChangeRequest;
+namespace Civi\Funding\FundingCase\Api4\ActionHandler\RemoteAmountApprovedChangeRequest;
 
 use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;

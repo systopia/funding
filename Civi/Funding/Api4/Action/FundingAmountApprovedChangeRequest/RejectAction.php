@@ -20,30 +20,18 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest;
 
 use Civi\Api4\FundingAmountApprovedChangeRequest;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 
-class RejectAction extends AbstractFundingAmountApprovedChangeRequestAction {
+final class RejectAction extends AbstractAction {
+
+  use ActionHandlerRunTrait;
+
+  use IdsParameterTrait;
 
   public function __construct() {
     parent::__construct(FundingAmountApprovedChangeRequest::getEntityName(), 'reject');
-  }
-
-  /**
-   * @param int $id
-   * @param array<string, mixed> $request
-   *
-   * @return array<string, mixed>
-   */
-  protected function processRequest(int $id, array $request): array {
-    FundingAmountApprovedChangeRequest::update(FALSE)
-      ->addWhere('id', '=', $id)
-      ->setValues(['status' => 'rejected'])
-      ->execute();
-
-    return [
-      'id' => $id,
-      'status' => 'rejected',
-      'amount_approved' => NULL,
-    ];
   }
 
 }
