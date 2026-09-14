@@ -88,7 +88,7 @@ final class FundingAmountApprovedChangeRequestEntity extends AbstractEntity {
   }
 
   public function getComment(): ?string {
-    return $this->values['comment'] ?? NULL;
+    return $this->values['comment'];
   }
 
   public function setComment(?string $comment): self {
@@ -98,17 +98,17 @@ final class FundingAmountApprovedChangeRequestEntity extends AbstractEntity {
   }
 
   public function getDecisionDate(): ?\DateTime {
-    return isset($this->values['decision_date']) ? new \DateTime($this->values['decision_date']) : NULL;
+    return static::toDateTimeOrNull($this->values['decision_date'] ?? NULL);
   }
 
   public function setDecisionDate(?\DateTimeInterface $decisionDate): self {
-    $this->values['decision_date'] = ($decisionDate !== NULL) ? static::toDateTimeStr($decisionDate) : NULL;
+    $this->values['decision_date'] = static::toDateTimeStrOrNull($decisionDate);
 
     return $this;
   }
 
   public function getDecisionContactId(): ?int {
-    return $this->values['decision_contact_id'] ?? NULL;
+    return $this->values['decision_contact_id'];
   }
 
   public function setDecisionContactId(?int $decisionContactId): self {
@@ -118,7 +118,7 @@ final class FundingAmountApprovedChangeRequestEntity extends AbstractEntity {
   }
 
   public function getAmountApproved(): ?float {
-    return isset($this->values['amount_approved']) ? (float) $this->values['amount_approved'] : NULL;
+    return $this->values['amount_approved'];
   }
 
   public function setAmountApproved(?float $amountApproved): self {
