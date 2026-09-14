@@ -21,10 +21,16 @@ namespace Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingAmountApprovedChangeRequest;
-use Civi\Api4\FundingCase;
 use Civi\Api4\Generic\AbstractAction;
 use Civi\Api4\Generic\Result;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseActionsDeterminerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
 use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\FundingCase\Actions\FundingCaseActions;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
+use Civi\Funding\FundingCase\FundingCaseManager;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
@@ -34,6 +40,22 @@ use Webmozart\Assert\Assert;
 abstract class AbstractFundingAmountApprovedChangeRequestAction extends AbstractAction {
 
   use IdsParameterTrait;
+  use ApplicationProcessManagerTrait;
+  use FundingCaseManagerTrait;
+  use FundingCaseActionsDeterminerTrait;
+
+  public function __construct(
+    string $entityName,
+    string $actionName,
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
+    ?FundingCaseManager $fundingCaseManager = NULL,
+    ?FundingCaseActionsDeterminerInterface $fundingCaseActionsDeterminer = NULL,
+  ) {
+    parent::__construct($entityName, $actionName);
+    $this->_applicationProcessManager = $applicationProcessManager;
+    $this->_fundingCaseManager = $fundingCaseManager;
+    $this->_fundingCaseActionsDeterminer = $fundingCaseActionsDeterminer;
+  }
 
   public function _run(Result $result): void {
     $processed = [];
@@ -51,25 +73,14 @@ abstract class AbstractFundingAmountApprovedChangeRequestAction extends Abstract
       Assert::integerish($request['funding_case_id']);
       $fundingCaseId = (int) $request['funding_case_id'];
 
-      $fundingCase = FundingCase::get(FALSE)
-        ->addSelect('id')
-        ->addWhere('id', '=', $fundingCaseId)
-        ->execute()
-        ->first();
+      $fundingCaseBundle = $this->getFundingCaseManager()->getBundle($fundingCaseId);
+      Assert::notNull($fundingCaseBundle, E::ts('Funding case with ID "%1" not found', [1 => $fundingCaseId]));
 
-      Assert::notNull($fundingCase, E::ts('Funding case with ID "%1" not found', [1 => $fundingCaseId]));
-
-      $possibleActions = FundingCase::getPossibleActions()
-        ->setId($fundingCaseId)
-        ->execute();
-
-      $canReview = FALSE;
-      foreach ($possibleActions as $action) {
-        if ($action === 'review-amount-approved-change-request') {
-          $canReview = TRUE;
-          break;
-        }
-      }
+      $canReview = $this->getFundingCaseActionsDeterminer()->isActionAllowed(
+        FundingCaseActions::REVIEW_AMOUNT_APPROVED_CHANGE_REQUEST,
+        $fundingCaseBundle,
+        $this->getApplicationProcessManager()->getStatusListByFundingCaseId($fundingCaseId),
+      );
 
       if (!$canReview) {
         throw new UnauthorizedException(E::ts('Not authorized to review this change request.'));

@@ -12,6 +12,7 @@ use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\Fixtures\PayoutProcessFixture;
 use Civi\Funding\Util\RequestTestUtil;
 use CRM_Core_DAO;
 use CRM_Funding_ExtensionUtil as E;
@@ -70,6 +71,7 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
         'amount_approved' => 50.0,
       ]
     );
+    PayoutProcessFixture::addFixture($fundingCase->getId());
 
     AttachmentFixture::addFixture(
       'civicrm_funding_case_type',
@@ -125,6 +127,7 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
         'amount_approved' => 50.0,
       ]
     );
+    PayoutProcessFixture::addFixture($fundingCase->getId());
 
     AttachmentFixture::addFixture(
       'civicrm_funding_case_type',

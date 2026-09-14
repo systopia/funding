@@ -64,13 +64,9 @@ class ApprovePartialAction extends AbstractFundingAmountApprovedChangeRequestAct
       ])
       ->execute();
 
-    FundingCase::update(FALSE)
-      ->addWhere('id', '=', $fundingCaseId)
-      ->setValues(['amount_approved' => $amount])
-      ->execute();
-
-    FundingCase::recreateTransferContract()
+    FundingCase::updateAmountApproved()
       ->setId($fundingCaseId)
+      ->setAmount($amount)
       ->execute();
 
     return [
