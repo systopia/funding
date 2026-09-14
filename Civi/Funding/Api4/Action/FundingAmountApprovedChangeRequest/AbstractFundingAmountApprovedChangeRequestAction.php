@@ -34,9 +34,6 @@ use Civi\Funding\FundingCase\FundingCaseManager;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-/**
- * @method self setIds(list<int> $ids)
- */
 abstract class AbstractFundingAmountApprovedChangeRequestAction extends AbstractAction {
 
   use IdsParameterTrait;

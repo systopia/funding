@@ -23,10 +23,6 @@ use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Api4\FundingCase;
 use Webmozart\Assert\Assert;
 
-/**
- * @method float getAmountApproved()
- * @method $this setIds(list<int> $ids)
- */
 class ApprovePartialAction extends AbstractFundingAmountApprovedChangeRequestAction {
 
   protected ?float $amountApproved = NULL;

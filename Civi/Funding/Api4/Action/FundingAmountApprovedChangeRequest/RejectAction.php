@@ -21,9 +21,6 @@ namespace Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest;
 
 use Civi\Api4\FundingAmountApprovedChangeRequest;
 
-/**
- * @method $this setIds(list<int> $ids)
- */
 class RejectAction extends AbstractFundingAmountApprovedChangeRequestAction {
 
   public function __construct() {

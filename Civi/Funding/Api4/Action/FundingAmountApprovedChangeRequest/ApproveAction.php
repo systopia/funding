@@ -23,9 +23,6 @@ use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Api4\FundingCase;
 use Webmozart\Assert\Assert;
 
-/**
- * @method $this setIds(list<int> $ids)
- */
 class ApproveAction extends AbstractFundingAmountApprovedChangeRequestAction {
 
   public function __construct() {
