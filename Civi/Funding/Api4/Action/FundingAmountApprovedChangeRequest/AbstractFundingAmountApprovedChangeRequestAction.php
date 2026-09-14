@@ -80,7 +80,7 @@ abstract class AbstractFundingAmountApprovedChangeRequestAction extends Abstract
       );
 
       if (!$canReview) {
-        throw new UnauthorizedException(E::ts('Not authorized to review this change request.'));
+        throw new UnauthorizedException('Not authorized to review this change request.');
       }
 
       $res = $this->processRequest($id, $request);
