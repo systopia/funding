@@ -26,43 +26,62 @@ use Civi\Funding\Api4\Action\FundingCase\AbstractReferencingDAOGetAction;
 
 class GetAction extends AbstractReferencingDAOGetAction {
 
+  private bool $canReviewSelected;
+
   public function __construct() {
     parent::__construct(FundingAmountApprovedChangeRequest::getEntityName(), NULL);
   }
 
   public function _run(Result $result): void {
     $this->initOriginalSelect();
-    $canReviewSelected = $this->isFieldExplicitlySelected('CAN_review');
+    $this->canReviewSelected = $this->isFieldExplicitlySelected('CAN_review');
 
-    parent::_run($result);
+    if ([] === $this->getSelect()) {
+      $this->setSelect(['*']);
+    }
 
-    if ($canReviewSelected) {
-      /** @var array<string, mixed> $record */
-      foreach ($result as &$record) {
-        $record['CAN_review'] = $this->canReview($record);
+    if ($this->canReviewSelected) {
+      if (!$this->isFieldSelected('status')) {
+        $this->addSelect('status');
+      }
+      if (!$this->isFieldSelected($this->_fundingCaseIdFieldName)) {
+        $this->addSelect($this->_fundingCaseIdFieldName);
       }
     }
+
+    parent::_run($result);
+  }
+
+  protected function handleRecord(array &$record): bool {
+    if (!parent::handleRecord($record)) {
+      return FALSE;
+    }
+
+    if ($this->canReviewSelected) {
+      $record['CAN_review'] = $this->canReview(
+        // @phpstan-ignore argument.type
+        $record['status'],
+        // @phpstan-ignore argument.type
+        $record[$this->_fundingCaseIdFieldName]
+      );
+      $this->unsetIfNotSelected($record, 'status');
+    }
+
+    return TRUE;
   }
 
   /**
-   * @param array<string, mixed> $record
-   *
    * @return bool
    * @throws \CRM_Core_Exception
    * @throws \Civi\API\Exception\UnauthorizedException
    */
-  private function canReview(array $record): bool {
-    if (($record['status'] ?? NULL) !== 'new') {
-      return FALSE;
-    }
-
-    $fundingCaseId = $record['funding_case_id'] ?? NULL;
-    if (!is_numeric($fundingCaseId)) {
+  private function canReview(string $status, int $fundingCaseId): bool {
+    if ($status !== 'new') {
       return FALSE;
     }
 
     $possibleActions = FundingCase::getPossibleActions()
-      ->setId((int) $fundingCaseId)
+      ->setId($fundingCaseId)
       ->execute();
 
     return in_array('review-amount-approved-change-request', (array) $possibleActions, TRUE);
