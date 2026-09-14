@@ -63,8 +63,8 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
           }
 
           const ts = CRM.ts('funding');
-          taskManager.entityInfo.title = ts('Change Request');
-          taskManager.entityInfo.title_plural = ts('Change Requests');
+          taskManager.entityInfo.title = ts('Amount Approved Change Request');
+          taskManager.entityInfo.title_plural = ts('Amount Approved Change Requests');
 
           const searchKitTasks = taskManager.tasks;
 

@@ -82,7 +82,7 @@ return [
     ],
     'amount_requested' => [
       'title' => E::ts('Amount Requested'),
-      'sql_type' => 'decimal(15,2)',
+      'sql_type' => 'decimal(10,2)',
       'input_type' => 'Text',
       'required' => TRUE,
       'data_type' => 'Money',
@@ -112,7 +112,7 @@ return [
     ],
     'amount_approved' => [
       'title' => E::ts('Amount Approved'),
-      'sql_type' => 'decimal(15,2)',
+      'sql_type' => 'decimal(10,2)',
       'input_type' => 'Text',
       'required' => FALSE,
       'data_type' => 'Money',

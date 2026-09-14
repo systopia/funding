@@ -82,10 +82,6 @@ msgstr ""
 msgid "Funding case with ID \"%1\" not found"
 msgstr "Förderfall mit ID \"%1\" nicht gefunden"
 
-#: Civi/Funding/Api4/Action/FundingAmountApprovedChangeRequest/AbstractFundingAmountApprovedChangeRequestAction.php
-msgid "Not authorized to review this change request."
-msgstr ""
-
 #: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
@@ -806,10 +802,6 @@ msgstr "d.m.Y"
 msgid "Funding program does not allow applications after %1"
 msgstr "Förderprogramm erlaubt keine Anträge nach %1"
 
-#: Civi/Funding/Api4/ActionHandler/RemoteAmountApprovedChangeRequest/CreateActionHandler.php
-msgid "Not authorized to create this change request."
-msgstr ""
-
 #: Civi/Funding/Api4/Util/ContactUtil.php
 #: ang/crmFunding/application/applicationReviewer.directive.js
 #: ang/crmFunding/clearing/clearingReviewer.directive.js
@@ -1414,8 +1406,8 @@ msgid "Review: drawdown create"
 msgstr "Prüfung: Mittelabruf erstellen"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
-msgid "Application: amount approved change request create"
-msgstr "Antrag: Mehr-/Minderbedarf beantragen"
+msgid "Amount approved change request: create"
+msgstr "Mehr-/Minderbedarf beantragen"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
@@ -2446,6 +2438,7 @@ msgid "Recreate Transfer Contract"
 msgstr "Weiterleitungsvertrag erneut erstellen"
 
 #: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 msgid "Amount Approved Change Requests"
 msgstr "Mehr-/Minderbedarfsmeldungen"
 
@@ -2586,12 +2579,8 @@ msgstr ""
 "nicht möglich."
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
-msgid "Change Request"
+msgid "Amount Approved Change Request"
 msgstr "Mehr-/Minderbedarfsmeldung"
-
-#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
-msgid "Change Requests"
-msgstr "Mehr-/Minderbedarfsmeldungen"
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 msgid "Do you want to approve the selected change requests?"
@@ -2653,6 +2642,12 @@ msgstr "Förderprogrammberechtigungen"
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Possible Funding Recipients"
 msgstr "Mögliche Fördergeldempfänger"
+
+#: ang/skFundingAmountApprovedChangeRequestTable.aff.php
+#, fuzzy
+#| msgid "Funding Amount Approved Change Request"
+msgid "Funding Amount Approved Change Request Table"
+msgstr "Mehr-/Minderbedarfsmeldung"
 
 #: funding.php
 msgid "CiviCRM: access Funding Program Manager"
@@ -3796,3 +3791,9 @@ msgstr "CiviOffice-Renderer"
 msgid "The CiviOffice renderer to use for rendering PDFs."
 msgstr ""
 "Der CiviOffice-Renderer, der zum Rendern von PDFs verwendet werden soll."
+
+#~ msgid "Change Request"
+#~ msgstr "Mehr-/Minderbedarfsmeldung"
+
+#~ msgid "Change Requests"
+#~ msgstr "Mehr-/Minderbedarfsmeldungen"

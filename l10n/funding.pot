@@ -34,10 +34,6 @@ msgstr ""
 msgid "Funding case with ID \"%1\" not found"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingAmountApprovedChangeRequest/AbstractFundingAmountApprovedChangeRequestAction.php
-msgid "Not authorized to review this change request."
-msgstr ""
-
 #: Civi/Funding/Api4/Action/FundingApplicationProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCase/GetFieldsAction.php Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/Api4/Action/FundingClearingProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingDrawdown/GetFieldsAction.php Civi/Funding/Api4/Action/FundingPayoutProcess/GetFieldsAction.php Civi/Funding/Api4/Action/FundingTransferContract/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/ClearingItem/GetFieldsAction.php Civi/Funding/Api4/Action/Generic/FinancePlanItem/AbstractGetFieldsAction.php managed/SavedSearch_funding_programs.mgd.php schema/FundingProgram.entityType.php
 msgid "Currency"
 msgstr ""
@@ -420,10 +416,6 @@ msgstr ""
 
 #: Civi/Funding/Api4/Action/Remote/FundingCase/Traits/NewApplicationFormActionTrait.php Civi/Funding/FundingCase/Api4/ActionHandler/RemoteSubmitNewApplicationFormActionHandler.php Civi/Funding/FundingCase/Api4/ActionHandler/Traits/NewApplicationFormRemoteActionHandlerTrait.php
 msgid "Funding program does not allow applications after %1"
-msgstr ""
-
-#: Civi/Funding/Api4/ActionHandler/RemoteAmountApprovedChangeRequest/CreateActionHandler.php
-msgid "Not authorized to create this change request."
 msgstr ""
 
 #: Civi/Funding/Api4/Util/ContactUtil.php ang/crmFunding/application/applicationReviewer.directive.js ang/crmFunding/clearing/clearingReviewer.directive.js
@@ -887,7 +879,7 @@ msgid "Review: drawdown create"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
-msgid "Application: amount approved change request create"
+msgid "Amount approved change request: create"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
@@ -1666,7 +1658,7 @@ msgstr ""
 msgid "Recreate Transfer Contract"
 msgstr ""
 
-#: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/case/fundingCase.template.html ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 msgid "Amount Approved Change Requests"
 msgstr ""
 
@@ -1771,11 +1763,7 @@ msgid "Combining application permissions with other ones is not possible."
 msgstr ""
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
-msgid "Change Request"
-msgstr ""
-
-#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
-msgid "Change Requests"
+msgid "Amount Approved Change Request"
 msgstr ""
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
@@ -1828,6 +1816,10 @@ msgstr ""
 
 #: ang/crmFunding/program/recipientRelations.html
 msgid "Possible Funding Recipients"
+msgstr ""
+
+#: ang/skFundingAmountApprovedChangeRequestTable.aff.php
+msgid "Funding Amount Approved Change Request Table"
 msgstr ""
 
 #: funding.php

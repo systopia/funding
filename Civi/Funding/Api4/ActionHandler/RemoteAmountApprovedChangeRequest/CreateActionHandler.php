@@ -25,7 +25,6 @@ use Civi\Api4\FundingCase;
 use Civi\Funding\Api4\Action\Remote\AmountApprovedChangeRequest\CreateAction;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
-use CRM_Funding_ExtensionUtil as E;
 
 final class CreateActionHandler implements ActionHandlerInterface {
 
@@ -54,7 +53,7 @@ final class CreateActionHandler implements ActionHandlerInterface {
     }
 
     if (!$canCreate) {
-      throw new UnauthorizedException(E::ts('Not authorized to create this change request.'));
+      throw new UnauthorizedException('Not authorized to create this change request.');
     }
 
     // Create the entity
