@@ -20,10 +20,182 @@ use Throwable;
 
 /**
  * @covers \Civi\Api4\FundingAmountApprovedChangeRequest
+ * @covers \Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\GetAction
  *
  * @group headless
  */
 final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadlessTestCase {
+
+  public function testGet(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual();
+
+    $fundingCase = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $recipientContact['id'],
+      $creationContact['id']
+    );
+
+    $request = FundingAmountApprovedChangeRequest::create(FALSE)
+      ->addValue('funding_case_id', $fundingCase->getId())
+      ->addValue('status', 'new')
+      ->addValue('creation_date', date('Y-m-d H:i:s'))
+      ->addValue('creation_contact_id', $contact['id'])
+      ->addValue('amount_requested', 100.0)
+      ->execute()->first();
+
+    $result = FundingAmountApprovedChangeRequest::get(FALSE)
+      ->addSelect('id', 'amount_requested', 'status')
+      ->execute();
+
+    static::assertCount(1, $result);
+    static::assertEquals(
+      [
+        'id' => $request['id'],
+        'amount_requested' => 100.0,
+        'status' => 'new',
+      ],
+      $result->first()
+    );
+  }
+
+  public function testGetCanReview(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual();
+
+    $fundingCase = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $recipientContact['id'],
+      $creationContact['id'],
+      [
+        'status' => 'ongoing',
+        'amount_approved' => 50.0,
+      ]
+    );
+    PayoutProcessFixture::addFixture($fundingCase->getId());
+
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingCase->getId(),
+      ['review_calculative']
+    );
+
+    RequestTestUtil::mockInternalRequest($contact['id']);
+
+    $request = FundingAmountApprovedChangeRequest::create(FALSE)
+      ->addValue('funding_case_id', $fundingCase->getId())
+      ->addValue('status', 'new')
+      ->addValue('creation_date', date('Y-m-d H:i:s'))
+      ->addValue('creation_contact_id', $contact['id'])
+      ->addValue('amount_requested', 120.0)
+      ->execute()->first();
+
+    $result = FundingAmountApprovedChangeRequest::get()
+      ->addSelect('id', 'CAN_review')
+      ->execute();
+
+    static::assertCount(1, $result);
+    static::assertSame(
+      [
+        'id' => $request['id'],
+        'CAN_review' => TRUE,
+      ],
+      $result->first()
+    );
+  }
+
+  public function testGetCanReviewNonNewStatus(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual();
+
+    $fundingCase = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $recipientContact['id'],
+      $creationContact['id'],
+      [
+        'status' => 'ongoing',
+        'amount_approved' => 50.0,
+      ]
+    );
+    PayoutProcessFixture::addFixture($fundingCase->getId());
+
+    FundingCaseContactRelationFixture::addContact(
+      $contact['id'],
+      $fundingCase->getId(),
+      ['review_calculative']
+    );
+
+    RequestTestUtil::mockInternalRequest($contact['id']);
+
+    $request = FundingAmountApprovedChangeRequest::create(FALSE)
+      ->addValue('funding_case_id', $fundingCase->getId())
+      ->addValue('status', 'approved')
+      ->addValue('creation_date', date('Y-m-d H:i:s'))
+      ->addValue('creation_contact_id', $contact['id'])
+      ->addValue('amount_requested', 120.0)
+      ->execute()->first();
+
+    $result = FundingAmountApprovedChangeRequest::get()
+      ->addSelect('id', 'CAN_review')
+      ->execute();
+
+    static::assertCount(1, $result);
+    static::assertSame(
+      [
+        'id' => $request['id'],
+        'CAN_review' => FALSE,
+      ],
+      $result->first()
+    );
+  }
+
+  public function testGetCanReviewNotPermitted(): void {
+    $contactNotPermitted = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual();
+
+    $fundingCase = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $recipientContact['id'],
+      $creationContact['id'],
+      [
+        'status' => 'ongoing',
+        'amount_approved' => 50.0,
+      ]
+    );
+    PayoutProcessFixture::addFixture($fundingCase->getId());
+
+    RequestTestUtil::mockInternalRequest($contactNotPermitted['id']);
+
+    FundingAmountApprovedChangeRequest::create(FALSE)
+      ->addValue('funding_case_id', $fundingCase->getId())
+      ->addValue('status', 'new')
+      ->addValue('creation_date', date('Y-m-d H:i:s'))
+      ->addValue('creation_contact_id', $creationContact['id'])
+      ->addValue('amount_requested', 120.0)
+      ->execute();
+
+    $result = FundingAmountApprovedChangeRequest::get()
+      ->addSelect('id', 'CAN_review')
+      ->execute();
+
+    static::assertCount(0, $result);
+  }
 
   public function testCreateAndGet(): void {
     $contact = ContactFixture::addIndividual();
