@@ -24,11 +24,14 @@ use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\ApprovePartialAc
 use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\GetAction;
 use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\RejectAction;
+use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 
 /**
  * FundingAmountApprovedChangeRequest entity.
  */
 final class FundingAmountApprovedChangeRequest extends Generic\DAOEntity {
+
+  use AccessPermissionsTrait;
 
   /**
    * @param bool $checkPermissions
