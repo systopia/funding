@@ -20,10 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\Remote\AmountApprovedChangeRequest;
 
 use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
+use Civi\Funding\Api4\Action\Traits\FundingCaseIdParameterTrait;
 
 /**
- * @method int getFundingCaseId()
- * @method $this setFundingCaseId(int $fundingCaseId)
  * @method float getAmountRequested()
  * @method $this setAmountRequested(float $amountRequested)
  * @method string getComment()
@@ -31,11 +30,7 @@ use Civi\Funding\Api4\Action\Remote\AbstractRemoteFundingAction;
  */
 final class CreateAction extends AbstractRemoteFundingAction {
 
-  /**
-   * @var int
-   * @required
-   */
-  protected int $fundingCaseId;
+  use FundingCaseIdParameterTrait;
 
   /**
    * @var float
