@@ -36,7 +36,7 @@ final class CreateAction extends AbstractRemoteFundingAction {
    * @var float
    * @required
    */
-  protected float $amountRequested;
+  protected ?float $amountRequested = NULL;
 
   /**
    * @var string|null
