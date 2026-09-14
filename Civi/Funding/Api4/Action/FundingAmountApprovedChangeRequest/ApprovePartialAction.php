@@ -20,10 +20,14 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest;
 
 use Civi\Api4\FundingAmountApprovedChangeRequest;
-use Civi\Api4\FundingCase;
-use Webmozart\Assert\Assert;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 
-class ApprovePartialAction extends AbstractFundingAmountApprovedChangeRequestAction {
+final class ApprovePartialAction extends AbstractAction {
+
+  use ActionHandlerRunTrait;
+  use IdsParameterTrait;
 
   protected ?float $amountApproved = NULL;
 
@@ -32,44 +36,12 @@ class ApprovePartialAction extends AbstractFundingAmountApprovedChangeRequestAct
     return $this;
   }
 
-  public function __construct() {
-    parent::__construct(FundingAmountApprovedChangeRequest::getEntityName(), 'approvePartial');
+  public function getAmountApproved(): ?float {
+    return $this->amountApproved;
   }
 
-  /**
-   * @param int $id
-   * @param array<string, mixed> $request
-   *
-   * @return array<string, mixed>
-   */
-  protected function processRequest(int $id, array $request): array {
-    $amount = $this->amountApproved;
-
-    Assert::greaterThan($amount, 0);
-
-    Assert::integerish($request['funding_case_id']);
-    $fundingCaseId = (int) $request['funding_case_id'];
-
-    FundingAmountApprovedChangeRequest::update(FALSE)
-      ->addWhere('id', '=', $id)
-      ->setValues([
-        'status' => 'approved_partial',
-        'amount_approved' => $amount,
-        'decision_date' => date('Y-m-d H:i:s'),
-        'decision_contact_id' => \CRM_Core_Session::getLoggedInContactID(),
-      ])
-      ->execute();
-
-    FundingCase::updateAmountApproved()
-      ->setId($fundingCaseId)
-      ->setAmount($amount)
-      ->execute();
-
-    return [
-      'id' => $id,
-      'status' => 'approved_partial',
-      'amount_approved' => $amount,
-    ];
+  public function __construct() {
+    parent::__construct(FundingAmountApprovedChangeRequest::getEntityName(), 'approvePartial');
   }
 
 }

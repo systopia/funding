@@ -20,48 +20,17 @@ declare(strict_types = 1);
 namespace Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest;
 
 use Civi\Api4\FundingAmountApprovedChangeRequest;
-use Civi\Api4\FundingCase;
-use Webmozart\Assert\Assert;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 
-class ApproveAction extends AbstractFundingAmountApprovedChangeRequestAction {
+final class ApproveAction extends AbstractAction {
+
+  use ActionHandlerRunTrait;
+  use IdsParameterTrait;
 
   public function __construct() {
     parent::__construct(FundingAmountApprovedChangeRequest::getEntityName(), 'approve');
-  }
-
-  /**
-   * @param int $id
-   * @param array<string, mixed> $request
-   *
-   * @return array<string, mixed>
-   */
-  protected function processRequest(int $id, array $request): array {
-    Assert::numeric($request['amount_requested']);
-    $amount = (float) $request['amount_requested'];
-
-    Assert::integerish($request['funding_case_id']);
-    $fundingCaseId = (int) $request['funding_case_id'];
-
-    FundingAmountApprovedChangeRequest::update(FALSE)
-      ->addWhere('id', '=', $id)
-      ->setValues([
-        'status' => 'approved',
-        'amount_approved' => $amount,
-        'decision_date' => date('Y-m-d H:i:s'),
-        'decision_contact_id' => \CRM_Core_Session::getLoggedInContactID(),
-      ])
-      ->execute();
-
-    FundingCase::updateAmountApproved()
-      ->setId($fundingCaseId)
-      ->setAmount($amount)
-      ->execute();
-
-    return [
-      'id' => $id,
-      'status' => 'approved',
-      'amount_approved' => $amount,
-    ];
   }
 
 }

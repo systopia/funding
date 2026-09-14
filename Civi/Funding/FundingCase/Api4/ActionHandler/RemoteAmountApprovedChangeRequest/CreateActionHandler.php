@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\ActionHandler\RemoteAmountApprovedChangeRequest;
+namespace Civi\Funding\FundingCase\Api4\ActionHandler\RemoteAmountApprovedChangeRequest;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingAmountApprovedChangeRequest;
@@ -25,10 +25,17 @@ use Civi\Api4\FundingCase;
 use Civi\Funding\Api4\Action\Remote\AmountApprovedChangeRequest\CreateAction;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
+use Civi\RemoteTools\Api4\Api4Interface;
 
 final class CreateActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingAmountApprovedChangeRequest';
+
+  private Api4Interface $api4;
+
+  public function __construct(Api4Interface $api4) {
+    $this->api4 = $api4;
+  }
 
   /**
    * @param \Civi\Funding\Api4\Action\Remote\AmountApprovedChangeRequest\CreateAction $action
@@ -40,9 +47,9 @@ final class CreateActionHandler implements ActionHandlerInterface {
   public function create(CreateAction $action): array {
     $fundingCaseId = $action->getFundingCaseId();
 
-    $possibleActions = FundingCase::getPossibleActions(FALSE)
-      ->setId($fundingCaseId)
-      ->execute();
+    $possibleActions = $this->api4->executeAction(
+      FundingCase::getPossibleActions(FALSE)->setId($fundingCaseId)
+    );
 
     $canCreate = FALSE;
     foreach ($possibleActions as $actionName) {
@@ -56,15 +63,14 @@ final class CreateActionHandler implements ActionHandlerInterface {
       throw new UnauthorizedException('Not authorized to create this change request.');
     }
 
-    // Create the entity
-    $result = FundingAmountApprovedChangeRequest::create(FALSE)
+    $createAction = FundingAmountApprovedChangeRequest::create(FALSE)
       ->addValue('funding_case_id', $fundingCaseId)
       ->addValue('amount_requested', $action->getAmountRequested())
       ->addValue('comment', $action->getComment())
       ->addValue('status', 'new')
       ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $action->getResolvedContactId())
-      ->execute();
+      ->addValue('creation_contact_id', $action->getResolvedContactId());
+    $result = $this->api4->executeAction($createAction);
 
     return [$result->single()];
   }
