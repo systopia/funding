@@ -9,7 +9,7 @@ use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetFieldsActionHandler;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
 // phpcs:ignore Generic.Files.LineLength.TooLong
-final class GetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler implements ActionHandlerInterface {
+final class GetFieldsActionHandler extends AbstractRemoteFundingGetFieldsActionHandler {
 
   public const ENTITY_NAME = 'RemoteFundingAmountApprovedChangeRequest';
 

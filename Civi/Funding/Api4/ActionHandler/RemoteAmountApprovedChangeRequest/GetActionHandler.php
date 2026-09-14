@@ -8,7 +8,7 @@ use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Funding\Api4\ActionHandler\AbstractRemoteFundingGetActionHandler;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
-final class GetActionHandler extends AbstractRemoteFundingGetActionHandler implements ActionHandlerInterface {
+final class GetActionHandler extends AbstractRemoteFundingGetActionHandler {
 
   public const ENTITY_NAME = 'RemoteFundingAmountApprovedChangeRequest';
 
