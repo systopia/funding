@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function(angular, $, _) {
+(function(angular, $) {
   "use strict";
 
   angular.module('crmFunding').controller('fundingCaseSearchTaskCreateDrawdown', function($scope, crmApi4, dialogService) {
@@ -59,4 +59,4 @@
       });
     };
   });
-})(angular, CRM.$, CRM._);
+})(angular, CRM.$);
