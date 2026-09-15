@@ -25,8 +25,8 @@ use Civi\Funding\Api4\Action\Traits\FundingCaseIdParameterTrait;
 /**
  * @method float getAmountRequested()
  * @method $this setAmountRequested(float $amountRequested)
- * @method string getComment()
- * @method $this setComment(string $comment)
+ * @method ?string getComment()
+ * @method $this setComment(?string $comment)
  */
 final class CreateAction extends AbstractRemoteFundingAction {
 
