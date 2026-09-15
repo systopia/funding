@@ -24,21 +24,20 @@ use Civi\Api4\Generic\AbstractAction;
 use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
 use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 
+/**
+ * @method float getAmountApproved()
+ * @method $this setAmountApproved(float $amountApproved)
+ */
 final class ApprovePartialAction extends AbstractAction {
 
   use ActionHandlerRunTrait;
   use IdsParameterTrait;
 
+  /**
+   * @var float
+   * @required
+   */
   protected ?float $amountApproved = NULL;
-
-  public function setAmountApproved(?float $amount): self {
-    $this->amountApproved = $amount;
-    return $this;
-  }
-
-  public function getAmountApproved(): ?float {
-    return $this->amountApproved;
-  }
 
   public function __construct() {
     parent::__construct(FundingAmountApprovedChangeRequest::getEntityName(), 'approvePartial');
