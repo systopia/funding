@@ -101,7 +101,8 @@ sum(
 )
 EOD,
         ['zeitraeume' => new JsonSchemaDataPointer('1/zeitraeume')],
-        0
+        0,
+        ['maximum' => 28]
       ),
       'teilnehmer' => new JsonSchemaObject([
         'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),
@@ -131,7 +132,7 @@ EOD,
 
     $required = array_values(array_filter(
       array_keys($properties),
-      static fn (string $key) => $key !== 'internerBezeichner',
+      static fn (string $key) => 'internerBezeichner' !== $key && 'programmtage' !== $key,
     ));
 
     parent::__construct($properties, [
