@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace Civi\Api4;
 
+use Civi\API\Exception\UnauthorizedException;
 use Civi\Funding\AbstractFundingHeadlessTestCase;
+use Civi\Funding\Api4\Permissions;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
@@ -427,6 +429,55 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
 
     FundingAmountApprovedChangeRequest::approve(FALSE)
       ->setIds([$request['id']])
+      ->execute();
+  }
+
+  public function testApproveWithoutPermission(): void {
+    $this->expectException(UnauthorizedException::class);
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM]);
+
+    FundingAmountApprovedChangeRequest::approve()
+      ->setIds([1])
+      ->execute();
+  }
+
+  public function testApprovePartialWithoutPermission(): void {
+    $this->expectException(UnauthorizedException::class);
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM]);
+
+    FundingAmountApprovedChangeRequest::approvePartial()
+      ->setIds([1])
+      ->setAmountApproved(50.0)
+      ->execute();
+  }
+
+  public function testRejectWithoutPermission(): void {
+    $this->expectException(UnauthorizedException::class);
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM]);
+
+    FundingAmountApprovedChangeRequest::reject()
+      ->setIds([1])
+      ->execute();
+  }
+
+  public function testGetWithoutPermission(): void {
+    $this->expectException(UnauthorizedException::class);
+    $this->setUserPermissions([Permissions::ACCESS_CIVICRM]);
+    FundingAmountApprovedChangeRequest::get()->execute();
+  }
+
+  public function testUpdateNotPermitted(): void {
+    $this->expectException(UnauthorizedException::class);
+    FundingAmountApprovedChangeRequest::update()
+      ->addValue('amount_approved', 100.0)
+      ->addWhere('id', '=', 1)
+      ->execute();
+  }
+
+  public function testDeleteNotPermitted(): void {
+    $this->expectException(UnauthorizedException::class);
+    FundingAmountApprovedChangeRequest::delete()
+      ->addWhere('id', '=', 1)
       ->execute();
   }
 

@@ -24,14 +24,16 @@ use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\ApprovePartialAc
 use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\GetAction;
 use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\GetFieldsAction;
 use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\RejectAction;
-use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
+use Civi\Funding\Api4\Traits\AccessROPermissionsTrait;
 
 /**
  * FundingAmountApprovedChangeRequest entity.
  */
 final class FundingAmountApprovedChangeRequest extends Generic\DAOEntity {
 
-  use AccessPermissionsTrait;
+  use AccessROPermissionsTrait {
+    permissions as private traitPermissions;
+  }
 
   /**
    * @param bool $checkPermissions
@@ -66,6 +68,19 @@ final class FundingAmountApprovedChangeRequest extends Generic\DAOEntity {
 
   public static function getFields($checkPermissions = TRUE): GetFieldsAction {
     return (new GetFieldsAction())->setCheckPermissions($checkPermissions);
+  }
+
+  /**
+   * @phpstan-return array<string, array<string|list<string>>>
+   */
+  public static function permissions(): array {
+    $permissions = self::traitPermissions();
+
+    return $permissions + [
+      'approve' => $permissions['get'],
+      'approvePartial' => $permissions['get'],
+      'reject' => $permissions['get'],
+    ];
   }
 
 }
