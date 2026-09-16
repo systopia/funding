@@ -40,7 +40,7 @@ final class CreateActionHandler implements ActionHandlerInterface {
   /**
    * @param \Civi\Funding\Api4\Action\Remote\AmountApprovedChangeRequest\CreateAction $action
    *
-   * @return array<string, mixed>
+   * @return array<int, array<string, mixed>>
    * @throws \CRM_Core_Exception
    * @throws \Civi\API\Exception\UnauthorizedException
    */
