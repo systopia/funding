@@ -23,6 +23,7 @@ use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\RejectAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\Entity\FundingAmountApprovedChangeRequestEntity;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
 use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
@@ -64,18 +65,18 @@ final class RejectActionHandler implements ActionHandlerInterface {
     $processed = [];
 
     foreach ($action->getIds() as $id) {
-      /** @var array<string, mixed> $request */
-      $request = $this->api4->executeAction(
-        FundingAmountApprovedChangeRequest::get(FALSE)
-          ->addWhere('id', '=', $id)
-      )->single();
+      $requestEntity = FundingAmountApprovedChangeRequestEntity::singleFromApiResult(
+        $this->api4->executeAction(
+          FundingAmountApprovedChangeRequest::get(FALSE)
+            ->addWhere('id', '=', $id)
+        )
+      );
 
-      if ($request['status'] !== 'new') {
+      if ($requestEntity->getStatus() !== 'new') {
         continue;
       }
 
-      Assert::integerish($request['funding_case_id']);
-      $fundingCaseId = (int) $request['funding_case_id'];
+      $fundingCaseId = $requestEntity->getFundingCaseId();
 
       $fundingCaseBundle = $this->fundingCaseManager->getBundle($fundingCaseId);
       Assert::notNull($fundingCaseBundle, E::ts('Funding case with ID "%1" not found', [1 => $fundingCaseId]));
