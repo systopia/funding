@@ -14,7 +14,6 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
-use Civi\Funding\FundingCase\FundingCasePermissions;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
