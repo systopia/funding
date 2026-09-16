@@ -30,6 +30,7 @@ use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
@@ -45,16 +46,20 @@ final class ApproveActionHandler implements ActionHandlerInterface {
 
   private FundingCaseActionsDeterminerInterface $fundingCaseActionsDeterminer;
 
+  private RequestContextInterface $requestContext;
+
   public function __construct(
     Api4Interface $api4,
     FundingCaseManager $fundingCaseManager,
     ApplicationProcessManager $applicationProcessManager,
     FundingCaseActionsDeterminerInterface $fundingCaseActionsDeterminer,
+    RequestContextInterface $requestContext,
   ) {
     $this->api4 = $api4;
     $this->fundingCaseManager = $fundingCaseManager;
     $this->applicationProcessManager = $applicationProcessManager;
     $this->fundingCaseActionsDeterminer = $fundingCaseActionsDeterminer;
+    $this->requestContext = $requestContext;
   }
 
   /**
@@ -100,7 +105,7 @@ final class ApproveActionHandler implements ActionHandlerInterface {
             'status' => 'approved',
             'amount_approved' => $amount,
             'decision_date' => date('Y-m-d H:i:s'),
-            'decision_contact_id' => \CRM_Core_Session::getLoggedInContactID(),
+            'decision_contact_id' => $this->requestContext->getLoggedInContactId(),
           ])
       );
 
