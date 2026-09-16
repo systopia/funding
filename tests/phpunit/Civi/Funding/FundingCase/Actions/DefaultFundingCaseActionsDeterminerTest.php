@@ -60,7 +60,7 @@ final class DefaultFundingCaseActionsDeterminerTest extends TestCase {
         'review-amount-approved-change-request',
         'set-notification-contacts',
       ],
-      'amount_approved_change_request_create' => ['create-amount-review-change-request'],
+      'amount_approved_change_request_create' => ['create-amount-approved-change-request'],
       'review_clearing_calculative' => ['set-notification-contacts'],
       'review_clearing_content' => ['set-notification-contacts'],
       'review_drawdown' => ['set-notification-contacts'],
