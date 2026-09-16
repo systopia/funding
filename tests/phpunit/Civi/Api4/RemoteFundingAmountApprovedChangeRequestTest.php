@@ -14,6 +14,7 @@ use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
 use Civi\Funding\Fixtures\FundingProgramContactRelationFixture;
 use Civi\Funding\Fixtures\FundingProgramFixture;
+use Civi\Funding\FundingCase\FundingCasePermissions;
 use CRM_Funding_ExtensionUtil as E;
 
 /**
@@ -37,12 +38,16 @@ final class RemoteFundingAmountApprovedChangeRequestTest extends AbstractRemoteF
     FundingProgramContactRelationFixture::addContact(
       $contact['id'],
       $fundingCase->getFundingProgramId(),
-      ['application_program_perm', 'CAN_create_amount_approved_change_request', 'amount_approved_change_request_create']
+      [
+        'application_program_perm',
+        'CAN_create_amount_approved_change_request',
+        'amountApprovedChangeRequest_create',
+      ]
     );
     FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), [
       'application_case_perm',
       'CAN_create_amount_approved_change_request',
-      'amount_approved_change_request_create',
+      'amountApprovedChangeRequest_create',
     ]);
 
     $request = RemoteFundingAmountApprovedChangeRequest::create()
