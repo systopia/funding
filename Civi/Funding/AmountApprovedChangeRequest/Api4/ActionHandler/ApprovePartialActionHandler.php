@@ -17,11 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingAmountApprovedChangeRequest\Api4\ActionHandler;
+namespace Civi\Funding\AmountApprovedChangeRequest\Api4\ActionHandler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingAmountApprovedChangeRequest;
-use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\RejectAction;
+use Civi\Api4\FundingCase;
+use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\ApprovePartialAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FundingAmountApprovedChangeRequestEntity;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -33,7 +34,7 @@ use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-final class RejectActionHandler implements ActionHandlerInterface {
+final class ApprovePartialActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'FundingAmountApprovedChangeRequest';
 
@@ -66,8 +67,11 @@ final class RejectActionHandler implements ActionHandlerInterface {
    * @throws \Civi\API\Exception\UnauthorizedException
    * @throws \CRM_Core_Exception
    */
-  public function reject(RejectAction $action): array {
+  public function approvePartial(ApprovePartialAction $action): array {
     $processed = [];
+    $amount = $action->getAmountApproved();
+
+    Assert::greaterThan($amount, 0);
 
     foreach ($action->getIds() as $id) {
       $requestEntity = FundingAmountApprovedChangeRequestEntity::singleFromApiResult(
@@ -100,16 +104,23 @@ final class RejectActionHandler implements ActionHandlerInterface {
         FundingAmountApprovedChangeRequest::update(FALSE)
           ->addWhere('id', '=', $id)
           ->setValues([
-            'status' => 'rejected',
+            'status' => 'approved_partial',
+            'amount_approved' => $amount,
             'decision_date' => date('Y-m-d H:i:s'),
             'decision_contact_id' => $this->requestContext->getLoggedInContactId(),
           ])
       );
 
+      $this->api4->executeAction(
+        FundingCase::updateAmountApproved()
+          ->setId($fundingCaseId)
+          ->setAmount($amount)
+      );
+
       $processed[$id] = [
         'id' => $id,
-        'status' => 'rejected',
-        'amount_approved' => NULL,
+        'status' => 'approved_partial',
+        'amount_approved' => $amount,
       ];
     }
 

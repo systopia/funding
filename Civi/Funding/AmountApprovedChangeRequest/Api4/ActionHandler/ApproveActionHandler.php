@@ -17,12 +17,12 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingAmountApprovedChangeRequest\Api4\ActionHandler;
+namespace Civi\Funding\AmountApprovedChangeRequest\Api4\ActionHandler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingAmountApprovedChangeRequest;
 use Civi\Api4\FundingCase;
-use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\ApprovePartialAction;
+use Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest\ApproveAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FundingAmountApprovedChangeRequestEntity;
 use Civi\Funding\FundingCase\Actions\FundingCaseActions;
@@ -34,7 +34,7 @@ use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Webmozart\Assert\Assert;
 
-final class ApprovePartialActionHandler implements ActionHandlerInterface {
+final class ApproveActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'FundingAmountApprovedChangeRequest';
 
@@ -67,11 +67,8 @@ final class ApprovePartialActionHandler implements ActionHandlerInterface {
    * @throws \Civi\API\Exception\UnauthorizedException
    * @throws \CRM_Core_Exception
    */
-  public function approvePartial(ApprovePartialAction $action): array {
+  public function approve(ApproveAction $action): array {
     $processed = [];
-    $amount = $action->getAmountApproved();
-
-    Assert::greaterThan($amount, 0);
 
     foreach ($action->getIds() as $id) {
       $requestEntity = FundingAmountApprovedChangeRequestEntity::singleFromApiResult(
@@ -85,6 +82,7 @@ final class ApprovePartialActionHandler implements ActionHandlerInterface {
         continue;
       }
 
+      $amount = $requestEntity->getAmountRequested();
       $fundingCaseId = $requestEntity->getFundingCaseId();
 
       $fundingCaseBundle = $this->fundingCaseManager->getBundle($fundingCaseId);
@@ -104,7 +102,7 @@ final class ApprovePartialActionHandler implements ActionHandlerInterface {
         FundingAmountApprovedChangeRequest::update(FALSE)
           ->addWhere('id', '=', $id)
           ->setValues([
-            'status' => 'approved_partial',
+            'status' => 'approved',
             'amount_approved' => $amount,
             'decision_date' => date('Y-m-d H:i:s'),
             'decision_contact_id' => $this->requestContext->getLoggedInContactId(),
@@ -119,7 +117,7 @@ final class ApprovePartialActionHandler implements ActionHandlerInterface {
 
       $processed[$id] = [
         'id' => $id,
-        'status' => 'approved_partial',
+        'status' => 'approved',
         'amount_approved' => $amount,
       ];
     }

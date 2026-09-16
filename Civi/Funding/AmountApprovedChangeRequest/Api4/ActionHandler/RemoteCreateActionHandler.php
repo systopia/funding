@@ -17,7 +17,7 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase\Api4\ActionHandler\RemoteAmountApprovedChangeRequest;
+namespace Civi\Funding\AmountApprovedChangeRequest\Api4\ActionHandler;
 
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\FundingAmountApprovedChangeRequest;
@@ -27,7 +27,7 @@ use Civi\Funding\FundingCase\Actions\FundingCaseActions as Actions;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Civi\RemoteTools\Api4\Api4Interface;
 
-final class CreateActionHandler implements ActionHandlerInterface {
+final class RemoteCreateActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingAmountApprovedChangeRequest';
 
