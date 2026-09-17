@@ -22,20 +22,19 @@ namespace Civi\Funding\Api4\Action\Traits;
 use Webmozart\Assert\Assert;
 
 /**
- * @phpstan-method array<int> getIds()
+ * @phpstan-method list<int> getIds()
  */
 trait IdsParameterTrait {
 
   /**
    * @var array
-   * @phpstan-var array<int>
+   * @phpstan-var list<int>
    * @required
    */
   protected array $ids = [];
 
   /**
-   * @phpstan-param array<int> $ids
-   * @return $this
+   * @phpstan-param list<int> $ids
    */
   public function setIds(array $ids): self {
     Assert::allInteger($ids);
