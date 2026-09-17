@@ -98,7 +98,7 @@ final class FundingAmountApprovedChangeRequestEntity extends AbstractEntity {
   }
 
   public function getDecisionDate(): ?\DateTime {
-    return static::toDateTimeOrNull($this->values['decision_date'] ?? NULL);
+    return static::toDateTimeOrNull($this->values['decision_date']);
   }
 
   public function setDecisionDate(?\DateTimeInterface $decisionDate): self {
