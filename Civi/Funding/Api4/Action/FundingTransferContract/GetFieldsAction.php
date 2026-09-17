@@ -233,6 +233,11 @@ final class GetFieldsAction extends BasicGetFieldsAction {
         'title' => 'CAN_view_contract',
         'data_type' => 'Boolean',
       ],
+      [
+        'name' => 'CAN_create_amount_approved_change_request',
+        'title' => 'CAN_create_amount_approved_change_request',
+        'data_type' => 'Boolean',
+      ],
     ];
   }
 

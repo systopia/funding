@@ -49,8 +49,9 @@ final class DefaultFundingCaseActionsDeterminer extends FundingCaseActionsDeterm
       FundingCasePermissions::REVIEW_FINISH => [Actions::REJECT],
     ],
     Status::ONGOING => [
-      ApplicationProcessPermissions::REVIEW_CALCULATIVE => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED, Actions::SET_NOTIFICATION_CONTACTS],
-      ApplicationProcessPermissions::REVIEW_CONTENT => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED, Actions::SET_NOTIFICATION_CONTACTS],
+      ApplicationProcessPermissions::REVIEW_CALCULATIVE => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED, Actions::REVIEW_AMOUNT_APPROVED_CHANGE_REQUEST, Actions::SET_NOTIFICATION_CONTACTS],
+      ApplicationProcessPermissions::REVIEW_CONTENT => [Actions::RECREATE_TRANSFER_CONTRACT, Actions::UPDATE_AMOUNT_APPROVED, Actions::REVIEW_AMOUNT_APPROVED_CHANGE_REQUEST, Actions::SET_NOTIFICATION_CONTACTS],
+      FundingCasePermissions::AMOUNT_APPROVED_CHANGE_REQUEST_CREATE => [Actions::CREATE_AMOUNT_REVIEW_CHANGE_REQUEST],
       ClearingProcessPermissions::REVIEW_CALCULATIVE => [Actions::SET_NOTIFICATION_CONTACTS],
       ClearingProcessPermissions::REVIEW_CONTENT => [Actions::SET_NOTIFICATION_CONTACTS],
       'review_drawdown' => [Actions::SET_NOTIFICATION_CONTACTS],

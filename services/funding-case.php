@@ -84,11 +84,11 @@ $container->addCompilerPass(new FundingCaseTypeServicePass(
 ));
 $container->addCompilerPass(new FundingCaseRecipientContactSetHandlerPass());
 $container->addCompilerPass(new FundingCaseNotificationContactsSetHandlerPass());
-$container->addCompilerPass(new FundingCaseTypeServicePass(
+$container->addCompilerPass((new FundingCaseTypeServicePass(
   FundingCaseActionsDeterminerCollector::class,
   FundingCaseActionsDeterminerInterface::class,
   TRUE
-));
+))->setPublic(TRUE));
 
 $container->autowire(FundingCaseManager::class)
   // phpcs:disable Squiz.PHP.CommentedOutCode.Found

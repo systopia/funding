@@ -29,4 +29,6 @@ final class FundingCasePermissions {
 
   public const REVIEW_DRAWDOWN_CREATE = 'review_drawdown_create';
 
+  public const AMOUNT_APPROVED_CHANGE_REQUEST_CREATE = 'amountApprovedChangeRequest_create';
+
 }

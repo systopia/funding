@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2023 SYSTOPIA GmbH
+ * Copyright (C) 2026 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,30 +17,20 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\Api4\Action\Traits;
+namespace Civi\Api4;
 
-use Webmozart\Assert\Assert;
+use Civi\Funding\Api4\AbstractRemoteFundingEntity;
+use Civi\Funding\Api4\Action\Remote\AmountApprovedChangeRequest\CreateAction;
+use Civi\Funding\Api4\Action\Remote\RemoteFundingGetAction;
 
-/**
- * @phpstan-method list<int> getIds()
- */
-trait IdsParameterTrait {
+final class RemoteFundingAmountApprovedChangeRequest extends AbstractRemoteFundingEntity {
 
-  /**
-   * @var array
-   * @phpstan-var list<int>
-   * @required
-   */
-  protected array $ids = [];
+  public static function get(): RemoteFundingGetAction {
+    return new RemoteFundingGetAction(self::getEntityName(), __FUNCTION__);
+  }
 
-  /**
-   * @phpstan-param list<int> $ids
-   */
-  public function setIds(array $ids): self {
-    Assert::allInteger($ids);
-    $this->ids = $ids;
-
-    return $this;
+  public static function create(): CreateAction {
+    return new CreateAction(self::getEntityName(), __FUNCTION__);
   }
 
 }
