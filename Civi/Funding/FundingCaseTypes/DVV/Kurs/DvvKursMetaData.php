@@ -63,12 +63,12 @@ final class DvvKursMetaData extends AbstractFundingCaseTypeMetaData {
       // Applicant actions.
       'save' => DefaultApplicationProcessActions::save(),
       'apply' => DefaultApplicationProcessActions::apply(
-          'Einreichen',
-          'Eingereichte Anträge können nicht mehr verändert werden. Wollen Sie fortfahren?'
+        'Einreichen',
+        'Nach der Einreichung kann der Antrag nicht mehr verändert werden. Wollen Sie fortfahren?'
       ),
       'withdraw' => DefaultApplicationProcessActions::withdraw(),
       'delete' => DefaultApplicationProcessActions::delete(),
-        // Reviewer actions.
+      // Reviewer actions.
       'review' => DefaultApplicationProcessActions::review(),
       'approve-calculative' => DefaultApplicationProcessActions::approveCalculative(),
       'reject-calculative' => DefaultApplicationProcessActions::rejectCalculative(),
@@ -78,7 +78,17 @@ final class DvvKursMetaData extends AbstractFundingCaseTypeMetaData {
       'approve' => DefaultApplicationProcessActions::approve(),
       'reject' => DefaultApplicationProcessActions::reject(),
       'move-to-new-funding-case' => DefaultApplicationProcessActions::moveToNewFundingCase(),
-    ] + ReworkApplicationProcessActions::getAll();
+      // Rework: Applicant actions.
+      'request-rework' => ReworkApplicationProcessActions::requestRework(),
+      'withdraw-rework-request' => ReworkApplicationProcessActions::withdrawReworkRequest(),
+      'withdraw-change' => ReworkApplicationProcessActions::withdrawChange(),
+      'withdraw-rework' => ReworkApplicationProcessActions::withdrawRework(),
+      // Rework: Reviewer actions.
+      'approve-rework-request' => ReworkApplicationProcessActions::approveReworkRequest(),
+      'reject-rework-request' => ReworkApplicationProcessActions::rejectReworkRequest(),
+      'approve-change' => ReworkApplicationProcessActions::approveChange(),
+      'reject-change' => ReworkApplicationProcessActions::rejectChange(),
+    ];
   }
 
   /**
@@ -93,7 +103,10 @@ final class DvvKursMetaData extends AbstractFundingCaseTypeMetaData {
       'rejected' => DefaultApplicationProcessStatuses::rejected(),
       'review' => DefaultApplicationProcessStatuses::review(),
       'withdrawn' => DefaultApplicationProcessStatuses::withdrawn(),
-    ] + ReworkApplicationProcessStatuses::getAll();
+      'rework' => ReworkApplicationProcessStatuses::rework(),
+      'rework-requested' => ReworkApplicationProcessStatuses::reworkRequested(),
+      'rework-review' => ReworkApplicationProcessStatuses::reworkReview(),
+    ];
   }
 
   /**
