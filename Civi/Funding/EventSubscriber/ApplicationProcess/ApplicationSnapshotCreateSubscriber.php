@@ -29,6 +29,7 @@ use Civi\Funding\Entity\FundingCaseTypeEntity;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationSnapshotCreatedEvent;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
 use CRM_Funding_ExtensionUtil as E;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -78,15 +79,37 @@ class ApplicationSnapshotCreateSubscriber implements EventSubscriberInterface {
 
   private function isSnapshotRequired(ApplicationProcessPreUpdateEvent $event): bool {
     $applicationProcess = $event->getApplicationProcess();
+    if (NULL !== $applicationProcess->getRestoredSnapshot()) {
+      return FALSE;
+    }
+
     $previousApplicationProcess = $event->getPreviousApplicationProcess();
     $status = $this->getMetaData($event->getFundingCaseType())
       ->getApplicationProcessStatus($applicationProcess->getStatus());
 
-    return ($status?->isSnapshotRequired() ?? TRUE) && NULL === $applicationProcess->getRestoredSnapshot() && (
-      $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()
+    $snapshotRequired = $status?->getSnapshotRequired() ?? ApplicationProcessStatus::SNAPSHOT_ON_ENTER_OR_DATA_CHANGED;
+
+    if (
+      (bool) (ApplicationProcessStatus::SNAPSHOT_ON_ENTER & $snapshotRequired)
+      && $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus()
+    ) {
+      return TRUE;
+    }
+
+    if (
+      (bool) (ApplicationProcessStatus::SNAPSHOT_ON_DATA_CHANGED & $snapshotRequired)
+      && $applicationProcess->getStatus() === $previousApplicationProcess->getStatus()
       // @phpstan-ignore notEqual.notAllowed
-      || $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
-    );
+      && $applicationProcess->getRequestData() != $previousApplicationProcess->getRequestData()
+    ) {
+      return TRUE;
+    }
+
+    $previousStatus = $this->getMetaData($event->getFundingCaseType())
+      ->getApplicationProcessStatus($previousApplicationProcess->getStatus());
+
+    return (bool) (ApplicationProcessStatus::SNAPSHOT_ON_LEAVE & $previousStatus?->getSnapshotRequired())
+      && $applicationProcess->getStatus() !== $previousApplicationProcess->getStatus();
   }
 
   public function onSnapshotCreated(ApplicationSnapshotCreatedEvent $event): void {
