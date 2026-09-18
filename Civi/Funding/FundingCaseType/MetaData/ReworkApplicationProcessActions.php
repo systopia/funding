@@ -46,10 +46,11 @@ final class ReworkApplicationProcessActions {
     ]);
   }
 
-  public static function applyRework(?string $label = NULL): ApplicationProcessAction {
+  public static function applyRework(?string $label = NULL, ?string $confirmMessage = NULL): ApplicationProcessAction {
     return new ApplicationProcessAction([
       'name' => 'apply-rework',
       'label' => $label ?? E::ts('Apply rework'),
+      'confirmMessage' => $confirmMessage,
     ]);
   }
 

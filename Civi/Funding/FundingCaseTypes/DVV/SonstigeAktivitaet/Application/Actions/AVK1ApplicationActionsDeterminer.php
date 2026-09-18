@@ -21,7 +21,6 @@ namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\Actio
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationActionsDeterminerDecorator;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\ApplicationProcessActionsDeterminer;
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\ReworkPossibleApplicationProcessActionsDeterminer;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
@@ -60,8 +59,8 @@ final class AVK1ApplicationActionsDeterminer extends AbstractApplicationActionsD
       'application_apply' => ['add-applicant-comment'],
       'application_modify' => ['add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['update', 'add-comment'],
-      'review_content' => ['update', 'add-comment'],
+      'review_calculative' => ['add-comment'],
+      'review_content' => ['add-comment'],
       ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
       ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
@@ -69,12 +68,43 @@ final class AVK1ApplicationActionsDeterminer extends AbstractApplicationActionsD
       'review_calculative' => ['move-to-new-funding-case'],
       'review_content' => ['move-to-new-funding-case'],
     ],
+    'ongoing&eligible' => [
+      'application_request_rework' => ['request-rework', 'add-applicant-comment'],
+      'review_calculative' => ['update'],
+      'review_content' => ['update'],
+    ],
     'complete' => [
       'application_apply' => ['add-applicant-comment'],
       'application_modify' => ['add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['update', 'add-comment'],
-      'review_content' => ['update', 'add-comment'],
+      'review_calculative' => ['add-comment'],
+      'review_content' => ['add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
+    ],
+    'rework-requested' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
+      'application_request_rework' => ['withdraw-rework-request', 'add-applicant-comment'],
+      'review_calculative' => ['approve-rework-request', 'reject-rework-request', 'add-comment'],
+      'review_content' => ['approve-rework-request', 'reject-rework-request', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
+    ],
+    'rework' => [
+      'application_apply' => ['apply', 'add-applicant-comment'],
+      'application_modify' => ['save', 'add-applicant-comment'],
+      'application_withdraw' => ['withdraw-change'],
+      'review_calculative' => ['add-comment'],
+      'review_content' => ['add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
+    ],
+    'rework-review' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
+      'review_calculative' => ['request-change', 'update', 'reject-change', 'add-comment'],
+      'review_content' => ['request-change', 'update', 'reject-change', 'add-comment'],
       ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
       ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
@@ -82,9 +112,17 @@ final class AVK1ApplicationActionsDeterminer extends AbstractApplicationActionsD
 
   public function __construct() {
     parent::__construct(
-      new ReworkPossibleApplicationProcessActionsDeterminer(
-        new ApplicationProcessActionsDeterminer(self::STATUS_PERMISSION_ACTIONS_MAP)
-      ));
+      new ApplicationProcessActionsDeterminer(
+        self::STATUS_PERMISSION_ACTIONS_MAP,
+        reviewStatuses: ['review', 'rework-review'],
+        actionNames: [
+          'approve' => [
+            'review' => 'approve',
+            'rework-review' => 'approve-change',
+          ],
+        ]
+      )
+    );
   }
 
 }
