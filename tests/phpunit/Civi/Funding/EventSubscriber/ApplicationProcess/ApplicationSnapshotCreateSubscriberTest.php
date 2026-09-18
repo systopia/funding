@@ -99,9 +99,37 @@ final class ApplicationSnapshotCreateSubscriberTest extends TestCase {
     $this->subscriber->onPreUpdate($event);
   }
 
-  public function testOnPreUpdateWithStatusChange(): void {
+  public function testOnPreUpdateWithStatusEnter(): void {
     $event = $this->createPreUpdateEvent([
       'status' => ['old-status', 'eligible'],
+      'request_data' => [['foo' => 'bar'], ['foo' => 'bar']],
+    ]);
+
+    $this->snapshotCreateHandlerMock->expects(static::once())->method('handle')
+      ->with(new ApplicationSnapshotCreateCommand(
+        new ApplicationProcessEntityBundle(
+          $event->getPreviousApplicationProcess(),
+          $event->getFundingCase(),
+          $event->getFundingCaseType(),
+          $event->getFundingProgram()
+        )
+      ));
+    $this->subscriber->onPreUpdate($event);
+  }
+
+  public function testOnPreUpdateWithStatusLeave(): void {
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'old-status',
+      'label' => 'old-status',
+      'snapshotRequired' => ApplicationProcessStatus::SNAPSHOT_ON_LEAVE,
+    ]));
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'new-status',
+      'label' => 'new-status',
+    ]));
+
+    $event = $this->createPreUpdateEvent([
+      'status' => ['old-status', 'new-status'],
       'request_data' => [['foo' => 'bar'], ['foo' => 'bar']],
     ]);
 

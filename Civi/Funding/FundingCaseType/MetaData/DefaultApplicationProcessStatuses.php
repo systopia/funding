@@ -48,6 +48,7 @@ final class DefaultApplicationProcessStatuses {
       'label' => $label ?? E::ts('Draft'),
       'icon' => 'fa-spinner',
       'inWork' => TRUE,
+      'snapshotRequired' => ApplicationProcessStatus::SNAPSHOT_ON_ENTER,
     ]);
   }
 
