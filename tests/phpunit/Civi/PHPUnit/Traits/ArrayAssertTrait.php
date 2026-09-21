@@ -25,10 +25,11 @@ use SebastianBergmann\Exporter\Exporter;
 trait ArrayAssertTrait {
 
   /**
-   * @phpstan-param array<int|string> $expectedKeys
-   * @param mixed[] $actual
+   * @param array<int|string> $expectedKeys
+   * @param array<mixed> $actual
    */
   public static function assertArrayHasSameKeys(array $expectedKeys, array $actual): void {
+    // @phpstan-ignore staticMethod.alreadyNarrowedType (https://github.com/phpstan/phpstan-phpunit/issues/332)
     Assert::assertCount(count($expectedKeys), $actual);
     foreach ($expectedKeys as $expectedKey) {
       Assert::assertArrayHasKey($expectedKey, $actual);
