@@ -10,6 +10,7 @@ use Civi\Funding\Api4\Permissions;
 use Civi\Funding\FileTypeNames;
 use Civi\Funding\Fixtures\AttachmentFixture;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\FundingAmountApprovedChangeRequestFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -42,13 +43,11 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
       $creationContact['id']
     );
 
-    $request = FundingAmountApprovedChangeRequest::create(FALSE)
-      ->addValue('funding_case_id', $fundingCase->getId())
-      ->addValue('status', 'new')
-      ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $contact['id'])
-      ->addValue('amount_requested', 100.0)
-      ->execute()->first();
+    $request = FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $contact['id'],
+      ['amount_requested' => 100.0]
+    );
 
     $result = FundingAmountApprovedChangeRequest::get(FALSE)
       ->addSelect('id', 'amount_requested', 'status')
@@ -57,7 +56,7 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
     static::assertCount(1, $result);
     static::assertEquals(
       [
-        'id' => $request['id'],
+        'id' => $request->getId(),
         'amount_requested' => 100.0,
         'status' => 'new',
       ],
@@ -92,13 +91,10 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
 
     RequestTestUtil::mockInternalRequest($contact['id']);
 
-    $request = FundingAmountApprovedChangeRequest::create(FALSE)
-      ->addValue('funding_case_id', $fundingCase->getId())
-      ->addValue('status', 'new')
-      ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $contact['id'])
-      ->addValue('amount_requested', 120.0)
-      ->execute()->first();
+    $request = FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $contact['id']
+    );
 
     $result = FundingAmountApprovedChangeRequest::get()
       ->addSelect('id', 'CAN_review')
@@ -107,7 +103,7 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
     static::assertCount(1, $result);
     static::assertSame(
       [
-        'id' => $request['id'],
+        'id' => $request->getId(),
         'CAN_review' => TRUE,
       ],
       $result->first()
@@ -141,13 +137,11 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
 
     RequestTestUtil::mockInternalRequest($contact['id']);
 
-    $request = FundingAmountApprovedChangeRequest::create(FALSE)
-      ->addValue('funding_case_id', $fundingCase->getId())
-      ->addValue('status', 'approved')
-      ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $contact['id'])
-      ->addValue('amount_requested', 120.0)
-      ->execute()->first();
+    $request = FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $contact['id'],
+      ['status' => 'approved']
+    );
 
     $result = FundingAmountApprovedChangeRequest::get()
       ->addSelect('id', 'CAN_review')
@@ -156,7 +150,7 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
     static::assertCount(1, $result);
     static::assertSame(
       [
-        'id' => $request['id'],
+        'id' => $request->getId(),
         'CAN_review' => FALSE,
       ],
       $result->first()
@@ -184,13 +178,10 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
 
     RequestTestUtil::mockInternalRequest($contactNotPermitted['id']);
 
-    FundingAmountApprovedChangeRequest::create(FALSE)
-      ->addValue('funding_case_id', $fundingCase->getId())
-      ->addValue('status', 'new')
-      ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $creationContact['id'])
-      ->addValue('amount_requested', 120.0)
-      ->execute();
+    FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $creationContact['id']
+    );
 
     $result = FundingAmountApprovedChangeRequest::get()
       ->addSelect('id', 'CAN_review')
@@ -262,16 +253,13 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
 
     RequestTestUtil::mockInternalRequest($contact['id']);
 
-    $request = FundingAmountApprovedChangeRequest::create(FALSE)
-      ->addValue('funding_case_id', $fundingCase->getId())
-      ->addValue('status', 'new')
-      ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $contact['id'])
-      ->addValue('amount_requested', 120.0)
-      ->execute()->first();
+    $request = FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $contact['id']
+    );
 
     $result = FundingAmountApprovedChangeRequest::approve(FALSE)
-      ->setIds([$request['id']])
+      ->setIds([$request->getId()])
       ->execute();
 
     static::assertCount(1, $result);
@@ -318,17 +306,14 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
 
     RequestTestUtil::mockInternalRequest($contact['id']);
 
-    $request = FundingAmountApprovedChangeRequest::create(FALSE)
-      ->addValue('funding_case_id', $fundingCase->getId())
-      ->addValue('status', 'new')
-      ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $contact['id'])
-      ->addValue('amount_requested', 120.0)
-      ->execute()->first();
+    $request = FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $contact['id']
+    );
 
     $result = FundingAmountApprovedChangeRequest::approvePartial(FALSE)
       ->setAmountApproved(80.0)
-      ->setIds([$request['id']])
+      ->setIds([$request->getId()])
       ->execute();
 
     static::assertCount(1, $result);
@@ -367,16 +352,13 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
 
     RequestTestUtil::mockInternalRequest($contact['id']);
 
-    $request = FundingAmountApprovedChangeRequest::create(FALSE)
-      ->addValue('funding_case_id', $fundingCase->getId())
-      ->addValue('status', 'new')
-      ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $contact['id'])
-      ->addValue('amount_requested', 120.0)
-      ->execute()->first();
+    $request = FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $contact['id']
+    );
 
     $result = FundingAmountApprovedChangeRequest::reject(FALSE)
-      ->setIds([$request['id']])
+      ->setIds([$request->getId()])
       ->execute();
 
     static::assertCount(1, $result);
@@ -410,17 +392,14 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
 
     RequestTestUtil::mockInternalRequest($contact['id']);
 
-    $request = FundingAmountApprovedChangeRequest::create(FALSE)
-      ->addValue('funding_case_id', $fundingCase->getId())
-      ->addValue('status', 'new')
-      ->addValue('creation_date', date('Y-m-d H:i:s'))
-      ->addValue('creation_contact_id', $contact['id'])
-      ->addValue('amount_requested', 120.0)
-      ->execute()->first();
+    $request = FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $contact['id']
+    );
 
     CRM_Core_DAO::executeQuery('SET FOREIGN_KEY_CHECKS = 0');
     FundingAmountApprovedChangeRequest::update(FALSE)
-      ->addWhere('id', '=', $request['id'])
+      ->addWhere('id', '=', $request->getId())
       ->setValues(['funding_case_id' => 999999])
       ->execute();
     CRM_Core_DAO::executeQuery('SET FOREIGN_KEY_CHECKS = 1');
@@ -428,7 +407,7 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
     $this->expectException(Throwable::class);
 
     FundingAmountApprovedChangeRequest::approve(FALSE)
-      ->setIds([$request['id']])
+      ->setIds([$request->getId()])
       ->execute();
   }
 
@@ -479,6 +458,37 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
     FundingAmountApprovedChangeRequest::delete()
       ->addWhere('id', '=', 1)
       ->execute();
+  }
+
+  public function testFixtureWithDefaults(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingProgram = FundingProgramFixture::addFixture();
+    $fundingCaseType = FundingCaseTypeFixture::addFixture();
+    $recipientContact = ContactFixture::addOrganization();
+    $creationContact = ContactFixture::addIndividual();
+
+    $fundingCase = FundingCaseFixture::addFixture(
+      $fundingProgram->getId(),
+      $fundingCaseType->getId(),
+      $recipientContact['id'],
+      $creationContact['id']
+    );
+
+    $entity = FundingAmountApprovedChangeRequestFixture::addFixture(
+      $fundingCase->getId(),
+      $contact['id'],
+      ['comment' => 'Test comment']
+    );
+
+    static::assertGreaterThan(0, $entity->getId());
+    static::assertSame($fundingCase->getId(), $entity->getFundingCaseId());
+    static::assertSame($contact['id'], $entity->getCreationContactId());
+    static::assertSame('new', $entity->getStatus());
+    static::assertSame(120.0, $entity->getAmountRequested());
+    static::assertSame('Test comment', $entity->getComment());
+    static::assertNull($entity->getDecisionDate());
+    static::assertNull($entity->getDecisionContactId());
+    static::assertNull($entity->getAmountApproved());
   }
 
 }
