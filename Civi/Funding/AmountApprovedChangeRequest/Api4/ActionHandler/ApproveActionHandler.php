@@ -74,6 +74,7 @@ final class ApproveActionHandler implements ActionHandlerInterface {
       $requestEntity = FundingAmountApprovedChangeRequestEntity::singleFromApiResult(
         $this->api4->executeAction(
           FundingAmountApprovedChangeRequest::get(FALSE)
+            ->setIgnoreCasePermissions(TRUE)
             ->addWhere('id', '=', $id)
         )
       );
