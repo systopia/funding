@@ -88,7 +88,9 @@ $container->addCompilerPass((new FundingCaseTypeServicePass(
   FundingCaseActionsDeterminerCollector::class,
   FundingCaseActionsDeterminerInterface::class,
   TRUE
-))->setPublic(TRUE));
+))
+  // Used in API action.
+  ->setPublic(TRUE));
 
 $container->autowire(FundingCaseManager::class)
   // phpcs:disable Squiz.PHP.CommentedOutCode.Found
@@ -159,7 +161,7 @@ $container->addCompilerPass(
   (new FundingCaseTypeServicePass(
     FundingCasePossibleActionsGetHandlerCollector::class, FundingCasePossibleActionsGetHandlerInterface::class,
   ))
-  // Used in API action.
+    // Used in API action.
     ->setPublic(TRUE)
 );
 
@@ -171,10 +173,10 @@ $container->autowire(TransferContractRecreateHandler::class)
   ->addTag(TransferContractRecreateHandler::SERVICE_TAG);
 $container->addCompilerPass(
   (new FundingCaseTypeServicePass(
-  TransferContractRecreateHandlerCollector::class,
-  TransferContractRecreateHandlerInterface::class,
+    TransferContractRecreateHandlerCollector::class,
+    TransferContractRecreateHandlerInterface::class,
   ))
-  // Used in API action.
+    // Used in API action.
     ->setPublic(TRUE)
 );
 
