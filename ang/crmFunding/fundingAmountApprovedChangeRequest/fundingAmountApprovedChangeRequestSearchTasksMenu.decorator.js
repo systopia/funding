@@ -164,47 +164,36 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
             const actionName = action.name;
             const confirmMsg = action.confirm;
 
-            const run = function (targetIds) {
-              if (targetIds.length === 0) {
-                CRM.alert(ts('No change requests selected or found.'), ts('Notice'), 'warning');
-                return;
-              }
-
-              if (actionName === 'approvePartial') {
-                CRM.confirm({
-                  title: ts('Approve with change'),
-                  width: '400px',
-                  message: '<div class="form-group"><label for="change-request-approved-amount">' + ts('Approved amount') + '</label><input type="number" id="change-request-approved-amount" class="form-control" /></div>',
-                  options: { no: ts('Cancel'), yes: ts('Confirm') },
-                }).on('crmConfirm:yes', function () {
-                  const amount = document.getElementById('change-request-approved-amount').value;
-                  executeTask(actionName, targetIds, {
-                    amountApproved: amount,
-                  });
-                });
-              } else {
-                const yesLabels = {
-                  approve: ts('Approve'),
-                  reject: ts('Reject'),
-                };
-                const yesLabel = yesLabels[actionName] || ts('Continue');
-                CRM.confirm({
-                  message: confirmMsg,
-                  options: { no: ts('Cancel'), yes: yesLabel },
-                }).on('crmConfirm:yes', function () {
-                  executeTask(actionName, targetIds, {});
-                });
-              }
-            };
-
             if (!ids || ids.length === 0) {
-              const params = taskManager.getApiParams();
-              params.return = 'id';
-              crmApi4('SearchDisplay', 'run', params).then(function (allIds) {
-                run(_.toArray(allIds));
+              CRM.alert(ts('No change requests selected.'), ts('Notice'), 'warning');
+              return;
+            }
+
+            if (actionName === 'approvePartial') {
+              CRM.confirm({
+                title: ts('Approve with change'),
+                width: '400px',
+                message: '<div class="form-group"><label for="change-request-approved-amount">' + ts('Approved amount') + '</label><input type="number" id="change-request-approved-amount" class="form-control" /></div>',
+                options: { no: ts('Cancel'), yes: ts('Confirm') },
+              }).on('crmConfirm:yes', function () {
+                const amount = document.getElementById('change-request-approved-amount').value;
+                executeTask(actionName, ids, {
+                  amountApproved: amount,
+                });
               });
             } else {
-              run(ids);
+              const yesLabels = {
+                approve: ts('Approve'),
+                reject: ts('Reject'),
+              };
+              const yesLabel = yesLabels[actionName] || ts('Continue');
+
+              CRM.confirm({
+                message: confirmMsg,
+                options: { no: ts('Cancel'), yes: yesLabel },
+              }).on('crmConfirm:yes', function () {
+                executeTask(actionName, ids, {});
+              });
             }
           };
 
