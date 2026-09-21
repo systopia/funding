@@ -38,6 +38,7 @@ trait IdsParameterTrait {
    */
   public function setIds(array $ids): self {
     Assert::allInteger($ids);
+    Assert::isList($ids);
     $this->ids = $ids;
 
     return $this;
