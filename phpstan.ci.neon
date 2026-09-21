@@ -12,6 +12,11 @@ parameters:
 		# \DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts is used
 		- '#^Call to deprecated method assertArraySubset\(\)#'
 
+		- # Required with CiviCRM <6.15 https://github.com/civicrm/civicrm-core/commit/db4cce015dbce80eeef29fa3da151dc5a6f16655
+			message: '#PHPDoc tag @var with type Civi\\Token\\TokenRow is not subtype of type Civi\\Token\\Event\\TokenRow.#'
+			identifier: varTag.type
+			path: Civi/Funding/DocumentRender/CiviOffice/AbstractCiviOfficeTokenSubscriber.php
+
 		- # Required with CiviCRM <6.3.0
 			identifier: varTag.nativeType
 			path: Civi/Funding/Database/DaoEntityInfoProvider.php
