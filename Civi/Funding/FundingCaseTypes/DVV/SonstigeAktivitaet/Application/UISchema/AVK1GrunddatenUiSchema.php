@@ -50,10 +50,6 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
         ]
       ),
       new JsonFormsControl(
-        "$scopePrefix/internerBezeichner",
-        'Interner Bezeichner'
-      ),
-      new JsonFormsControl(
         "$scopePrefix/titel",
         'Titel'
       ),

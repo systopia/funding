@@ -115,25 +115,7 @@ EOD,
       ]),
     ];
 
-    if ($report) {
-      $properties['internerBezeichner'] = new JsonSchemaString([
-        'maxLength' => 255,
-        'readOnly' => TRUE,
-      ]);
-    }
-    else {
-      $properties['internerBezeichner'] = new JsonSchemaString([
-        'maxLength' => 255,
-        '$tag' => JsonSchema::fromArray(
-          ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
-        ),
-      ]);
-    }
-
-    $required = array_values(array_filter(
-      array_keys($properties),
-      static fn (string $key) => 'internerBezeichner' !== $key && 'programmtage' !== $key,
-    ));
+    $required = array_keys($properties);
 
     parent::__construct($properties, [
       'required' => $required,
