@@ -1415,7 +1415,7 @@ msgstr "Prüfung: Mittelabruf erstellen"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Amount approved change request: create"
-msgstr "Mehr-/Minderbedarf beantragen"
+msgstr "Mehr-/Minderbedarf: erstellen"
 
 #: Civi/Funding/EventSubscriber/FundingCase/FundingCaseGetPossiblePermissionsSubscriber.php
 msgid "Drawdown: create"
@@ -2634,11 +2634,13 @@ msgstr "Möchten Sie die ausgewählten Mehr-/Minderbedarfsmeldungen bewilligen?"
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 msgid "Approve with change"
-msgstr "Mit Änderungen bewilligen"
+msgstr "Mit Änderung bewilligen"
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 msgid "Do you want to approve the selected change requests with changes?"
-msgstr "Möchten Sie die ausgewählten Mehr-/Minderbedarfsmeldungen bewilligen?"
+msgstr ""
+"Möchten Sie die ausgewählten Mehr-/Minderbedarfsmeldungen mit Änderungen "
+"bewilligen?"
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 msgid "Do you want to reject the selected change requests?"
@@ -2690,10 +2692,9 @@ msgid "Possible Funding Recipients"
 msgstr "Mögliche Fördergeldempfänger"
 
 #: ang/skFundingAmountApprovedChangeRequestTable.aff.php
-#, fuzzy
 #| msgid "Funding Amount Approved Change Request"
 msgid "Funding Amount Approved Change Request Table"
-msgstr "Mehr-/Minderbedarfsmeldung"
+msgstr ""
 
 #: funding.php
 msgid "CiviCRM: access Funding Program Manager"
@@ -3871,9 +3872,3 @@ msgstr "CiviOffice-Renderer"
 msgid "The CiviOffice renderer to use for rendering PDFs."
 msgstr ""
 "Der CiviOffice-Renderer, der zum Rendern von PDFs verwendet werden soll."
-
-#~ msgid "Change Request"
-#~ msgstr "Mehr-/Minderbedarfsmeldung"
-
-#~ msgid "Change Requests"
-#~ msgstr "Mehr-/Minderbedarfsmeldungen"
