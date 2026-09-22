@@ -46,44 +46,41 @@ final class FundingPseudoConstants {
    * @phpstan-return list<optionT>
    *
    * @throws \CRM_Core_Exception
-   *
-   * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
    */
+  // phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
   public static function getApplicationProcessStatus(string $fieldName, array $params): array {
-  // phpcs:enable
-    $fundingCaseTypeName = NULL;
+    $fundingCaseTypeNames = [];
     if ([] !== $params['values']) {
       $values = $params['values'];
       if (is_int($values['fundingCaseTypeId'] ?? NULL)) {
-        $fundingCaseTypeName = FundingCaseType::get(FALSE)
+        $fundingCaseTypeNames[] = FundingCaseType::get(FALSE)
           ->addSelect('name')
           ->addWhere('id', '=', $values['fundingCaseTypeId'])
           ->execute()->single()['name'];
       }
       elseif (is_int($values['fundingCaseId'] ?? NULL)) {
-        $fundingCaseTypeName = FundingCase::get(FALSE)
+        $fundingCaseTypeNames[] = FundingCase::get(FALSE)
           ->addSelect('funding_case_type_id.name')
           ->addWhere('id', '=', $values['fundingCaseId'])
           ->execute()->single()['funding_case_type_id.name'];
       }
       elseif (is_int($values['id'] ?? NULL)) {
-        $fundingCaseTypeName = FundingApplicationProcess::get(FALSE)
+        $fundingCaseTypeNames[] = FundingApplicationProcess::get(FALSE)
           ->addSelect('funding_case_id.funding_case_type_id.name')
           ->addWhere('id', '=', $values['id'])
           ->execute()->single()['funding_case_id.funding_case_type_id.name'];
       }
     }
 
+    if ([] === $fundingCaseTypeNames) {
+      $fundingCaseTypeNames = self::getActiveFundingCaseTypeNames();
+    }
+
     /** @var \Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface $metaDataProvider */
     $metaDataProvider = \Civi::service(FundingCaseTypeMetaDataProviderInterface::class);
-    if (NULL === $fundingCaseTypeName) {
-      $statuses = [];
-      foreach ($metaDataProvider->getAll() as $metaData) {
-        $statuses += $metaData->getApplicationProcessStatuses();
-      }
-    }
-    else {
-      $statuses = $metaDataProvider->get($fundingCaseTypeName)->getApplicationProcessStatuses();
+    $statuses = [];
+    foreach ($fundingCaseTypeNames as $fundingCaseTypeName) {
+      $statuses += $metaDataProvider->get($fundingCaseTypeName)->getApplicationProcessStatuses();
     }
 
     $options = [];
@@ -217,6 +214,7 @@ final class FundingPseudoConstants {
    * @phpstan-return list<optionT>
    */
   public static function getFundingCaseStatus(): array {
+    // @todo Return funding case status in FundingCaseTypeMetaDataInterface.
     $options = [
       FundingCaseStatus::OPEN => E::ts('Open'),
       FundingCaseStatus::ONGOING => E::ts('Ongoing'),
@@ -241,13 +239,18 @@ final class FundingPseudoConstants {
   }
 
   /**
-   * @return array<string, string>
+   * @return list<string>
+   *
+   * @throws \CRM_Core_Exception
    */
-  public static function getRelationshipTypeDirections(): array {
-    return [
-      'a_b' => E::ts('Relationship from a to b'),
-      'b_a' => E::ts('Relationship from b to a'),
-    ];
+  private static function getActiveFundingCaseTypeNames(): array {
+    static $fundingCaseTypeNames;
+
+    /** @var list<string> */
+    return $fundingCaseTypeNames ??= FundingCaseType::get(FALSE)
+      ->addSelect('name')
+      ->execute()
+      ->column('name');
   }
 
 }
