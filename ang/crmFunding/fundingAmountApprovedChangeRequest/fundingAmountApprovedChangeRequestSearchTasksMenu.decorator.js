@@ -67,7 +67,20 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
           taskManager.entityInfo.title_plural = ts('Amount Approved Change Requests');
 
           let allowedActionsByChangeRequest = {};
-          const searchKitTasks = taskManager.tasks;
+          const actionNames = ['approve', 'approvePartial', 'reject'];
+          const searchKitTasks = taskManager.tasks
+            .map(getTaskAsObject)
+            .filter((task) => !actionNames.includes(task.name));
+
+          function getTaskAsObject(task) {
+            if (typeof task === 'string') {
+              return {
+                name: task,
+                title: task,
+              };
+            }
+            return task;
+          }
 
           function updateAvailableTasks() {
             if (ctrl.ids.length === 0) {
@@ -77,7 +90,7 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
 
             let tasks = {};
             const firstActions = allowedActionsByChangeRequest[ctrl.ids[0]] || {};
-            for (const [actionName, {label, confirm}] of Object.entries(firstActions)) {
+            for (const [actionName, { label, confirm }] of Object.entries(firstActions)) {
               tasks[actionName] = {
                 name: actionName,
                 title: label,
@@ -100,7 +113,7 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
 
           function updateTasks() {
             if (_4.isEqual(lastIds, ctrl.ids)) {
-              return new Promise((resolve) => resolve([]));
+              return Promise.resolve([]);
             }
 
             lastIds = _4.clone(ctrl.ids);
@@ -115,8 +128,11 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
               taskManager.tasks = searchKitTasks;
               return crmApi4('FundingAmountApprovedChangeRequest', 'get', {
                 select: ['id', 'CAN_review'],
-                where: [['id', 'IN', idsToGetActions]]
+                where: [['id', 'IN', idsToGetActions]],
               }).then(function (changeRequests) {
+                for (const id of idsToGetActions) {
+                  allowedActionsByChangeRequest[id] = {};
+                }
                 for (const req of changeRequests) {
                   if (req.CAN_review) {
                     allowedActionsByChangeRequest[req.id] = {
@@ -133,18 +149,16 @@ fundingModule.directive('fundingChangeRequestTasksDecorator', function () {
                         confirm: ts('Do you want to reject the selected change requests?'),
                       },
                     };
-                  }
-                  else {
+                  } else {
                     allowedActionsByChangeRequest[req.id] = {};
                   }
                 }
 
                 updateAvailableTasks();
               });
-            }
-            else {
+            } else {
               updateAvailableTasks();
-              return new Promise((resolve) => resolve([]));
+              return Promise.resolve([]);
             }
           }
 
