@@ -35,7 +35,7 @@ class UpdateAmountApprovedAction extends AbstractAction {
   use IdParameterTrait;
 
   /**
-   * @var mixed CiviCRM (v5.59) does not know float/double in @var.
+   * @var float
    * @required
    * @phpstan-ignore property.phpDocType
    */
