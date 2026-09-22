@@ -124,7 +124,7 @@ final class RemoteFundingAmountApprovedChangeRequestTest extends AbstractRemoteF
     );
   }
 
-  public function testGetNotAllowedWithoutAmountApprovedChangeRequestCreatePermission(): void {
+  public function testGetAllowedWithoutAmountApprovedChangeRequestCreatePermission(): void {
     $fundingCase = $this->createFundingCase();
 
     $contact = ContactFixture::addIndividual();
