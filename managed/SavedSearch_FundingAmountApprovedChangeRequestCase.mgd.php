@@ -131,7 +131,9 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
-                  'conditions' => [],
+                  'conditions' => [
+                    ['CAN_review', '=', TRUE],
+                  ],
                 ],
                 [
                   'entity' => 'FundingAmountApprovedChangeRequest',
@@ -143,7 +145,9 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
-                  'conditions' => [],
+                  'conditions' => [
+                    ['CAN_review', '=', TRUE],
+                  ],
                 ],
                 [
                   'entity' => 'FundingAmountApprovedChangeRequest',
@@ -155,7 +159,9 @@ return [
                   'action' => '',
                   'join' => '',
                   'target' => '',
-                  'conditions' => [],
+                  'conditions' => [
+                    ['CAN_review', '=', TRUE],
+                  ],
                 ],
               ],
               'type' => 'buttons',
