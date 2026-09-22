@@ -32,9 +32,13 @@ namespace Civi\Funding\FundingCaseType\MetaData;
  *   inReview?: bool,
  *   inWork?: bool,
  *   rejected?: bool,
- *   snapshotRequired?: bool,
+ *   snapshotRequired?: int,
  *   withdrawn?: bool,
  * }
+ *
+ *   snapshotRequired defines under which conditions a snapshot is required. It
+ *   can be a combination of the SNAPSHOT_ constants.
+ *
  *   Defaults:
  *     - icon: NULL
  *     - iconColor: NULL
@@ -44,7 +48,7 @@ namespace Civi\Funding\FundingCaseType\MetaData;
  *     - inReview: FALSE
  *     - inWork: FALSE
  *     - rejected: FALSE
- *     - snapshotRequired: eligible === TRUE || final === TRUE
+ *     - snapshotRequired: eligible === TRUE || final === TRUE ? SNAPSHOT_ON_ENTER_OR_DATA_CHANGED : SNAPSHOT_NO
  *     - withdrawn: FALSE
  *   The value NULL for 'eligible' means the eligibility, is not decided, yet.
  *   An application 'inWork' is in work by the applicant.
@@ -52,6 +56,28 @@ namespace Civi\Funding\FundingCaseType\MetaData;
  *   it's valid to stay in this forever.
  */
 final class ApplicationProcessStatus {
+
+  /**
+   * No snapshot required.
+   */
+  public const SNAPSHOT_NO = 0;
+
+  /**
+   * Snapshot required when status is entered.
+   */
+  public const SNAPSHOT_ON_ENTER = 1;
+
+  /**
+   * Snapshot required when status is left.
+   */
+  public const SNAPSHOT_ON_LEAVE = 2;
+
+  /**
+   * Snapshot when status stays and data is changed.
+   */
+  public const SNAPSHOT_ON_DATA_CHANGED = 4;
+
+  public const SNAPSHOT_ON_ENTER_OR_DATA_CHANGED = self::SNAPSHOT_ON_ENTER | self::SNAPSHOT_ON_DATA_CHANGED;
 
   /**
    * @phpstan-var applicationProcessStatusT
@@ -113,8 +139,11 @@ final class ApplicationProcessStatus {
     return $this->values['rejected'] ?? FALSE;
   }
 
-  public function isSnapshotRequired(): bool {
-    return $this->values['snapshotRequired'] ?? (TRUE === $this->isEligible() || $this->isFinal());
+  public function getSnapshotRequired(): int {
+    return $this->values['snapshotRequired'] ?? (
+      (TRUE === $this->isEligible() || $this->isFinal())
+      ? self::SNAPSHOT_ON_ENTER_OR_DATA_CHANGED : self::SNAPSHOT_NO
+    );
   }
 
   public function isWithdrawn(): bool {
