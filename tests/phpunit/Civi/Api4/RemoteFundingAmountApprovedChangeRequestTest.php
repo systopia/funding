@@ -27,11 +27,6 @@ final class RemoteFundingAmountApprovedChangeRequestTest extends AbstractRemoteF
     $fundingCase = $this->createFundingCase();
 
     $contact = ContactFixture::addIndividual();
-    FundingProgramContactRelationFixture::addContact(
-      $contact['id'],
-      $fundingCase->getFundingProgramId(),
-      []
-    );
     FundingCaseContactRelationFixture::addContact(
       $contact['id'],
       $fundingCase->getId(),
