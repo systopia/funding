@@ -82,7 +82,6 @@ class KursJsonSchemaTest extends TestCase {
         'keinSchutzkonzeptBegruendung' => 'abc',
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
-        'internerBezeichner' => 'interne id',
         'zeitraeume' => [
           [
             'beginn' => '2022-08-25',
@@ -236,7 +235,6 @@ class KursJsonSchemaTest extends TestCase {
     static::assertEquals([
       'title' => 'Test',
       'short_description' => 'foo bar',
-      'funding_application_process_extra.internal_identifier' => 'interne id',
       'recipient_contact_id' => 2,
       'start_date' => '2022-08-24',
       'end_date' => '2022-08-25',
@@ -268,7 +266,6 @@ class KursJsonSchemaTest extends TestCase {
         'keinSchutzkonzeptBegruendung' => '',
         'titel' => 'Test',
         'kurzbeschreibungDesInhalts' => 'foo bar',
-        'internerBezeichner' => 'interne id',
         'zeitraeume' => [
           [
             'beginn' => '2022-08-25',
