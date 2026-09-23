@@ -105,14 +105,14 @@ EOD,
         ['maximum' => 28]
       ),
       'teilnehmer' => new JsonSchemaObject([
-        'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),
+        'gesamt' => new JsonSchemaInteger(['minimum' => 1]),
         'weiblich' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
         'divers' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
         'unter27' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
         'inJugendhilfeEhrenamtlichTaetig' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
         'inJugendhilfeHauptamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-        'referenten' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0]),
-      ], ['required' => ['gesamt']]),
+        'referenten' => new JsonSchemaInteger(['minimum' => 0]),
+      ], ['required' => ['gesamt', 'referenten']]),
     ];
 
     $required = array_values(array_filter(
