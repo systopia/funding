@@ -47,7 +47,7 @@ class KursUiSchemaTest extends TestCase {
       3.0
     );
 
-    $uiSchema = new KursUiSchema('€', KursUiSchema::FLAG_SHOW_RECIPIENTS_CONTROL);
+    $uiSchema = new KursUiSchema('€', KursUiSchema::FLAG_SHOW_RECIPIENTS_CONTROL, '1,23 €', '2,34 €', '5,67 €');
     static::assertScopesExist($jsonSchema->toStdClass(), $uiSchema);
   }
 

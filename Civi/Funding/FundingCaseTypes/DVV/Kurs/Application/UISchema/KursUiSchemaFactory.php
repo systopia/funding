@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\DVV\Kurs\Application\UISchema;
 
+use Civi\Core\Format;
 use Civi\Funding\Contact\PossibleRecipientsLoaderInterface;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -35,6 +36,7 @@ final class KursUiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
   use KursSupportedFundingCaseTypesTrait;
 
   public function __construct(
+    private readonly Format $format,
     private readonly PossibleRecipientsLoaderInterface $possibleRecipientsLoader,
     private readonly RequestContextInterface $requestContext,
     private readonly KursStatusMarkupFactory $statusMarkupFactory,
@@ -46,7 +48,7 @@ final class KursUiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
   ): JsonFormsLayout {
     $statusMarkup = new JsonFormsMarkup($this->statusMarkupFactory->buildStatusMarkup($applicationProcessBundle));
 
-    return new KursUiSchema($applicationProcessBundle->getFundingProgram()->getCurrency(), 0, [$statusMarkup]);
+    return $this->crateUiSchema($applicationProcessBundle->getFundingProgram(), 0, [$statusMarkup]);
   }
 
   public function createUiSchemaNew(
@@ -58,8 +60,8 @@ final class KursUiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
       $fundingProgram
     );
 
-    return new KursUiSchema(
-      $fundingProgram->getCurrency(),
+    return $this->crateUiSchema(
+      $fundingProgram,
       1 === count($possibleRecipients) ? KursUiSchema::FLAG_SHOW_RECIPIENTS_CONTROL : 0
     );
   }
@@ -68,7 +70,35 @@ final class KursUiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonFormsLayout {
-    return new KursUiSchema($fundingProgram->getCurrency(), 0);
+    return $this->crateUiSchema($fundingProgram, 0);
+  }
+
+  /**
+   * @param list<\Civi\RemoteTools\JsonForms\JsonFormsElement> $extraElements
+   */
+  private function crateUiSchema(FundingProgramEntity $fundingProgram, int $flags, array $extraElements = []): KursUiSchema {
+    if (!is_float($fundingProgram->get('funding_program_dvv.grundbetrag_reisekosten'))) {
+      throw new \RuntimeException('Reisekostengrundbetrag nicht definiert');
+    }
+
+    if (!is_float($fundingProgram->get('funding_program_dvv.grundbetrag_teilnehmer'))) {
+      throw new \RuntimeException('Teilnehmer*innengrundbetrag nicht definiert');
+    }
+
+    if (!is_float($fundingProgram->get('funding_program_dvv.grundbetrag_honorar'))) {
+      throw new \RuntimeException('Honorargrundbetrag nicht definiert');
+    }
+#
+    $currency = $fundingProgram->getCurrency();
+
+    return new KursUiSchema(
+      $currency,
+      $flags,
+      $this->format->money($fundingProgram->get('funding_program_dvv.grundbetrag_reisekosten'), $currency),
+      $this->format->money($fundingProgram->get('funding_program_dvv.grundbetrag_teilnehmer'), $currency),
+      $this->format->money($fundingProgram->get('funding_program_dvv.grundbetrag_honorar'), $currency),
+      $extraElements
+    );
   }
 
 }
