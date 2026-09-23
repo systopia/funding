@@ -33,9 +33,16 @@ final class KursUiSchema extends JsonFormsGroup {
   public const FLAG_SHOW_RECIPIENTS_CONTROL = 1;
 
   /**
-   * @phpstan-param array<int, \Civi\RemoteTools\JsonForms\JsonFormsElement> $extraElements
+   * @param list<\Civi\RemoteTools\JsonForms\JsonFormsElement> $extraElements
    */
-  public function __construct(string $currency, int $flags, array $extraElements = []) {
+  public function __construct(
+    string $currency,
+    int $flags,
+    string $grundbetragReisekosten,
+    string $grundbetragTeilnehmer,
+    string $grundbetragHonorar,
+    array $extraElements = []
+  ) {
     $elements = [];
     $categories = [new KursGrunddatenUiSchema('#/properties/grunddaten/properties')];
 
@@ -95,13 +102,17 @@ final class KursUiSchema extends JsonFormsGroup {
           new KursOeffentlicheMittelUiSchema($currency),
           new JsonFormsGroup('Finanzierung und beantragter KJP-Zuschuss', [
             new JsonFormsControl(
-              '#/properties/finanzierung/properties/festbetragReisekosten', 'Reisekostenfestbetrag in ' . $currency
+              '#/properties/finanzierung/properties/festbetragReisekosten',
+              "Reisekostenfestbetrag in $currency (Veranstaltungstage × $grundbetragReisekosten)"
             ),
             new JsonFormsControl(
-              '#/properties/finanzierung/properties/festbetragTeilnehmer', 'Teilnehmer*innenfestbetrag in ' . $currency
+              '#/properties/finanzierung/properties/festbetragTeilnehmer',
+              "Teilnehmer*innenfestbetrag in $currency "
+              . "(Veranstaltungstage × Teilnehmer*innenanzahl × $grundbetragTeilnehmer)"
             ),
             new JsonFormsControl(
-              '#/properties/finanzierung/properties/festbetragHonorar', 'Honorarfestbetrag in ' . $currency
+              '#/properties/finanzierung/properties/festbetragHonorar',
+              "Honorarfestbetrag in $currency (Tage, an denen Honorare anfallen × $grundbetragHonorar)"
             ),
             new JsonFormsControl(
               '#/properties/finanzierung/properties/maximalerZuschuss', 'Maximaler KJP-Zuschuss in ' . $currency
