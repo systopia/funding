@@ -101,10 +101,6 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
           "$scopePrefix/teilnehmer/properties/inJugendhilfeHauptamtlichTaetig",
           'davon in der Kinder- und Jugendhilfe hauptamtlich tätig',
         ),
-        new JsonFormsControl(
-          "$scopePrefix/teilnehmer/properties/referenten",
-          'davon Referent*innen'
-        ),
       ], 'Wie viele Teilnehmer*innen werden für die Veranstaltung erwartet?'),
     ];
 

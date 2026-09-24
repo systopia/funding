@@ -110,10 +110,10 @@ final class KursFinanzierungSchema extends JsonSchemaObject {
       // Festbeträge
       'festbetragHonorar' => new JsonSchemaCalculate(
         'number',
-        'round(honorartage * anzahlReferenten * grundbetragHonorar, 2)',
+        'round(honorartage * anzahlHonorarkraefte * grundbetragHonorar, 2)',
         [
           'honorartage' => new JsonSchemaDataPointer('2/kosten/honorartage', 0),
-          'anzahlReferenten' => new JsonSchemaDataPointer('2/grunddaten/teilnehmer/referenten', 0),
+          'anzahlHonorarkraefte' => new JsonSchemaDataPointer('2/kosten/anzahlHonorarkraefte', 0),
           'grundbetragHonorar' => $grundbetragHonorar,
         ],
       ),

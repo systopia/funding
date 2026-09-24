@@ -81,6 +81,7 @@ final class KursKostenSchema extends JsonSchemaObject {
         'honorare' => new JsonSchemaDataPointer('1/honorare'),
       ]),
       'honorartage' => new JsonSchemaInteger(['minimum' => 0]),
+      'anzahlHonorarkraefte' => new JsonSchemaInteger(['minimum' => 0]),
       // Abschnitt I.4
       'fahrtkosten' => new JsonSchemaObject([
         'teilnehmer' => new JsonSchemaMoney([
@@ -175,6 +176,7 @@ final class KursKostenSchema extends JsonSchemaObject {
       'required' => [
         'honorare',
         'honorartage',
+        'anzahlHonorarkraefte',
         'fahrtkosten',
         'sachkosten',
         'sonstigeAusgaben',
