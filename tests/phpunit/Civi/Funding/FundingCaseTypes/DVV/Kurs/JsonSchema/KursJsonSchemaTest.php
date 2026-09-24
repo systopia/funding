@@ -76,7 +76,7 @@ class KursJsonSchemaTest extends TestCase {
 
     $honorartage = 1;
     $teilnehmerGesamt = 5;
-    $anzahlReferenten = 2;
+    $anzahlHonorarkraefte = 2;
     $data = [
       'grunddaten' => [
         'schutzkonzept' => FALSE,
@@ -100,7 +100,6 @@ class KursJsonSchemaTest extends TestCase {
           'unter27' => 2,
           'inJugendhilfeEhrenamtlichTaetig' => 1,
           'inJugendhilfeHauptamtlichTaetig' => 0,
-          'referenten' => $anzahlReferenten,
         ],
       ],
       'empfaenger' => 2,
@@ -122,6 +121,7 @@ class KursJsonSchemaTest extends TestCase {
           ],
         ],
         'honorartage' => $honorartage,
+        'anzahlHonorarkraefte' => $anzahlHonorarkraefte,
         'unterkunftUndVerpflegung' => 222.22,
         'fahrtkosten' => [
           'teilnehmer' => 2.2,
@@ -222,7 +222,7 @@ class KursJsonSchemaTest extends TestCase {
     $maximalerZuschuss = round(
       $teilnehmerGesamt * $grundbetragReisekosten
       + $programmtage * $teilnehmerGesamt * $grundbetragTeilnehmer
-      + $honorartage * $anzahlReferenten * $grundbetragHonorar, 2);
+      + $honorartage * $anzahlHonorarkraefte * $grundbetragHonorar, 2);
     static::assertSame($maximalerZuschuss, $resultData->finanzierung->maximalerZuschuss);
 
     $beantragterZuschuss = round($gesamtkosten - $gesamtmittel, 2);
@@ -284,7 +284,6 @@ class KursJsonSchemaTest extends TestCase {
           'unter27' => 2,
           'inJugendhilfeEhrenamtlichTaetig' => 1,
           'inJugendhilfeHauptamtlichTaetig' => 0,
-          'referenten' => 0,
         ],
       ],
       'empfaenger' => 2,
@@ -306,6 +305,7 @@ class KursJsonSchemaTest extends TestCase {
           ],
         ],
         'honorartage' => 2,
+        'anzahlHonorarkraefte' => 1,
         'unterkunftUndVerpflegung' => 222.22,
         'fahrtkosten' => [
           'teilnehmer' => 2.2,

@@ -50,6 +50,10 @@ final class KursHonorareUiSchema extends JsonFormsGroup {
         '#/properties/kosten/properties/honorartage',
         'Tage, an denen Honorare anfallen'
       ),
+      new JsonFormsControl(
+        '#/properties/kosten/properties/anzahlHonorarkraefte',
+        'Anzahl der Honorarkräfte'
+      ),
     ];
 
     parent::__construct(

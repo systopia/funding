@@ -113,7 +113,7 @@ final class KursUiSchema extends JsonFormsGroup {
             new JsonFormsControl(
               '#/properties/finanzierung/properties/festbetragHonorar',
               "Honorarfestbetrag in $currency "
-              . "(Tage, an denen Honorare anfallen × Anzahl Referent*innen × $grundbetragHonorar)"
+              . "(Tage, an denen Honorare anfallen × Anzahl der Honorarkräfte × $grundbetragHonorar)"
             ),
             new JsonFormsControl(
               '#/properties/finanzierung/properties/maximalerZuschuss', 'Maximaler KJP-Zuschuss in ' . $currency
