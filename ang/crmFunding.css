@@ -330,3 +330,14 @@ funding-jf-control {
   background-color: #a6ffb5;
   font-weight: bold;
 }
+
+label[for="change-request-approved-amount"] {
+  display: block;
+  margin-bottom: 5px;
+}
+
+#change-request-approved-amount {
+  width: 100%;
+  border: 1px solid #ccc !important;
+  box-shadow: none !important;
+}
