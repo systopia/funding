@@ -21,10 +21,10 @@ namespace Civi\Funding\EventSubscriber\CiviOffice;
 
 use Civi\Api4\FundingApplicationProcess;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ApplicationProcess\Token\ApplicationProcessTokenNameExtractor;
+use Civi\Funding\ApplicationProcess\Token\ApplicationProcessTokenResolver;
 use Civi\Funding\DocumentRender\CiviOffice\AbstractCiviOfficeTokenSubscriber;
 use Civi\Funding\DocumentRender\CiviOffice\CiviOfficeContextDataHolder;
-use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
-use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 
@@ -34,27 +34,21 @@ use Civi\Funding\Entity\ApplicationProcessEntity;
  */
 class ApplicationProcessTokenSubscriber extends AbstractCiviOfficeTokenSubscriber {
 
-  private ApplicationProcessManager $applicationProcessManager;
-
   public static function getPriority(): int {
     return FundingCaseTokenSubscriber::getPriority() + 1;
   }
 
-  /**
-   * @phpstan-param TokenResolverInterface<\Civi\Funding\Entity\ApplicationProcessEntity> $tokenResolver
-   */
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
+    private readonly ApplicationProcessManager $applicationProcessManager,
     CiviOfficeContextDataHolder $contextDataHolder,
-    TokenResolverInterface $tokenResolver,
-    TokenNameExtractorInterface $tokenNameExtractor
+    ApplicationProcessTokenResolver $tokenResolver,
+    ApplicationProcessTokenNameExtractor $tokenNameExtractor
   ) {
     parent::__construct(
       $contextDataHolder,
       $tokenResolver,
       $tokenNameExtractor
     );
-    $this->applicationProcessManager = $applicationProcessManager;
   }
 
   protected function getApiEntityName(): string {

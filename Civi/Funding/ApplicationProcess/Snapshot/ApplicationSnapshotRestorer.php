@@ -34,33 +34,14 @@ use Webmozart\Assert\Assert;
 
 final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerInterface {
 
-  private ApplicationProcessManager $applicationProcessManager;
-
-  private ApplicationSnapshotManager $applicationSnapshotManager;
-
-  private ApplicationCostItemManager $costItemManager;
-
-  private CiviEventDispatcherInterface $eventDispatcher;
-
-  private ApplicationExternalFileManagerInterface $externalFileManager;
-
-  private ApplicationResourcesItemManager $resourcesItemManager;
-
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    ApplicationSnapshotManager $applicationSnapshotManager,
-    ApplicationCostItemManager $costItemManager,
-    CiviEventDispatcherInterface $eventDispatcher,
-    ApplicationExternalFileManagerInterface $externalFileManager,
-    ApplicationResourcesItemManager $resourcesItemManager
-  ) {
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->applicationSnapshotManager = $applicationSnapshotManager;
-    $this->costItemManager = $costItemManager;
-    $this->eventDispatcher = $eventDispatcher;
-    $this->externalFileManager = $externalFileManager;
-    $this->resourcesItemManager = $resourcesItemManager;
-  }
+    private readonly ApplicationProcessManager $applicationProcessManager,
+    private readonly ApplicationSnapshotManager $applicationSnapshotManager,
+    private readonly ApplicationCostItemManager $costItemManager,
+    private readonly CiviEventDispatcherInterface $eventDispatcher,
+    private readonly ApplicationExternalFileManagerInterface $externalFileManager,
+    private readonly ApplicationResourcesItemManager $resourcesItemManager
+  ) {}
 
   /**
    * @throws \CRM_Core_Exception
@@ -81,6 +62,10 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $applicationProcess->setRequestData($applicationSnapshot->getRequestData());
     $applicationProcess->setAmountRequested($applicationSnapshot->getAmountRequested());
     $applicationProcess->setAmountEligible($applicationSnapshot->getAmountEligible());
+    $applicationProcess->setFirstApplicationDate($applicationSnapshot->getFirstApplicationDate());
+    $applicationProcess->setFirstApplicationContactId($applicationSnapshot->getFirstApplicationContactId());
+    $applicationProcess->setLastApplicationDate($applicationSnapshot->getLastApplicationDate());
+    $applicationProcess->setLastApplicationContactId($applicationSnapshot->getLastApplicationContactId());
     $applicationProcess->setIsReviewCalculative($applicationSnapshot->getIsReviewCalculative());
     $applicationProcess->setIsReviewContent($applicationSnapshot->getIsReviewContent());
     $applicationProcess->setIsEligible($applicationSnapshot->getIsEligible());

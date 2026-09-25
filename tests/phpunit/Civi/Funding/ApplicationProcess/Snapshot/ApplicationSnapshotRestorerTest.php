@@ -78,6 +78,10 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     $resourcesItem = ApplicationResourcesItemFactory::createApplicationResourcesItem();
 
     $applicationSnapshot = ApplicationSnapshotFactory::createApplicationSnapshot([
+      'first_application_date' => '2026-01-01 01:01:01',
+      'first_application_contact_id' => 1,
+      'last_application_date' => '2026-02-02 02:02:02',
+      'last_application_contact_id' => 2,
       'amount_eligible' => 1.2,
       'cost_items' => [$costItem->toArray()],
       'resources_items' => [$resourcesItem->toArray()],
@@ -122,6 +126,22 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     static::assertSame($applicationSnapshot->getRequestData(), $applicationProcess->getRequestData());
     static::assertSame($applicationSnapshot->getAmountRequested(), $applicationProcess->getAmountRequested());
     static::assertSame($applicationSnapshot->getAmountEligible(), $applicationProcess->getAmountEligible());
+    static::assertEquals(
+      $applicationSnapshot->getFirstApplicationDate(),
+      $applicationProcess->getFirstApplicationDate()
+    );
+    static::assertSame(
+      $applicationSnapshot->getFirstApplicationContactId(),
+      $applicationProcess->getFirstApplicationContactId()
+    );
+    static::assertEquals(
+      $applicationSnapshot->getLastApplicationDate(),
+      $applicationProcess->getLastApplicationDate()
+    );
+    static::assertSame(
+      $applicationSnapshot->getLastApplicationContactId(),
+      $applicationProcess->getLastApplicationContactId()
+    );
     static::assertSame($applicationSnapshot->getIsReviewContent(), $applicationProcess->getIsReviewContent());
     static::assertSame($applicationSnapshot->getIsReviewCalculative(), $applicationProcess->getIsReviewCalculative());
     static::assertSame($applicationSnapshot->getIsEligible(), $applicationProcess->getIsEligible());

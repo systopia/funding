@@ -50,6 +50,7 @@ final class ReworkApplicationProcessActions {
     return new ApplicationProcessAction([
       'name' => 'apply-rework',
       'label' => $label ?? E::ts('Apply rework'),
+      'apply' => TRUE,
     ]);
   }
 

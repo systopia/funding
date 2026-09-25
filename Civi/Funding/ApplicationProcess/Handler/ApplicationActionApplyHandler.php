@@ -27,32 +27,18 @@ use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterfac
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminerInterface;
 use Civi\Funding\Entity\ApplicationProcessEntity;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 
 final class ApplicationActionApplyHandler implements ApplicationActionApplyHandlerInterface {
 
-  private ApplicationProcessManager $applicationProcessManager;
-
-  private ApplicationSnapshotRestorerInterface $applicationSnapshotRestorer;
-
-  private ApplicationFormCommentPersistHandlerInterface $commentPersistHandler;
-
-  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
-
-  private ApplicationProcessStatusDeterminerInterface $statusDeterminer;
-
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    ApplicationSnapshotRestorerInterface $applicationSnapshotRestorer,
-    ApplicationFormCommentPersistHandlerInterface $commentPersistHandler,
-    FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
-    ApplicationProcessStatusDeterminerInterface $statusDeterminer
-  ) {
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->applicationSnapshotRestorer = $applicationSnapshotRestorer;
-    $this->commentPersistHandler = $commentPersistHandler;
-    $this->metaDataProvider = $metaDataProvider;
-    $this->statusDeterminer = $statusDeterminer;
-  }
+    private readonly ApplicationProcessManager $applicationProcessManager,
+    private readonly ApplicationSnapshotRestorerInterface $applicationSnapshotRestorer,
+    private readonly ApplicationFormCommentPersistHandlerInterface $commentPersistHandler,
+    private readonly RequestContextInterface $requestContext,
+    private readonly FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
+    private readonly ApplicationProcessStatusDeterminerInterface $statusDeterminer
+  ) {}
 
   /**
    * @throws \CRM_Core_Exception
@@ -77,6 +63,15 @@ final class ApplicationActionApplyHandler implements ApplicationActionApplyHandl
       $applicationProcess->setFullStatus(
         $this->statusDeterminer->getStatus($applicationProcess->getFullStatus(), $command->getAction())
       );
+      if (TRUE === $action?->isApply()) {
+        $applicationDate = new \DateTime(\CRM_Utils_Time::date('YmdHis'));
+        if (NULL === $applicationProcess->getFirstApplicationDate()) {
+          $applicationProcess->setFirstApplicationDate($applicationDate);
+          $applicationProcess->setFirstApplicationContactId($this->requestContext->getContactId());
+        }
+        $applicationProcess->setLastApplicationDate($applicationDate);
+        $applicationProcess->setLastApplicationContactId($this->requestContext->getContactId());
+      }
 
       if (NULL !== $command->getValidationResult()) {
         $this->mapValidatedDataIntoApplicationProcess($applicationProcess, $command->getValidationResult());
