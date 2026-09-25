@@ -20,6 +20,7 @@ declare(strict_types = 1);
 namespace Civi\Funding\Entity;
 
 use Civi\Funding\Api4\RemoteApiConstants;
+use Civi\Funding\Util\DateTimeUtil;
 
 /**
  * @phpstan-type fundingCaseT array{
@@ -35,6 +36,8 @@ use Civi\Funding\Api4\RemoteApiConstants;
  *   notification_contact_ids: list<int>,
  *   budget_requested: ?float,
  *   amount_approved: ?float,
+ *   approval_date: ?string,
+ *   approval_contact_id: ?int,
  *   permissions?: list<string>,
  *   transfer_contract_uri?: ?string,
  * }
@@ -152,6 +155,26 @@ final class FundingCaseEntity extends AbstractEntity {
 
   public function setAmountApproved(?float $amountApproved): self {
     $this->values['amount_approved'] = $amountApproved;
+
+    return $this;
+  }
+
+  public function getApprovalDate(): ?\DateTimeInterface {
+    return DateTimeUtil::toDateTimeOrNull($this->values['approval_date']);
+  }
+
+  public function setApprovalDate(\DateTimeInterface $approvalDate): self {
+    $this->values['approval_date'] = DateTimeUtil::toDateTimeStr($approvalDate);
+
+    return $this;
+  }
+
+  public function getApprovalContactId(): ?int {
+    return $this->values['approval_contact_id'];
+  }
+
+  public function setApprovalContactId(int $approvalContactId): self {
+    $this->values['approval_contact_id'] = $approvalContactId;
 
     return $this;
   }
