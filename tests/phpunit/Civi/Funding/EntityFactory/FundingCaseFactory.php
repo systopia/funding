@@ -34,6 +34,8 @@ use Civi\Funding\Entity\FundingCaseEntity;
  *   creation_contact_id?: int,
  *   budget_requested?: ?float,
  *   amount_approved?: ?float,
+ *   approval_date?: ?string,
+ *   approval_contact_id?: ?int,
  *   permissions?: list<string>,
  * }
  */
@@ -60,6 +62,8 @@ final class FundingCaseFactory {
       'notification_contact_ids' => [1],
       'budget_requested' => NULL,
       'amount_approved' => NULL,
+      'approval_date' => NULL,
+      'approval_contact_id' => NULL,
       'permissions' => ['test_permission'],
     ]);
   }

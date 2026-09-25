@@ -249,6 +249,34 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0025(): bool {
+    $this->ctx->log->info('Applying database migration 0025');
+    E::schema()->alterSchemaField(
+      'FundingCase',
+      'approval_date',
+      [
+        'sql_type' => 'timestamp',
+        'input_type' => 'Select Date',
+      ],
+      'AFTER amount_approved'
+    );
+    E::schema()->alterSchemaField(
+      'FundingCase',
+      'approval_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER approval_date'
+    );
+
+    return TRUE;
+  }
+
   private function createUniqueTranslationIndex(): void {
     try {
       // Not possible on MySQL because it exceeds max key length of 3072 bytes.
