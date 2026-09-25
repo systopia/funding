@@ -86,6 +86,8 @@ use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidato
 use Civi\Funding\ApplicationProcess\JsonSchema\Validator\OpisApplicationValidatorFactory;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorer;
 use Civi\Funding\ApplicationProcess\Snapshot\ApplicationSnapshotRestorerInterface;
+use Civi\Funding\ApplicationProcess\Token\ApplicationProcessTokenNameExtractor;
+use Civi\Funding\ApplicationProcess\Token\ApplicationProcessTokenResolver;
 use Civi\Funding\DependencyInjection\Compiler\FundingCaseTypeServicePass;
 use Civi\Funding\DependencyInjection\Util\ServiceRegistrator;
 use Civi\Funding\Form\Application\ApplicationCostItemsFormDataLoader;
@@ -253,3 +255,6 @@ ServiceRegistrator::autowireAllImplementing(
 );
 
 $container->autowire(ApplicationSnapshotRestorerInterface::class, ApplicationSnapshotRestorer::class);
+
+$container->autowire(ApplicationProcessTokenResolver::class);
+$container->autowire(ApplicationProcessTokenNameExtractor::class);

@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Entity;
 
+use Civi\Funding\Util\DateTimeUtil;
+
 /**
  * @phpstan-type applicationProcessT array{
  *   id?: int,
@@ -29,16 +31,20 @@ namespace Civi\Funding\Entity;
  *   modification_date: string,
  *   title: string,
  *   short_description: string,
- *   start_date: string|null,
- *   end_date: string|null,
+ *   start_date: ?string,
+ *   end_date: ?string,
  *   request_data: array<string, mixed>,
  *   amount_requested: float,
  *   amount_eligible: float,
- *   is_review_content: bool|null,
- *   reviewer_cont_contact_id: int|null,
- *   is_review_calculative: bool|null,
- *   reviewer_calc_contact_id: int|null,
- *   is_eligible: bool|null,
+ *   first_application_date: ?string,
+ *   first_application_contact_id: ?int,
+ *   last_application_date: ?string,
+ *   last_application_contact_id: ?int,
+ *   is_review_content: ?bool,
+ *   reviewer_cont_contact_id: ?int,
+ *   is_review_calculative: ?bool,
+ *   reviewer_calc_contact_id: ?int,
+ *   is_eligible: ?bool,
  *   is_in_work: bool,
  *   is_rejected: bool,
  *   is_withdrawn: bool,
@@ -166,6 +172,46 @@ final class ApplicationProcessEntity extends AbstractEntity {
 
   public function setAmountEligible(float $amountEligible): self {
     $this->values['amount_eligible'] = $amountEligible;
+
+    return $this;
+  }
+
+  public function getFirstApplicationDate(): ?\DateTimeInterface {
+    return DateTimeUtil::toDateTimeOrNull($this->values['first_application_date']);
+  }
+
+  public function setFirstApplicationDate(?\DateTimeInterface $firstApplicationDate): self {
+    $this->values['first_application_date'] = DateTimeUtil::toDateTimeStrOrNull($firstApplicationDate);
+
+    return $this;
+  }
+
+  public function getFirstApplicationContactId(): ?int {
+    return $this->values['first_application_contact_id'];
+  }
+
+  public function setFirstApplicationContactId(?int $firstApplicationContactId): self {
+    $this->values['first_application_contact_id'] = $firstApplicationContactId;
+
+    return $this;
+  }
+
+  public function getLastApplicationDate(): ?\DateTimeInterface {
+    return DateTimeUtil::toDateTimeOrNull($this->values['last_application_date']);
+  }
+
+  public function setLastApplicationDate(?\DateTimeInterface $lastApplicationDate): self {
+    $this->values['last_application_date'] = DateTimeUtil::toDateTimeStrOrNull($lastApplicationDate);
+
+    return $this;
+  }
+
+  public function getLastApplicationContactId(): ?int {
+    return $this->values['last_application_contact_id'];
+  }
+
+  public function setLastApplicationContactId(?int $lastApplicationContactId): self {
+    $this->values['last_application_contact_id'] = $lastApplicationContactId;
 
     return $this;
   }
