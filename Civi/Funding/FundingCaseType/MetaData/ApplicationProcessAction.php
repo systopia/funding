@@ -26,18 +26,23 @@ namespace Civi\Funding\FundingCaseType\MetaData;
  *   label: string,
  *   confirmMessage?: string|null,
  *   batchPossible?: bool,
+ *   apply?: bool,
  *   delete?: bool,
  *   restore?: bool,
  * }
  *   Defaults:
  *     - confirmMessage: NULL
  *     - batchPossible: FALSE
+ *     - apply: FALSE
  *     - delete: FALSE
  *     - restore: FALSE
  *
  * If "batchPossible" is TRUE, the action can be applied to multiple application
  * processes at the same time, i.e. it can be performed without form data. It
  * will be available as SearchKit action for reviewers.
+ *
+ * If "apply" is TRUE, the fields for the application date and the application
+ * contact ID of FundingApplicationProcess will be updated.
  *
  * If "delete" is TRUE the application process will be deleted when the action
  * is performed.
@@ -80,6 +85,10 @@ final class ApplicationProcessAction {
    */
   public function isBatchPossible(): bool {
     return $this->values['batchPossible'] ?? FALSE;
+  }
+
+  public function isApply(): bool {
+    return $this->values['apply'] ?? FALSE;
   }
 
   public function isDelete(): bool {

@@ -249,6 +249,101 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0026(): bool {
+    $this->ctx->log->info('Applying database migration 0026');
+    E::schema()->alterSchemaField(
+      'FundingApplicationProcess',
+      'first_application_date',
+      [
+        'sql_type' => 'timestamp',
+        'input_type' => 'Select Date',
+      ],
+      'AFTER amount_eligible'
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationProcess',
+      'first_application_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER first_application_date'
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationProcess',
+      'last_application_date',
+      [
+        'sql_type' => 'timestamp',
+        'input_type' => 'Select Date',
+      ],
+      'AFTER amount_eligible'
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationProcess',
+      'last_application_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER last_application_date'
+    );
+
+    E::schema()->alterSchemaField(
+      'FundingApplicationSnapshot',
+      'first_application_date',
+      [
+        'sql_type' => 'timestamp',
+        'input_type' => 'Select Date',
+      ],
+      'AFTER amount_eligible'
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationSnapshot',
+      'first_application_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER first_application_date'
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationSnapshot',
+      'last_application_date',
+      [
+        'sql_type' => 'timestamp',
+        'input_type' => 'Select Date',
+      ],
+      'AFTER amount_eligible'
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationSnapshot',
+      'last_application_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER last_application_date'
+    );
+
+    return TRUE;
+  }
+
   private function createUniqueTranslationIndex(): void {
     try {
       // Not possible on MySQL because it exceeds max key length of 3072 bytes.

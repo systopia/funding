@@ -101,6 +101,10 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $applicationProcessBundle = ApplicationProcessBundleFactory::create([
+      'first_application_date' => '2026-01-01 01:01:01',
+      'first_application_contact_id' => 1,
+      'last_application_date' => '2026-02-02 02:02:02',
+      'last_application_contact_id' => 2,
       'is_eligible' => TRUE,
     ]);
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
@@ -137,6 +141,22 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
         static::assertSame([$costItemData], $applicationSnapshot->getCostItems());
         static::assertSame([$resourcesItemData], $applicationSnapshot->getResourcesItems());
         static::assertSame($applicationProcess->getAmountRequested(), $applicationSnapshot->getAmountRequested());
+        static::assertEquals(
+          $applicationProcess->getFirstApplicationDate(),
+          $applicationSnapshot->getFirstApplicationDate()
+        );
+        static::assertSame(
+          $applicationProcess->getFirstApplicationContactId(),
+          $applicationSnapshot->getFirstApplicationContactId()
+        );
+        static::assertEquals(
+          $applicationProcess->getLastApplicationDate(),
+          $applicationSnapshot->getLastApplicationDate()
+        );
+        static::assertSame(
+          $applicationProcess->getLastApplicationContactId(),
+          $applicationSnapshot->getLastApplicationContactId()
+        );
         static::assertSame($applicationProcess->getIsReviewContent(), $applicationSnapshot->getIsReviewContent());
         static::assertSame(
           $applicationProcess->getIsReviewCalculative(),
