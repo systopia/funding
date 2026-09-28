@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2025 SYSTOPIA GmbH
+ * Copyright (C) 2026 SYSTOPIA GmbH
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
@@ -17,18 +17,21 @@
 
 declare(strict_types = 1);
 
-namespace Civi\Funding\FundingCase;
+namespace Civi\Funding\Api4\Action\FundingAmountApprovedChangeRequest;
 
-final class FundingCasePermissions {
+use Civi\Api4\FundingAmountApprovedChangeRequest;
+use Civi\Api4\Generic\AbstractAction;
+use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
+use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 
-  public const AUTO_UPDATE_AMOUNT_APPROVED = 'auto_update_amount_approved';
+final class RejectAction extends AbstractAction {
 
-  public const CONTRACT_VIEW = 'contract_view';
+  use ActionHandlerRunTrait;
 
-  public const REVIEW_FINISH = 'review_case_finish';
+  use IdsParameterTrait;
 
-  public const REVIEW_DRAWDOWN_CREATE = 'review_drawdown_create';
-
-  public const AMOUNT_APPROVED_CHANGE_REQUEST_CREATE = 'amountApprovedChangeRequest_create';
+  public function __construct() {
+    parent::__construct(FundingAmountApprovedChangeRequest::getEntityName(), 'reject');
+  }
 
 }

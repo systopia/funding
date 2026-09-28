@@ -88,6 +88,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       'funding_program_title' => $fundingProgram->getTitle(),
       'CAN_create_drawdown' => FALSE,
       'CAN_view_contract' => FALSE,
+      'CAN_create_amount_approved_change_request' => FALSE,
     ];
     static::assertEquals($expected, $values);
 
@@ -159,7 +160,7 @@ final class RemoteFundingTransferContractTest extends AbstractRemoteFundingHeadl
       static::assertTrue($field['readonly'], $message);
     }
 
-    static::assertCount(23, $result);
+    static::assertCount(24, $result);
   }
 
 }

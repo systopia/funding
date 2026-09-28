@@ -27,11 +27,16 @@ use Civi\Api4\Generic\AbstractGetAction;
 use Civi\Api4\Generic\Result;
 use Civi\Api4\Generic\Traits\ArrayQueryActionTrait;
 use Civi\Funding\Api4\Action\Traits\Api4Trait;
+use Civi\Funding\Api4\Action\Traits\ApplicationProcessManagerTrait;
+use Civi\Funding\Api4\Action\Traits\FundingCaseActionsDeterminerTrait;
 use Civi\Funding\Api4\Action\Traits\FundingCaseManagerTrait;
 use Civi\Funding\Api4\Action\Traits\IsFieldSelectedTrait;
 use Civi\Funding\Api4\Action\Traits\PayoutProcessManagerTrait;
 use Civi\Funding\Api4\Util\WhereUtil;
+use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\FundingCaseBundle;
+use Civi\Funding\FundingCase\Actions\FundingCaseActions;
+use Civi\Funding\FundingCase\Actions\FundingCaseActionsDeterminerInterface;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\FundingCasePermissions;
 use Civi\Funding\PayoutProcess\PayoutProcessManager;
@@ -51,15 +56,23 @@ final class GetAction extends AbstractGetAction {
 
   use PayoutProcessManagerTrait;
 
+  use ApplicationProcessManagerTrait;
+
+  use FundingCaseActionsDeterminerTrait;
+
   public function __construct(
     ?Api4Interface $api4 = NULL,
     ?FundingCaseManager $fundingCaseManager = NULL,
-    ?PayoutProcessManager $payoutProcessManager = NULL
+    ?PayoutProcessManager $payoutProcessManager = NULL,
+    ?ApplicationProcessManager $applicationProcessManager = NULL,
+    ?FundingCaseActionsDeterminerInterface $fundingCaseActionsDeterminer = NULL,
   ) {
     parent::__construct(FundingTransferContract::getEntityName(), 'get');
     $this->_api4 = $api4;
     $this->_fundingCaseManager = $fundingCaseManager;
     $this->_payoutProcessManager = $payoutProcessManager;
+    $this->_applicationProcessManager = $applicationProcessManager;
+    $this->_fundingCaseActionsDeterminer = $fundingCaseActionsDeterminer;
   }
 
   /**
@@ -139,6 +152,11 @@ final class GetAction extends AbstractGetAction {
       'CAN_create_drawdown'
       => $fundingCase->hasPermission('drawdown_create') && 'closed' !== $payoutProcess->getStatus(),
       'CAN_view_contract' => $fundingCase->hasPermission(FundingCasePermissions::CONTRACT_VIEW),
+      'CAN_create_amount_approved_change_request' => $this->getFundingCaseActionsDeterminer()->isActionAllowed(
+        FundingCaseActions::CREATE_AMOUNT_REVIEW_CHANGE_REQUEST,
+        $fundingCaseBundle,
+        $this->getApplicationProcessManager()->getStatusListByFundingCaseId($fundingCase->getId()),
+      ),
     ];
 
     if ($this->isFieldExplicitlySelected('creation_contact_display_name')) {
