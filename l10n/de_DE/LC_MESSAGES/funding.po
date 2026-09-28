@@ -68,7 +68,9 @@ msgstr ""
 "Vergleicht zwei JSON-Dokumente und gibt wahr zurück, wenn sie überlappen. "
 "Siehe https://mariadb.com/kb/en/json_overlaps/"
 
-#: Civi/Funding/Api4/Action/FundingAmountApprovedChangeRequest/AbstractFundingAmountApprovedChangeRequestAction.php
+#: Civi/Funding/AmountApprovedChangeRequest/Api4/ActionHandler/ApproveActionHandler.php
+#: Civi/Funding/AmountApprovedChangeRequest/Api4/ActionHandler/ApprovePartialActionHandler.php
+#: Civi/Funding/AmountApprovedChangeRequest/Api4/ActionHandler/RejectActionHandler.php
 #: Civi/Funding/Api4/Action/FundingCase/ApproveAction.php
 #: Civi/Funding/Api4/Action/FundingCase/GetPossibleActionsAction.php
 #: Civi/Funding/Api4/Action/FundingCase/RecreateTransferContractAction.php
@@ -431,6 +433,7 @@ msgstr "Förderfalländerungsdatum"
 #: Civi/Funding/ApplicationProcess/Api4/ActionHandler/RemoteGetFieldsActionHandler.php
 #: Civi/Funding/ClearingProcess/Form/AbstractClearingItemsJsonFormsGenerator.php
 #: ang/crmFunding/case/fundingCase.template.html
+#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 #: managed/SavedSearch_Drawdowns_by_Recipient_and_Funding_Program.mgd.php
 #: managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php
 #: managed/SavedSearch_funding_cases.mgd.php
@@ -2647,16 +2650,12 @@ msgid "Do you want to reject the selected change requests?"
 msgstr "Möchten Sie die ausgewählten Mehr-/Minderbedarfsmeldungen ablehnen?"
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
-msgid "No change requests selected or found."
-msgstr "Keine Mehr-/Minderbedarfsmeldungen ausgewählt oder gefunden."
+msgid "No change requests selected."
+msgstr "Keine Mehr-/Minderbedarfsmeldungen ausgewählt."
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 msgid "Notice"
 msgstr "Hinweis"
-
-#: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
-msgid "Approved amount"
-msgstr "Bewilligter Betrag"
 
 #: ang/crmFunding/fundingAmountApprovedChangeRequest/fundingAmountApprovedChangeRequestSearchTasksMenu.decorator.js
 msgid "Confirm"
@@ -2692,7 +2691,6 @@ msgid "Possible Funding Recipients"
 msgstr "Mögliche Fördergeldempfänger"
 
 #: ang/skFundingAmountApprovedChangeRequestTable.aff.php
-#| msgid "Funding Amount Approved Change Request"
 msgid "Funding Amount Approved Change Request Table"
 msgstr ""
 
