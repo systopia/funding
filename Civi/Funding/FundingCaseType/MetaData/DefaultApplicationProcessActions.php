@@ -42,6 +42,7 @@ final class DefaultApplicationProcessActions {
     return new ApplicationProcessAction([
       'name' => __FUNCTION__,
       'label' => $label ?? E::ts('Apply'),
+      'apply' => TRUE,
     ]);
   }
 

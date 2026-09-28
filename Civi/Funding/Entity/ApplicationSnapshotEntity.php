@@ -19,6 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\Entity;
 
+use Civi\Funding\Util\DateTimeUtil;
+
 /**
  * @phpstan-import-type applicationCostItemT from ApplicationCostItemEntity
  * @phpstan-import-type applicationResourcesItemT from ApplicationResourcesItemEntity
@@ -37,6 +39,10 @@ namespace Civi\Funding\Entity;
  *   resources_items: array<applicationResourcesItemT>,
  *   amount_requested: float,
  *   amount_eligible: float,
+ *   first_application_date: ?string,
+ *   first_application_contact_id: ?int,
+ *   last_application_date: ?string,
+ *   last_application_contact_id: ?int,
  *   is_review_content: ?bool,
  *   is_review_calculative: ?bool,
  *   is_eligible: ?bool,
@@ -105,6 +111,46 @@ final class ApplicationSnapshotEntity extends AbstractEntity {
 
   public function getAmountEligible(): float {
     return $this->values['amount_eligible'];
+  }
+
+  public function getFirstApplicationDate(): ?\DateTimeInterface {
+    return DateTimeUtil::toDateTimeOrNull($this->values['first_application_date']);
+  }
+
+  public function setFirstApplicationDate(?\DateTimeInterface $firstApplicationDate): self {
+    $this->values['first_application_date'] = DateTimeUtil::toDateTimeStrOrNull($firstApplicationDate);
+
+    return $this;
+  }
+
+  public function getFirstApplicationContactId(): ?int {
+    return $this->values['first_application_contact_id'];
+  }
+
+  public function setFirstApplicationContactId(?int $firstApplicationContactId): self {
+    $this->values['first_application_contact_id'] = $firstApplicationContactId;
+
+    return $this;
+  }
+
+  public function getLastApplicationDate(): ?\DateTimeInterface {
+    return DateTimeUtil::toDateTimeOrNull($this->values['last_application_date']);
+  }
+
+  public function setLastApplicationDate(?\DateTimeInterface $lastApplicationDate): self {
+    $this->values['last_application_date'] = DateTimeUtil::toDateTimeStrOrNull($lastApplicationDate);
+
+    return $this;
+  }
+
+  public function getLastApplicationContactId(): ?int {
+    return $this->values['last_application_contact_id'];
+  }
+
+  public function setLastApplicationContactId(?int $lastApplicationContactId): self {
+    $this->values['last_application_contact_id'] = $lastApplicationContactId;
+
+    return $this;
   }
 
   public function getIsReviewContent(): ?bool {

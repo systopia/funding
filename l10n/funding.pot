@@ -490,6 +490,14 @@ msgstr ""
 msgid "Review Application Rework"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Token/ApplicationProcessTokenNameExtractor.php
+msgid "First Application Contact Display Name"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Token/ApplicationProcessTokenNameExtractor.php
+msgid "Last Application Contact Display Name"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
 msgstr ""
@@ -2426,16 +2434,32 @@ msgstr ""
 msgid "Request Data"
 msgstr ""
 
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "First Applied At"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "First Applied By"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php schema/Drawdown.entityType.php schema/FundingCase.entityType.php
+msgid "FK to Contact"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Last Applied At"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Last Applied By"
+msgstr ""
+
 #: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php
 msgid "Is Review Content"
 msgstr ""
 
 #: schema/ApplicationProcess.entityType.php schema/ClearingProcess.entityType.php
 msgid "Reviewer Cont Contact ID"
-msgstr ""
-
-#: schema/ApplicationProcess.entityType.php schema/ClearingProcess.entityType.php schema/Drawdown.entityType.php schema/FundingCase.entityType.php
-msgid "FK to Contact"
 msgstr ""
 
 #: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingProcess.entityType.php

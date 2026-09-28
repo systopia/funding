@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: CRM/Funding/BAO/FundingCase.php
 #: managed/CustomGroup_funding_case_task.mgd.php
@@ -904,6 +904,14 @@ msgstr "Gesuch auf Überarbeitung prüfen"
 #: Civi/Funding/ApplicationProcess/Task/AbstractApplicationReviewReworkTaskHandler.php
 msgid "Review Application Rework"
 msgstr "Antragsüberarbeitung prüfen"
+
+#: Civi/Funding/ApplicationProcess/Token/ApplicationProcessTokenNameExtractor.php
+msgid "First Application Contact Display Name"
+msgstr "Anzeigename des Kontakts der ersten Beantragung"
+
+#: Civi/Funding/ApplicationProcess/Token/ApplicationProcessTokenNameExtractor.php
+msgid "Last Application Contact Display Name"
+msgstr "Anzeigename des Kontakts der letzten Beantragung"
 
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
@@ -3398,6 +3406,33 @@ msgstr ""
 
 #: schema/ApplicationProcess.entityType.php
 #: schema/ApplicationSnapshot.entityType.php
+msgid "First Applied At"
+msgstr "Erste Beantragung am"
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+msgid "First Applied By"
+msgstr "Erste Beantragung durch"
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+#: schema/ClearingProcess.entityType.php schema/Drawdown.entityType.php
+#: schema/FundingCase.entityType.php
+msgid "FK to Contact"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Last Applied At"
+msgstr "Letzte Beantragung am"
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Last Applied By"
+msgstr "Letzte Beantragung durch"
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
 #: schema/ClearingProcess.entityType.php
 msgid "Is Review Content"
 msgstr ""
@@ -3405,12 +3440,6 @@ msgstr ""
 #: schema/ApplicationProcess.entityType.php
 #: schema/ClearingProcess.entityType.php
 msgid "Reviewer Cont Contact ID"
-msgstr ""
-
-#: schema/ApplicationProcess.entityType.php
-#: schema/ClearingProcess.entityType.php schema/Drawdown.entityType.php
-#: schema/FundingCase.entityType.php
-msgid "FK to Contact"
 msgstr ""
 
 #: schema/ApplicationProcess.entityType.php

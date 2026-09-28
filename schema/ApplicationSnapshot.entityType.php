@@ -140,6 +140,44 @@ return [
       'data_type' => 'Money',
       'required' => TRUE,
     ],
+    'first_application_date' => [
+      'title' => E::ts('First Applied At'),
+      'sql_type' => 'timestamp',
+      'input_type' => 'Select Date',
+      'input_attrs' => [
+        'format_type' => 'activityDateTime',
+      ],
+    ],
+    'first_application_contact_id' => [
+      'title' => E::ts('First Applied By'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'EntityRef',
+      'description' => E::ts('FK to Contact'),
+      'entity_reference' => [
+        'entity' => 'Contact',
+        'key' => 'id',
+        'on_delete' => 'RESTRICT',
+      ],
+    ],
+    'last_application_date' => [
+      'title' => E::ts('Last Applied At'),
+      'sql_type' => 'timestamp',
+      'input_type' => 'Select Date',
+      'input_attrs' => [
+        'format_type' => 'activityDateTime',
+      ],
+    ],
+    'last_application_contact_id' => [
+      'title' => E::ts('Last Applied By'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'EntityRef',
+      'description' => E::ts('FK to Contact'),
+      'entity_reference' => [
+        'entity' => 'Contact',
+        'key' => 'id',
+        'on_delete' => 'RESTRICT',
+      ],
+    ],
     'is_review_content' => [
       'title' => E::ts('Is Review Content'),
       'sql_type' => 'boolean',
