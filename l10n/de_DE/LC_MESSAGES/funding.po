@@ -1680,7 +1680,6 @@ msgstr "Überarbeitung in Prüfung"
 
 #: Civi/Funding/FundingCaseTypes/AdB/SammelantragKurs/KursMetaData.php
 #: Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php
-#: Civi/Funding/FundingCaseTypes/DVV/SammelantragKurs/KursMetaData.php
 #: ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
 msgstr "Wieder öffnen"
@@ -1720,14 +1719,6 @@ msgstr "Abgerechnet"
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Applications adoptable"
 msgstr "Anträge übernehmbar"
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Relationship from a to b"
-msgstr "Beziehung von a zu b"
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Relationship from b to a"
-msgstr "Beziehung von b zu a"
 
 #: Civi/Funding/PayoutProcess/DrawdownDocumentCreator.php
 msgid "No bank account for contact with ID \"%1\" available."
@@ -2420,6 +2411,11 @@ msgstr "(Aktuell: %1)"
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Funding Case: %1"
 msgstr "Förderfall: %1"
+
+#: ang/crmFunding/case/fundingCase.template.html
+#: schema/FundingCase.entityType.php
+msgid "Approval Date"
+msgstr "Bewilligungsdatum"
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Notification Contacts"
@@ -3519,6 +3515,10 @@ msgstr "Erstellerkontakt-ID"
 msgid "Notification Contact Ids"
 msgstr ""
 
+#: schema/FundingCase.entityType.php
+msgid "Approval Contact"
+msgstr "Bewilligungskontakt"
+
 #: schema/FundingCaseContactRelation.entityType.php
 msgid "Funding Case Contact Relation"
 msgstr ""
@@ -3727,3 +3727,9 @@ msgstr "CiviOffice-Renderer"
 msgid "The CiviOffice renderer to use for rendering PDFs."
 msgstr ""
 "Der CiviOffice-Renderer, der zum Rendern von PDFs verwendet werden soll."
+
+#~ msgid "Relationship from a to b"
+#~ msgstr "Beziehung von a zu b"
+
+#~ msgid "Relationship from b to a"
+#~ msgstr "Beziehung von b zu a"
