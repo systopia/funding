@@ -27,6 +27,7 @@ use Civi\Funding\FundingCase\Approval\ApprovalValidator;
 use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
+use Civi\Funding\Mock\RequestContext\TestRequestContext;
 use Civi\Funding\TransferContract\TransferContractCreator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -49,6 +50,12 @@ final class FundingCaseApproveHandlerTest extends TestCase {
 
   private TransferContractCreator&MockObject $transferContractCreatorMock;
 
+  public static function setUpBeforeClass(): void {
+    parent::setUpBeforeClass();
+    putenv('TIME_FUNC=frozen');
+    \CRM_Utils_Time::setTime('2000-01-01 00:00:00');
+  }
+
   protected function setUp(): void {
     parent::setUp();
     $this->actionsDeterminerMock = $this->createMock(FundingCaseActionsDeterminerInterface::class);
@@ -60,6 +67,7 @@ final class FundingCaseApproveHandlerTest extends TestCase {
       $this->actionsDeterminerMock,
       $this->approvalValidatorMock,
       $this->fundingCaseManagerMock,
+      TestRequestContext::newInternal(123),
       $this->statusDeterminerMock,
       $this->transferContractCreatorMock,
     );
@@ -67,6 +75,8 @@ final class FundingCaseApproveHandlerTest extends TestCase {
 
   public function testHandle(): void {
     $command = $this->createCommand();
+    $fundingCase = $command->getFundingCase();
+
     $this->actionsDeterminerMock->method('isActionAllowed')
       ->with(
         'approve',
@@ -83,15 +93,17 @@ final class FundingCaseApproveHandlerTest extends TestCase {
       ->with($command->getFundingCaseBundle());
 
     $this->statusDeterminerMock->method('getStatus')
-      ->with($command->getFundingCase()->getStatus(), 'approve')
+      ->with($fundingCase->getStatus(), 'approve')
       ->willReturn('new_status');
 
     $this->fundingCaseManagerMock->expects(static::once())->method('update')
-      ->with($command->getFundingCase());
+      ->with($fundingCase);
 
     $this->handler->handle($command);
-    static::assertSame('new_status', $command->getFundingCase()->getStatus());
-    static::assertSame(12.34, $command->getFundingCase()->getAmountApproved());
+    static::assertSame('new_status', $fundingCase->getStatus());
+    static::assertSame(12.34, $fundingCase->getAmountApproved());
+    static::assertEquals(new \DateTime(\CRM_Utils_Time::date('YmdHis')), $fundingCase->getApprovalDate());
+    static::assertSame(123, $fundingCase->getApprovalContactId());
   }
 
   public function testHandleUnauthorizedActionNotAllowed(): void {

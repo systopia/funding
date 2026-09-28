@@ -162,5 +162,24 @@ return [
       'input_type' => 'Text',
       'data_type' => 'Money',
     ],
+    'approval_date' => [
+      'title' => E::ts('Approval Date'),
+      'sql_type' => 'timestamp',
+      'input_type' => 'Select Date',
+      'input_attrs' => [
+        'format_type' => 'activityDateTime',
+      ],
+    ],
+    'approval_contact_id' => [
+      'title' => E::ts('Approval Contact'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'EntityRef',
+      'description' => E::ts('FK to Contact'),
+      'entity_reference' => [
+        'entity' => 'Contact',
+        'key' => 'id',
+        'on_delete' => 'RESTRICT',
+      ],
+    ],
   ],
 ];

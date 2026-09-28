@@ -65,11 +65,15 @@
   </div>
   <div>
       <label>{{:: ts('Creation Date') }}</label>
-      {{ fundingCase.creation_date }}
+      {{ fundingCase.creation_date|fundingDate }}
   </div>
   <div>
       <label>{{:: ts('Modification Date') }}</label>
-      {{ fundingCase.modification_date }}
+      {{ fundingCase.modification_date|fundingDate }}
+  </div>
+  <div>
+      <label>{{:: ts('Approval Date')}}</label>
+      {{ fundingCase.approval_date|fundingDate }}
   </div>
   <div>
       <label>{{:: ts('Recipient') }}</label>

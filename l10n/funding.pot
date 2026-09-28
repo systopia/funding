@@ -1146,7 +1146,7 @@ msgstr ""
 msgid "Rework in review"
 msgstr ""
 
-#: Civi/Funding/FundingCaseTypes/AdB/SammelantragKurs/KursMetaData.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php Civi/Funding/FundingCaseTypes/DVV/SammelantragKurs/KursMetaData.php ang/crmFunding/application/defaultApplicationSidebar.template.html
+#: Civi/Funding/FundingCaseTypes/AdB/SammelantragKurs/KursMetaData.php Civi/Funding/FundingCaseTypes/AuL/SammelantragKurs/KursMetaData.php ang/crmFunding/application/defaultApplicationSidebar.template.html
 msgid "Reopen"
 msgstr ""
 
@@ -1192,14 +1192,6 @@ msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Applications adoptable"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Relationship from a to b"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Relationship from b to a"
 msgstr ""
 
 #: Civi/Funding/PayoutProcess/DrawdownDocumentCreator.php
@@ -1684,6 +1676,10 @@ msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
 msgid "Funding Case: %1"
+msgstr ""
+
+#: ang/crmFunding/case/fundingCase.template.html schema/FundingCase.entityType.php
+msgid "Approval Date"
 msgstr ""
 
 #: ang/crmFunding/case/fundingCase.template.html
@@ -2664,6 +2660,10 @@ msgstr ""
 
 #: schema/FundingCase.entityType.php
 msgid "Notification Contact Ids"
+msgstr ""
+
+#: schema/FundingCase.entityType.php
+msgid "Approval Contact"
 msgstr ""
 
 #: schema/FundingCaseContactRelation.entityType.php

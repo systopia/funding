@@ -167,6 +167,8 @@ class FundingCaseManager {
       'creation_contact_id' => $contactId,
       'notification_contact_ids' => [$contactId],
       'amount_approved' => NULL,
+      'approval_date' => NULL,
+      'approval_contact_id' => NULL,
     ] + $values);
 
     $event = new FundingCasePreCreateEvent(

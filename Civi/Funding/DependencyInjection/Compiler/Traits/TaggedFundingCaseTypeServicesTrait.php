@@ -100,7 +100,12 @@ trait TaggedFundingCaseTypeServicesTrait {
     }
 
     return array_map(
-      fn (\SplPriorityQueue $priorityQueue) => new IteratorArgument(iterator_to_array($priorityQueue)),
+      function (\SplPriorityQueue $priorityQueue) {
+        /** @var array<Reference> $references */
+        $references = iterator_to_array($priorityQueue);
+
+        return new IteratorArgument($references);
+      },
       $services
     );
   }

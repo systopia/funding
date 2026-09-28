@@ -47,7 +47,7 @@ return [
         'label' => E::ts('From Review Calculative'),
         'data_type' => 'Boolean',
         // When using CheckBox the field serialize is set to 1...
-        'html_type' => 'Select',
+        'html_type' => 'Radio',
         'is_required' => FALSE,
         'is_searchable' => TRUE,
         'is_search_range' => FALSE,
@@ -72,7 +72,7 @@ return [
         'label' => E::ts('To Review Calculative'),
         'data_type' => 'Boolean',
         // When using CheckBox the field serialize is set to 1...
-        'html_type' => 'Select',
+        'html_type' => 'Radio',
         'is_required' => FALSE,
         'is_searchable' => TRUE,
         'is_search_range' => FALSE,
@@ -97,7 +97,7 @@ return [
         'label' => E::ts('From Review Content'),
         'data_type' => 'Boolean',
         // When using CheckBox the field serialize is set to 1..
-        'html_type' => 'Select',
+        'html_type' => 'Radio',
         'is_required' => FALSE,
         'is_searchable' => TRUE,
         'is_search_range' => FALSE,
@@ -122,7 +122,7 @@ return [
         'label' => E::ts('To Review Content'),
         'data_type' => 'Boolean',
         // When using CheckBox the field serialize is set to 1...
-        'html_type' => 'Select',
+        'html_type' => 'Radio',
         'is_required' => FALSE,
         'is_searchable' => TRUE,
         'is_search_range' => FALSE,

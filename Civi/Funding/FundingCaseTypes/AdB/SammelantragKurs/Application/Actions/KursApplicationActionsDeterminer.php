@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\Actions
 
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\AbstractApplicationProcessActionsDeterminer;
 use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
+use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\FundingCaseEntity;
 use Civi\Funding\Entity\FundingCaseTypeEntity;
@@ -40,63 +41,38 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationProcessA
     NULL => [
       'application_create' => ['save', 'save&new', 'save&copy'],
     ],
-    'new' => [
-      'application_modify' => ['save'],
-      'application_apply' => ['apply'],
-      'application_withdraw' => ['withdraw', 'delete'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'applied' => [
-      'application_modify' => ['modify'],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'review' => [
-      'review_calculative' => ['request-change', 'update', 'reject', 'add-comment'],
-      'review_content' => ['request-change', 'update', 'reject', 'add-comment'],
-    ],
-    'draft' => [
-      'application_modify' => ['save'],
-      'application_apply' => ['apply'],
-      'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
     'eligible' => [
-      'application_modify' => ['modify'],
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['modify', 'add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
     ],
     'rework' => [
-      'application_apply' => ['apply'],
-      'application_modify' => ['save'],
+      'application_apply' => ['save', 'add-applicant-comment'],
+      'application_modify' => ['save', 'add-applicant-comment'],
       'application_withdraw' => ['withdraw-change'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'rework-review-requested' => [
-      'application_modify' => ['modify'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
-    ],
-    'rework-review' => [
-      'review_calculative' => ['request-change', 'update', 'reject-change', 'add-comment'],
-      'review_content' => ['request-change', 'update', 'reject-change', 'add-comment'],
+      'review_calculative' => ['add-comment'],
+      'review_content' => ['add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'complete' => [
+      'application_apply' => ['add-applicant-comment'],
+      'application_modify' => ['add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
       'review_calculative' => ['update', 'add-comment'],
       'review_content' => ['update', 'add-comment'],
+      ClearingProcessPermissions::CLEARING_APPLY => ['add-applicant-comment'],
+      ClearingProcessPermissions::CLEARING_MODIFY => ['add-applicant-comment'],
     ],
     'rejected' => [
-      'review_calculative' => ['reopen'],
-      'review_content' => ['reopen'],
+      'review_calculative' => ['reopen', 'add-comment'],
+      'review_content' => ['reopen', 'add-comment'],
     ],
     'withdrawn' => [
-      'review_calculative' => ['reopen'],
-      'review_content' => ['reopen'],
+      'review_calculative' => ['reopen', 'add-comment'],
+      'review_content' => ['reopen', 'add-comment'],
     ],
   ];
 

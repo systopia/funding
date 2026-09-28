@@ -27,33 +27,19 @@ use Civi\Funding\FundingCase\Command\FundingCaseApproveCommand;
 use Civi\Funding\FundingCase\FundingCaseManager;
 use Civi\Funding\FundingCase\StatusDeterminer\FundingCaseStatusDeterminerInterface;
 use Civi\Funding\TransferContract\TransferContractCreator;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use CRM_Funding_ExtensionUtil as E;
 
 final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterface {
 
-  private FundingCaseActionsDeterminerInterface $actionsDeterminer;
-
-  private ApprovalValidator $approvalValidator;
-
-  private FundingCaseManager $fundingCaseManager;
-
-  private FundingCaseStatusDeterminerInterface $statusDeterminer;
-
-  private TransferContractCreator $transferContractCreator;
-
   public function __construct(
-    FundingCaseActionsDeterminerInterface $actionsDeterminer,
-    ApprovalValidator $approvalValidator,
-    FundingCaseManager $fundingCaseManager,
-    FundingCaseStatusDeterminerInterface $statusDeterminer,
-    TransferContractCreator $transferContractCreator
-  ) {
-    $this->actionsDeterminer = $actionsDeterminer;
-    $this->approvalValidator = $approvalValidator;
-    $this->fundingCaseManager = $fundingCaseManager;
-    $this->statusDeterminer = $statusDeterminer;
-    $this->transferContractCreator = $transferContractCreator;
-  }
+    private readonly FundingCaseActionsDeterminerInterface $actionsDeterminer,
+    private readonly ApprovalValidator $approvalValidator,
+    private readonly FundingCaseManager $fundingCaseManager,
+    private readonly RequestContextInterface $requestContext,
+    private readonly FundingCaseStatusDeterminerInterface $statusDeterminer,
+    private readonly TransferContractCreator $transferContractCreator
+  ) {}
 
   /**
    * @throws \Civi\Funding\Exception\FundingException
@@ -64,6 +50,11 @@ final class FundingCaseApproveHandler implements FundingCaseApproveHandlerInterf
     $this->assertAuthorized($command);
 
     $fundingCase->setAmountApproved($command->getAmount());
+    $fundingCase->setApprovalDate(new \DateTime(\CRM_Utils_Time::date('YmdHis')));
+    // Contact ID might be 0, if approval is executed in a CLI process.
+    if (0 !== $this->requestContext->getContactId()) {
+      $fundingCase->setApprovalContactId($this->requestContext->getContactId());
+    }
 
     $this->transferContractCreator->createTransferContract($command->getFundingCaseBundle());
 
