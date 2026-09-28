@@ -148,7 +148,7 @@ final class FundingAmountApprovedChangeRequestTest extends AbstractFundingHeadle
     static::assertCount(0, $result);
   }
 
-  public function testCreateAndGet(): void {
+  public function testCreate(): void {
     $contact = ContactFixture::addIndividual();
     $fundingCaseBundle = FundingCaseBundleFixture::create();
     $fundingCase = $fundingCaseBundle->getFundingCase();
