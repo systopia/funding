@@ -26,6 +26,7 @@ use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\Entity\ActivityEntity;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
 use Civi\RemoteTools\Api4\Api4Interface;
 use CRM_Funding_ExtensionUtil as E;
 
@@ -151,7 +152,9 @@ final class Upgrader0024 implements UpgraderInterface {
     $metaData = $this->metaDataProvider->get($funingCaseTypeName);
     $statusList = array_values(array_filter(
       $metaData->getApplicationProcessStatuses(),
-      fn ($status) => $status->isSnapshotRequired()
+      // The different snapshot flags were added after these upgrader so we
+      // don't need to regard all flags.
+      fn ($status) => $status->getSnapshotRequired() === ApplicationProcessStatus::SNAPSHOT_ON_ENTER_OR_DATA_CHANGED
     ));
 
     return $this->snapshotRequiredStatusNames[$funingCaseTypeName]
