@@ -20,7 +20,6 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\Actions;
 
 use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminer;
-use Civi\Funding\Entity\FullApplicationProcessStatus;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 
 final class KursApplicationStatusDeterminer extends ApplicationProcessStatusDeterminer {

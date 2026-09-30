@@ -76,7 +76,11 @@ final class KursUiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
   /**
    * @param list<\Civi\RemoteTools\JsonForms\JsonFormsElement> $extraElements
    */
-  private function crateUiSchema(FundingProgramEntity $fundingProgram, int $flags, array $extraElements = []): KursUiSchema {
+  private function crateUiSchema(
+    FundingProgramEntity $fundingProgram,
+    int $flags,
+    array $extraElements = []
+  ): KursUiSchema {
     if (!is_float($fundingProgram->get('funding_program_dvv.grundbetrag_reisekosten'))) {
       throw new \RuntimeException('Reisekostengrundbetrag nicht definiert');
     }
@@ -88,7 +92,7 @@ final class KursUiSchemaFactory implements NonCombinedApplicationUiSchemaFactory
     if (!is_float($fundingProgram->get('funding_program_dvv.grundbetrag_honorar'))) {
       throw new \RuntimeException('Honorargrundbetrag nicht definiert');
     }
-#
+
     $currency = $fundingProgram->getCurrency();
 
     return new KursUiSchema(

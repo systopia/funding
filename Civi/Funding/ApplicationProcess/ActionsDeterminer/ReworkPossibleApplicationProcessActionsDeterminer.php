@@ -73,8 +73,8 @@ final class ReworkPossibleApplicationProcessActionsDeterminer extends Applicatio
     $this->actionsDeterminer = $actionsDeterminer;
     parent::__construct(
       self::STATUS_PERMISSIONS_ACTION_MAP,
-    reviewStatuses: ['rework-review'],
-    actionNames: ['approve' => 'approve-change']
+      reviewStatuses: ['rework-review'],
+      actionNames: ['approve' => 'approve-change']
     );
   }
 

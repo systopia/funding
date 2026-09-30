@@ -77,7 +77,7 @@ class KursJsonSchemaFactory implements NonCombinedApplicationJsonSchemaFactoryIn
    */
   private function createJsonSchema(FundingProgramEntity $fundingProgram, array $possibleRecipients): JsonSchema {
     if (!is_float($fundingProgram->get('funding_program_dvv.grundbetrag_reisekosten'))) {
-      throw new \RuntimeException("Reisekostengrundbetrag nicht definiert");
+      throw new \RuntimeException('Reisekostengrundbetrag nicht definiert');
     }
 
     if (!is_float($fundingProgram->get('funding_program_dvv.grundbetrag_teilnehmer'))) {
