@@ -26,6 +26,7 @@ use Civi\Funding\Event\FundingCase\GetPossibleFundingCaseStatusEvent;
 use Civi\Funding\FundingCase\FundingCaseStatus;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use CRM_Funding_ExtensionUtil as E;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * @phpstan-type optionT array{
@@ -80,7 +81,16 @@ final class FundingPseudoConstants {
     $metaDataProvider = \Civi::service(FundingCaseTypeMetaDataProviderInterface::class);
     $statuses = [];
     foreach ($fundingCaseTypeNames as $fundingCaseTypeName) {
-      $statuses += $metaDataProvider->get($fundingCaseTypeName)->getApplicationProcessStatuses();
+      try {
+        $statuses += $metaDataProvider->get($fundingCaseTypeName)->getApplicationProcessStatuses();
+      }
+      // @phpstan-ignore catch.neverThrown
+      catch (ServiceNotFoundException) {
+        // Don't fail if a funding case type is configured, but its services are not registered.
+        $message = "Meta data for funding case type $fundingCaseTypeName not found";
+        \Civi::log()->error($message);
+        \CRM_Core_Session::setStatus($message, 'Error', 'error');
+      }
     }
 
     $options = [];
