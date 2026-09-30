@@ -504,6 +504,7 @@ msgid "Short Description"
 msgstr "Kurzbeschreibung"
 
 #: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
 #: ang/crmFunding/application/defaultApplicationEditor.template.html
 #: ang/crmFunding/case/fundingCase.template.html
 #: ang/crmFunding/clearing/clearingEditor.template.html
@@ -1141,6 +1142,41 @@ msgstr "Verwendungsnachweis prüfen (fachlich)"
 msgid "Finish Clearing Review"
 msgstr "Verwendungsnachweisprüfung abschließen"
 
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
+msgid "Line item"
+msgstr "Position"
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
+msgid "No."
+msgstr "Nr."
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingTableGenerator.php
+msgid "Recorded"
+msgstr "Aufgezeichnet"
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingTableGenerator.php
+msgid "Admitted"
+msgstr "Anerkannt"
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
+msgid "- No receipts available -"
+msgstr "- Keine Belege vorhanden -"
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingTableGenerator.php
+#: Civi/Funding/FundingPseudoConstants.php
+msgid "Approved"
+msgstr "Bewilligt"
+
+#: Civi/Funding/ClearingProcess/Token/ClearingCostsTableGenerator.php
+msgid "Total of cost receipts"
+msgstr "Summe der Kostenbelege"
+
+#: Civi/Funding/ClearingProcess/Token/ClearingResourcesTableGenerator.php
+msgid "Total of resources receipts"
+msgstr "Summe der Finanzierungsbelege"
+
 #: Civi/Funding/ClearingProcess/Traits/ClearingCreateTaskTrait.php
 msgid "Create Clearing"
 msgstr "Verwendungsnachweis erstellen"
@@ -1368,6 +1404,22 @@ msgstr "Bankkontoreferenz (z. B. IBAN)"
 #: Civi/Funding/EventSubscriber/CiviOffice/AbstractDrawdownTokenSubscriber.php
 msgid "BIC (maybe empty)"
 msgstr "BIC (kann leer sein)"
+
+#: Civi/Funding/EventSubscriber/CiviOffice/ClearingProcessTokenSubscriber.php
+msgid "Costs Table"
+msgstr "Kostentabelle"
+
+#: Civi/Funding/EventSubscriber/CiviOffice/ClearingProcessTokenSubscriber.php
+msgid "Resources Table"
+msgstr "Mitteltabelle"
+
+#: Civi/Funding/EventSubscriber/CiviOffice/ClearingProcessTokenSubscriber.php
+msgid "Cost Receipts Table"
+msgstr "Kostenbelegtabelle"
+
+#: Civi/Funding/EventSubscriber/CiviOffice/ClearingProcessTokenSubscriber.php
+msgid "Resources Receipts Table"
+msgstr "Mittelbelegtabelle"
 
 #: Civi/Funding/EventSubscriber/CiviOffice/TransferContractTokenSubscriber.php
 msgid "List of Eligible Applications (identifier and title)"
@@ -1747,10 +1799,6 @@ msgstr "Offen"
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Closed"
 msgstr "Geschlossen"
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Approved"
-msgstr "Bewilligt"
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Approved partial"
