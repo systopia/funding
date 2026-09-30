@@ -19,17 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ApplicationProcess\ActionsDeterminer;
 
-use Civi\Funding\ApplicationProcess\ActionsDeterminer\Helper\DetermineApproveRejectActionsHelper;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
-use Civi\Funding\Entity\ApplicationProcessEntityBundle;
-use Civi\Funding\FundingCase\FundingCaseStatus;
-use Civi\Funding\Permission\Traits\HasReviewPermissionTrait;
 
-final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicationProcessActionsDeterminer {
-
-  use HasReviewPermissionTrait;
-
-  private const FUNDING_CASE_FINAL_STATUS_LIST = [FundingCaseStatus::CLEARED];
+final class DefaultApplicationProcessActionsDeterminer extends ApplicationProcessActionsDeterminer {
 
   private const STATUS_PERMISSION_ACTIONS_MAP = [
     NULL => [
@@ -93,28 +85,8 @@ final class DefaultApplicationProcessActionsDeterminer extends AbstractApplicati
     ],
   ];
 
-  private DetermineApproveRejectActionsHelper $determineApproveRejectActionsHelper;
-
   public function __construct() {
     parent::__construct(self::STATUS_PERMISSION_ACTIONS_MAP);
-    $this->determineApproveRejectActionsHelper = new DetermineApproveRejectActionsHelper();
-  }
-
-  public function getActions(ApplicationProcessEntityBundle $applicationProcessBundle, array $statusList): array {
-    if ($applicationProcessBundle->getFundingCase()->isStatusIn(self::FUNDING_CASE_FINAL_STATUS_LIST)) {
-      return [];
-    }
-
-    $permissions = $applicationProcessBundle->getFundingCase()->getPermissions();
-
-    return array_merge(
-      parent::getActions($applicationProcessBundle, $statusList),
-      $this->determineApproveRejectActionsHelper->getActions(
-        $applicationProcessBundle->getApplicationProcess()->getFullStatus(),
-        $this->hasReviewCalculativePermission($permissions),
-        $this->hasReviewContentPermission($permissions)
-      ),
-    );
   }
 
 }

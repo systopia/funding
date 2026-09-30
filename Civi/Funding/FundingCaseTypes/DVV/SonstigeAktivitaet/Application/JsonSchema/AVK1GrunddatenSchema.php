@@ -101,7 +101,8 @@ sum(
 )
 EOD,
         ['zeitraeume' => new JsonSchemaDataPointer('1/zeitraeume')],
-        0
+        0,
+        ['maximum' => 28]
       ),
       'teilnehmer' => new JsonSchemaObject([
         'gesamt' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 1]),
@@ -114,25 +115,7 @@ EOD,
       ]),
     ];
 
-    if ($report) {
-      $properties['internerBezeichner'] = new JsonSchemaString([
-        'maxLength' => 255,
-        'readOnly' => TRUE,
-      ]);
-    }
-    else {
-      $properties['internerBezeichner'] = new JsonSchemaString([
-        'maxLength' => 255,
-        '$tag' => JsonSchema::fromArray(
-          ['mapToField' => ['fieldName' => 'funding_application_process_extra.internal_identifier']]
-        ),
-      ]);
-    }
-
-    $required = array_filter(
-      array_keys($properties),
-      static fn (string $key) => $key !== 'internerBezeichner',
-    );
+    $required = array_keys($properties);
 
     parent::__construct($properties, [
       'required' => $required,

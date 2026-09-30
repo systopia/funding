@@ -50,10 +50,6 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
         ]
       ),
       new JsonFormsControl(
-        "$scopePrefix/internerBezeichner",
-        'Interner Bezeichner'
-      ),
-      new JsonFormsControl(
         "$scopePrefix/titel",
         'Titel'
       ),
@@ -79,6 +75,7 @@ final class AVK1GrunddatenUiSchema extends JsonFormsCategory {
           'removeButtonLabel' => 'Zeitraum entfernen',
         ]
       ),
+      new JsonFormsControl("$scopePrefix/programmtage", 'Veranstaltungstage'),
       new JsonFormsGroup('Teilnehmer*innen', [
         new JsonFormsControl(
           "$scopePrefix/teilnehmer/properties/gesamt",

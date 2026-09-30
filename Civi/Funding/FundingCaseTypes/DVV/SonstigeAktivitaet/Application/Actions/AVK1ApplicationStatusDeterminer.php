@@ -20,18 +20,83 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\Actions;
 
 use Civi\Funding\ApplicationProcess\StatusDeterminer\AbstractApplicationProcessStatusDeterminerDecorator;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\DefaultApplicationProcessStatusDeterminer;
-use Civi\Funding\ApplicationProcess\StatusDeterminer\ReworkPossibleApplicationProcessStatusDeterminer;
+use Civi\Funding\ApplicationProcess\StatusDeterminer\ApplicationProcessStatusDeterminer;
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Traits\AVK1SupportedFundingCaseTypesTrait;
 
 final class AVK1ApplicationStatusDeterminer extends AbstractApplicationProcessStatusDeterminerDecorator {
 
   use AVK1SupportedFundingCaseTypesTrait;
 
+  private const STATUS_ACTION_STATUS_MAP = [
+    NULL => [
+      'save' => 'new',
+      'apply' => 'review',
+    ],
+    'new' => [
+      'save' => 'new',
+      'apply' => 'review',
+      'reject' => 'rejected',
+    ],
+    'review' => [
+      'approve-calculative' => 'review',
+      'reject-calculative' => 'review',
+      'approve-content' => 'review',
+      'reject-content' => 'review',
+      'request-change' => 'draft',
+      'approve' => 'eligible',
+      'reject' => 'rejected',
+      'update' => 'review',
+      'add-comment' => 'review',
+    ],
+    'draft' => [
+      'save' => 'draft',
+      'apply' => 'review',
+      'withdraw' => 'withdrawn',
+      'review' => 'review',
+      'add-comment' => 'draft',
+      'reject' => 'rejected',
+    ],
+    'eligible' => [
+      'withdraw' => 'withdrawn',
+      'update' => 'eligible',
+      'add-comment' => 'eligible',
+      'request-rework' => 'rework-requested',
+    ],
+    'complete' => [
+      'withdraw' => 'withdrawn',
+      'update' => 'complete',
+      'add-comment' => 'complete',
+    ],
+    'rework-requested' => [
+      'withdraw-rework-request' => 'eligible',
+      'approve-rework-request' => 'rework',
+      'reject-rework-request' => 'eligible',
+      'add-comment' => 'rework-requested',
+    ],
+    'rework' => [
+      'save' => 'rework',
+      'apply' => 'rework-review',
+      'withdraw-change' => 'eligible',
+      'review' => 'rework-review',
+      'add-comment' => 'rework',
+    ],
+    'rework-review' => [
+      'approve-calculative' => 'rework-review',
+      'reject-calculative' => 'rework-review',
+      'approve-content' => 'rework-review',
+      'reject-content' => 'rework-review',
+      'request-change' => 'rework',
+      'approve-change' => 'eligible',
+      'reject-change' => 'eligible',
+      'update' => 'rework-review',
+      'add-comment' => 'rework-review',
+    ],
+  ];
+
   public function __construct() {
-    parent::__construct(new ReworkPossibleApplicationProcessStatusDeterminer(
-      new DefaultApplicationProcessStatusDeterminer()
-    ));
+    parent::__construct(
+      new ApplicationProcessStatusDeterminer(self::STATUS_ACTION_STATUS_MAP)
+    );
   }
 
 }
