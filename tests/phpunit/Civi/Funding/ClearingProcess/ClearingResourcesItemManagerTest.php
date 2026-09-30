@@ -87,7 +87,7 @@ final class ClearingResourcesItemManagerTest extends TestCase {
   }
 
   public function testSaveNew(): void {
-    $item = ClearingResourcesItemFactory::create();
+    $item = ClearingResourcesItemFactory::create(['id' => NULL]);
     $this->api4Mock->expects(static::once())->method('createEntity')
       ->with(FundingClearingResourcesItem::getEntityName(), $item->toArray())
       ->willReturn(new Result([$item->toArray() + ['id' => 11]]));

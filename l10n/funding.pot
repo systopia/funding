@@ -226,7 +226,7 @@ msgstr ""
 msgid "Short Description"
 msgstr ""
 
-#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingCostItem.entityType.php schema/ClearingProcess.entityType.php schema/ClearingResourcesItem.entityType.php schema/Drawdown.entityType.php schema/FundingAmountApprovedChangeRequest.entityType.php schema/FundingCase.entityType.php schema/PayoutProcess.entityType.php
+#: Civi/Funding/Api4/Action/FundingCaseInfo/GetFieldsAction.php Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php ang/crmFunding/application/defaultApplicationEditor.template.html ang/crmFunding/case/fundingCase.template.html ang/crmFunding/clearing/clearingEditor.template.html ang/crmFundingAVK1SonstigeAktivitaet/avk1SonstigeAktivitaetApplicationEditor.template.html ang/crmFundingHiH/hihApplicationEditor.template.html ang/crmFundingIJB/ijbApplicationEditor.template.html ang/crmFundingSammelantragKurs/sammelantragKursApplicationEditor.template.html managed/SavedSearchFundingDrawdowns.mgd.php managed/SavedSearch_Clearings.mgd.php managed/SavedSearch_FundingAmountApprovedChangeRequest.mgd.php managed/SavedSearch_FundingAmountApprovedChangeRequestCase.mgd.php managed/SavedSearch_FundingDrawdownsAll.mgd.php managed/SavedSearch_funding_application_processes.mgd.php managed/SavedSearch_funding_case_application_processes.mgd.php managed/SavedSearch_funding_cases.mgd.php schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php schema/ClearingCostItem.entityType.php schema/ClearingProcess.entityType.php schema/ClearingResourcesItem.entityType.php schema/Drawdown.entityType.php schema/FundingAmountApprovedChangeRequest.entityType.php schema/FundingCase.entityType.php schema/PayoutProcess.entityType.php
 msgid "Status"
 msgstr ""
 
@@ -674,6 +674,38 @@ msgstr ""
 msgid "Finish Clearing Review"
 msgstr ""
 
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
+msgid "Line item"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
+msgid "No."
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php Civi/Funding/ClearingProcess/Token/AbstractClearingTableGenerator.php
+msgid "Recorded"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php Civi/Funding/ClearingProcess/Token/AbstractClearingTableGenerator.php
+msgid "Admitted"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingReceiptsTableGenerator.php
+msgid "- No receipts available -"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Token/AbstractClearingTableGenerator.php Civi/Funding/FundingPseudoConstants.php
+msgid "Approved"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Token/ClearingCostsTableGenerator.php
+msgid "Total of cost receipts"
+msgstr ""
+
+#: Civi/Funding/ClearingProcess/Token/ClearingResourcesTableGenerator.php
+msgid "Total of resources receipts"
+msgstr ""
+
 #: Civi/Funding/ClearingProcess/Traits/ClearingCreateTaskTrait.php
 msgid "Create Clearing"
 msgstr ""
@@ -840,6 +872,22 @@ msgstr ""
 
 #: Civi/Funding/EventSubscriber/CiviOffice/AbstractDrawdownTokenSubscriber.php
 msgid "BIC (maybe empty)"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/CiviOffice/ClearingProcessTokenSubscriber.php
+msgid "Costs Table"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/CiviOffice/ClearingProcessTokenSubscriber.php
+msgid "Resources Table"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/CiviOffice/ClearingProcessTokenSubscriber.php
+msgid "Cost Receipts Table"
+msgstr ""
+
+#: Civi/Funding/EventSubscriber/CiviOffice/ClearingProcessTokenSubscriber.php
+msgid "Resources Receipts Table"
 msgstr ""
 
 #: Civi/Funding/EventSubscriber/CiviOffice/TransferContractTokenSubscriber.php
@@ -1180,10 +1228,6 @@ msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Closed"
-msgstr ""
-
-#: Civi/Funding/FundingPseudoConstants.php
-msgid "Approved"
 msgstr ""
 
 #: Civi/Funding/FundingPseudoConstants.php
