@@ -372,6 +372,13 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  public function upgrade_0027(): bool {
+    $this->ctx->log->info('Applying database migration 0027');
+    E::schema()->createEntityTable('upgrade/0027/FundingAmountApprovedChangeRequest.entityType.php');
+
+    return TRUE;
+  }
+
   private function createUniqueTranslationIndex(): void {
     try {
       // Not possible on MySQL because it exceeds max key length of 3072 bytes.

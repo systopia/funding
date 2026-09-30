@@ -10,6 +10,7 @@ parameters:
 		- services
 		- schema
 		- tests
+		- upgrade
 		- funding.php
 	excludePaths:
 		analyse:
