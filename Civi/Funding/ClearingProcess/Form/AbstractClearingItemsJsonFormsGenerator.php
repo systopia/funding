@@ -254,8 +254,8 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
 
         if ('array' === $applicationPropertySchema->getKeywordValue('type')) {
           // Append item index + 1 to item label.
-          if (!str_contains($itemLabel, '{@pos')) {
-            $itemLabel .= ' {@pos}';
+          if (0 === preg_match('/\{pos[,}]/', $itemLabel)) {
+            $itemLabel .= ' {pos}';
           }
         }
 
@@ -335,13 +335,13 @@ abstract class AbstractClearingItemsJsonFormsGenerator {
   abstract protected function getTitle(): string;
 
   private function createLabelElement(string $itemLabel, int $index): JsonFormsElement {
-    if (str_contains($itemLabel, '{@pos')) {
+    if (1 === preg_match('/\{pos[,}]/', $itemLabel)) {
       // Make form translation possible.
       return new JsonFormsElement(
       'Markup', [
         'content' => JsonSchema::fromArray([
           'text' => $itemLabel,
-          'values' => ['@pos' => $index + 1],
+          'values' => ['pos' => $index + 1],
         ]),
         'contentMediaType' => 'text/html',
       ]);
