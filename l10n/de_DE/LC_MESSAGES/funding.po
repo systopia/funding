@@ -914,6 +914,14 @@ msgstr "Anzeigename des Kontakts der ersten Beantragung"
 msgid "Last Application Contact Display Name"
 msgstr "Anzeigename des Kontakts der letzten Beantragung"
 
+#: Civi/Funding/ApplicationProcess/Token/ApplicationProcessTokenNameExtractor.php
+msgid "First Statement of Eligibility Contact Display Name"
+msgstr "Anzeigename des Kontakts der ersten Feststellung der Förderfähigkeit"
+
+#: Civi/Funding/ApplicationProcess/Token/ApplicationProcessTokenNameExtractor.php
+msgid "Last Statement of Eligibility Contact Display Name"
+msgstr "Anzeigename des Kontakts der letzten Feststellung der Förderfähigkeit"
+
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
 msgstr "Berechtigung zur Änderung des rechnerischen Prüfergebnisses fehlt."
@@ -3503,6 +3511,26 @@ msgstr ""
 
 #: schema/ApplicationProcess.entityType.php
 #: schema/ApplicationSnapshot.entityType.php
+msgid "First Statement of Eligibility At"
+msgstr "Erste Feststellung der Förderfähigkeit am"
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+msgid "First Statement of Eligibility By"
+msgstr "Erste Feststellung der Förderfähigkeit von"
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Last Statement of Eligibility At"
+msgstr "Letzte Feststellung der Förderfähigkeit am"
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
+msgid "Last Statement of Eligibility By"
+msgstr "Letzte Feststellung der Förderfähigkeit von"
+
+#: schema/ApplicationProcess.entityType.php
+#: schema/ApplicationSnapshot.entityType.php
 msgid "Is In Work"
 msgstr ""
 
@@ -3947,9 +3975,3 @@ msgstr "CiviOffice-Renderer"
 msgid "The CiviOffice renderer to use for rendering PDFs."
 msgstr ""
 "Der CiviOffice-Renderer, der zum Rendern von PDFs verwendet werden soll."
-
-#~ msgid "Relationship from a to b"
-#~ msgstr "Beziehung von a zu b"
-
-#~ msgid "Relationship from b to a"
-#~ msgstr "Beziehung von b zu a"

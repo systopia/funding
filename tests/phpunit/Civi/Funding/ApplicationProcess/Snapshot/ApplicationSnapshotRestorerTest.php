@@ -82,6 +82,10 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
       'first_application_contact_id' => 1,
       'last_application_date' => '2026-02-02 02:02:02',
       'last_application_contact_id' => 2,
+      'frist_statement_of_elgibility_date' => '2026-03-03 03:03:03',
+      'first_statement_of_eligibility_contact_id' => 3,
+      'last_statement_of_eligibility_date' => '2026-04-04 04:04:04',
+      'last_statement_of_eligibility_contact_id' => 4,
       'amount_eligible' => 1.2,
       'cost_items' => [$costItem->toArray()],
       'resources_items' => [$resourcesItem->toArray()],
@@ -144,6 +148,22 @@ final class ApplicationSnapshotRestorerTest extends TestCase {
     );
     static::assertSame($applicationSnapshot->getIsReviewContent(), $applicationProcess->getIsReviewContent());
     static::assertSame($applicationSnapshot->getIsReviewCalculative(), $applicationProcess->getIsReviewCalculative());
+    static::assertEquals(
+      $applicationSnapshot->getFirstStatementOfEligibilityDate(),
+      $applicationProcess->getFirstStatementOfEligibilityDate()
+    );
+    static::assertSame(
+      $applicationSnapshot->getFirstStatementOfEligibilityContactId(),
+      $applicationProcess->getFirstStatementOfEligibilityContactId()
+    );
+    static::assertEquals(
+      $applicationSnapshot->getLastStatementOfEligibilityDate(),
+      $applicationProcess->getLastStatementOfEligibilityDate()
+    );
+    static::assertSame(
+      $applicationSnapshot->getLastStatementOfEligibilityContactId(),
+      $applicationProcess->getLastStatementOfEligibilityContactId()
+    );
     static::assertSame($applicationSnapshot->getIsEligible(), $applicationProcess->getIsEligible());
     static::assertSame('baz', $applicationProcess->get('foo.bar'));
     static::assertSame($applicationSnapshot, $applicationProcess->getRestoredSnapshot());
