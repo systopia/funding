@@ -41,6 +41,10 @@ class ApplicationProcessTokenNameExtractor implements TokenNameExtractorInterfac
       + [
         'first_application_contact_display_name' => E::ts('First Application Contact Display Name'),
         'last_application_contact_display_name' => E::ts('Last Application Contact Display Name'),
+        'first_statement_of_eligibility_contact_display_name'
+        => E::ts('First Statement of Eligibility Contact Display Name'),
+        'last_statement_of_eligibility_contact_display_name'
+        => E::ts('Last Statement of Eligibility Contact Display Name'),
       ];
   }
 
