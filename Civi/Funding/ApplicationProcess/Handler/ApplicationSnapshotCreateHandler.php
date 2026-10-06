@@ -88,6 +88,14 @@ final class ApplicationSnapshotCreateHandler implements ApplicationSnapshotCreat
       'last_application_contact_id' => $applicationProcess->getLastApplicationContactId(),
       'is_review_content' => $applicationProcess->getIsReviewContent(),
       'is_review_calculative' => $applicationProcess->getIsReviewCalculative(),
+      'first_statement_of_eligibility_date' => DateTimeUtil::toDateTimeStrOrNull(
+        $applicationProcess->getFirstStatementOfEligibilityDate()
+      ),
+      'first_statement_of_eligibility_contact_id' => $applicationProcess->getFirstStatementOfEligibilityContactId(),
+      'last_statement_of_eligibility_date' => DateTimeUtil::toDateTimeStrOrNull(
+        $applicationProcess->getLastStatementOfEligibilityDate()
+      ),
+      'last_statement_of_eligibility_contact_id' => $applicationProcess->getLastStatementOfEligibilityContactId(),
       'is_eligible' => $applicationProcess->getIsEligible(),
       'is_in_work' => $applicationProcess->getIsInWork(),
       'is_rejected' => $applicationProcess->getIsRejected(),

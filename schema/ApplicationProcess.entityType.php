@@ -242,6 +242,44 @@ return [
         'on_delete' => 'RESTRICT',
       ],
     ],
+    'first_statement_of_eligibility_date' => [
+      'title' => E::ts('First Statement of Eligibility At'),
+      'sql_type' => 'timestamp',
+      'input_type' => 'Select Date',
+      'input_attrs' => [
+        'format_type' => 'activityDateTime',
+      ],
+    ],
+    'first_statement_of_eligibility_contact_id' => [
+      'title' => E::ts('First Statement of Eligibility By'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'EntityRef',
+      'description' => E::ts('FK to Contact'),
+      'entity_reference' => [
+        'entity' => 'Contact',
+        'key' => 'id',
+        'on_delete' => 'RESTRICT',
+      ],
+    ],
+    'last_statement_of_eligibility_date' => [
+      'title' => E::ts('Last Statement of Eligibility At'),
+      'sql_type' => 'timestamp',
+      'input_type' => 'Select Date',
+      'input_attrs' => [
+        'format_type' => 'activityDateTime',
+      ],
+    ],
+    'last_statement_of_eligibility_contact_id' => [
+      'title' => E::ts('Last Statement of Eligibility By'),
+      'sql_type' => 'int unsigned',
+      'input_type' => 'EntityRef',
+      'description' => E::ts('FK to Contact'),
+      'entity_reference' => [
+        'entity' => 'Contact',
+        'key' => 'id',
+        'on_delete' => 'RESTRICT',
+      ],
+    ],
     'is_eligible' => [
       'title' => E::ts('Is Eligible'),
       'sql_type' => 'boolean',
