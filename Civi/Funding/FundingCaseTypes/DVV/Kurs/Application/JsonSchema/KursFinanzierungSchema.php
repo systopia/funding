@@ -119,9 +119,10 @@ final class KursFinanzierungSchema extends JsonSchemaObject {
       ),
       'festbetragReisekosten' => new JsonSchemaCalculate(
         'number',
-        'round(teilnehmerzahl * grundbetragReisekosten, 2)',
+        'round(fahrtkostenTeilnehmer > 0 ? teilnehmerzahl * grundbetragReisekosten : 0, 2)',
         [
           'teilnehmerzahl' => new JsonSchemaDataPointer('2/grunddaten/teilnehmer/gesamt', 0),
+          'fahrtkostenTeilnehmer' => new JsonSchemaDataPointer('2/kosten/fahrtkosten/teilnehmer', 0),
           'grundbetragReisekosten' => $grundbetragReisekosten,
         ],
       ),
