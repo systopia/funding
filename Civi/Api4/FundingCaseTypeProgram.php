@@ -34,7 +34,7 @@ use Civi\Funding\Api4\Traits\AccessPermissionsTrait;
 class FundingCaseTypeProgram extends Generic\DAOEntity {
 
   use AccessPermissionsTrait {
-    permissions as traitPermissions;
+    permissions as private traitPermissions;
   }
 
   /**
