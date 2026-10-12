@@ -162,7 +162,24 @@ class ApplicationProcessManager {
   public function getBundle(int $applicationProcessId): ?ApplicationProcessEntityBundle {
     $applicationProcess = $this->get($applicationProcessId);
 
-    return NULL === $applicationProcess ? NULL : $this->createBundle($applicationProcess);
+    return NULL === $applicationProcess ? NULL : $this->getBundleForObject($applicationProcess);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  public function getBundleForObject(
+    ApplicationProcessEntity $applicationProcess
+  ): ApplicationProcessEntityBundle {
+    $fundingCaseBundle = $this->fundingCaseManager->getBundle($applicationProcess->getFundingCaseId());
+    Assert::notNull($fundingCaseBundle);
+
+    return new ApplicationProcessEntityBundle(
+      $applicationProcess,
+      $fundingCaseBundle->getFundingCase(),
+      $fundingCaseBundle->getFundingCaseType(),
+      $fundingCaseBundle->getFundingProgram()
+    );
   }
 
   /**
@@ -199,7 +216,7 @@ class ApplicationProcessManager {
    */
   public function getAllBundles(): array {
     return array_map(
-      [$this, 'createBundle'],
+      [$this, 'getBundleForObject'],
       $this->getAll(),
     );
   }
@@ -258,7 +275,7 @@ class ApplicationProcessManager {
     ?string $indexBy = NULL
   ): array {
     return array_map(
-      [$this, 'createBundle'],
+      [$this, 'getBundleForObject'],
       $this->getBy($condition, $orderBy, $limit, $offset, $indexBy),
     );
   }
@@ -318,7 +335,7 @@ class ApplicationProcessManager {
    */
   public function getBundlesByFundingCaseId(int $fundingCaseId): array {
     return array_map(
-      [$this, 'createBundle'],
+      [$this, 'getBundleForObject'],
       $this->getByFundingCaseId($fundingCaseId),
     );
   }
@@ -336,7 +353,7 @@ class ApplicationProcessManager {
   public function getFirstBundleByFundingCaseId(int $fundingCaseId): ?ApplicationProcessEntityBundle {
     $applicationProcess = $this->getFirstByFundingCaseId($fundingCaseId);
 
-    return NULL === $applicationProcess ? NULL : $this->createBundle($applicationProcess);
+    return NULL === $applicationProcess ? NULL : $this->getBundleForObject($applicationProcess);
   }
 
   /**
@@ -384,23 +401,6 @@ class ApplicationProcessManager {
 
     $deletedEvent = new ApplicationProcessDeletedEvent($applicationProcessBundle);
     $this->eventDispatcher->dispatch(ApplicationProcessDeletedEvent::class, $deletedEvent);
-  }
-
-  /**
-   * @throws \CRM_Core_Exception
-   */
-  private function createBundle(
-    ApplicationProcessEntity $applicationProcess
-  ): ApplicationProcessEntityBundle {
-    $fundingCaseBundle = $this->fundingCaseManager->getBundle($applicationProcess->getFundingCaseId());
-    Assert::notNull($fundingCaseBundle);
-
-    return new ApplicationProcessEntityBundle(
-      $applicationProcess,
-      $fundingCaseBundle->getFundingCase(),
-      $fundingCaseBundle->getFundingCaseType(),
-      $fundingCaseBundle->getFundingProgram()
-    );
   }
 
   /**

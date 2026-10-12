@@ -19,6 +19,7 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\ClearingProcess\Form;
 
+use Civi\Funding\JsonSchema\Util\JsonSchemaValueUtil;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTable;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsTableRow;
@@ -75,38 +76,14 @@ class ItemDetailsFormElementGenerator {
         // Actually this should always be true.
         if (is_scalar($value)) {
           $header[] = $label ?? $itemsProperties[$property]['title'] ?? ucfirst($property);
-          $tableRowElements[] = new JsonFormsMarkup($this->valueToString($value, $itemsProperties[$property]));
+          $tableRowElements[] = new JsonFormsMarkup(
+            JsonSchemaValueUtil::valueToString($value, $itemsProperties[$property])
+          );
         }
       }
     }
 
     return new JsonFormsTable($header, [new JsonFormsTableRow($tableRowElements)]);
-  }
-
-  /**
-   * @param scalar|null $value
-   */
-  private function valueToString($value, JsonSchema $itemPropertySchema): string {
-    /** @phpstan-var list<JsonSchema> $oneOf */
-    $oneOf = $itemPropertySchema->getKeywordValueOrDefault('oneOf', []);
-    foreach ($oneOf as $oneOfEntry) {
-      if ($oneOfEntry->hasKeyword('const') && $oneOfEntry->getKeywordValue('const') === $value) {
-        if ($oneOfEntry->hasKeyword('title')) {
-          $title = $oneOfEntry->getKeywordValue('title');
-          Assert::string($title);
-
-          return $title;
-        }
-
-        break;
-      }
-    }
-
-    if (is_bool($value)) {
-      return $value ? E::ts('Yes') : E::ts('No');
-    }
-
-    return (string) $value;
   }
 
   /**

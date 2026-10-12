@@ -34,8 +34,6 @@ final class EntityValidator implements EntityValidatorInterface {
 
   /**
    * @inheritDoc
-   *
-   * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
    */
   public function validate(
     AbstractEntity $new,
@@ -52,8 +50,6 @@ final class EntityValidator implements EntityValidatorInterface {
 
   /**
    * @inheritDoc
-   *
-   * @phpstan-ignore-next-line Generic argument of AbstractEntity not defined.
    */
   public function validateNew(AbstractEntity $new, bool $checkPermissions): EntityValidationResult {
     $result = new EntityValidationResult();
