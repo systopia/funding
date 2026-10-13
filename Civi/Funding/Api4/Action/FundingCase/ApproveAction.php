@@ -48,7 +48,6 @@ class ApproveAction extends AbstractAction {
   /**
    * @var float
    * @required
-   * @phpstan-ignore property.phpDocType
    */
   protected ?float $amount = NULL;
 
