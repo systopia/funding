@@ -52,8 +52,8 @@ final class KursApplicationActionsDeterminer extends AbstractApplicationActionsD
       'application_modify' => ['save', 'add-applicant-comment'],
       'application_apply' => ['apply', 'add-applicant-comment'],
       'application_withdraw' => ['withdraw'],
-      'review_calculative' => ['review', 'add-comment'],
-      'review_content' => ['review', 'add-comment'],
+      'review_calculative' => ['add-comment'],
+      'review_content' => ['add-comment'],
     ],
     'eligible' => [
       'application_apply' => ['add-applicant-comment'],

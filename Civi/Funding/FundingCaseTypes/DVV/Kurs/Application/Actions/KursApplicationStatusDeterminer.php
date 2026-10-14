@@ -52,7 +52,6 @@ final class KursApplicationStatusDeterminer extends AbstractApplicationProcessSt
       'save' => 'draft',
       'apply' => 'review',
       'withdraw' => 'withdrawn',
-      'review' => 'review',
       'add-comment' => 'draft',
       'reject' => 'rejected',
     ],
