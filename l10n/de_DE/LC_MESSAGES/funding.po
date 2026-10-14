@@ -1112,16 +1112,6 @@ msgstr "Verwendungsnachweis"
 msgid "Costs"
 msgstr "Kosten"
 
-#: Civi/Funding/ClearingProcess/Form/ItemDetailsFormElementGenerator.php
-#: ang/crmFunding/form/editableField.directive.js
-msgid "Yes"
-msgstr "Ja"
-
-#: Civi/Funding/ClearingProcess/Form/ItemDetailsFormElementGenerator.php
-#: ang/crmFunding/form/editableField.directive.js
-msgid "No"
-msgstr "Nein"
-
 #: Civi/Funding/ClearingProcess/Form/ReceiptsFormGenerator.php
 msgid "Amount Cleared in %1"
 msgstr "Abgerechneter Betrag in %1"
@@ -1823,6 +1813,16 @@ msgstr "Abgerechnet"
 #: Civi/Funding/FundingPseudoConstants.php
 msgid "Applications adoptable"
 msgstr "Anträge übernehmbar"
+
+#: Civi/Funding/JsonSchema/Util/JsonSchemaValueUtil.php
+#: ang/crmFunding/form/editableField.directive.js
+msgid "Yes"
+msgstr "Ja"
+
+#: Civi/Funding/JsonSchema/Util/JsonSchemaValueUtil.php
+#: ang/crmFunding/form/editableField.directive.js
+msgid "No"
+msgstr "Nein"
 
 #: Civi/Funding/PayoutProcess/DrawdownDocumentCreator.php
 msgid "No bank account for contact with ID \"%1\" available."
@@ -2609,6 +2609,18 @@ msgstr "Beim der Mittelabrufe ist ein Fehler aufgetreten."
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
 msgid "Percent of amount approved"
 msgstr "Prozent des bewilligten Betrags"
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Exact amount"
+msgstr "Exakter Betrag"
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid ""
+"The exact amount of each created drawdown. In case that exceeds the amount "
+"available, the amount available will be used."
+msgstr ""
+"Der exakte Betrag jedes erstellten Mittelabrufs. Sollte dies den verfügbaren "
+"Betrag überschreiten, wird der verfügbare Betrag verwendet."
 
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
 msgid "Create %1 drawdowns"
@@ -3894,8 +3906,8 @@ msgstr ""
 
 #: schema/FundingProgram.entityType.php
 msgid ""
-"By default the database ID of a funding case will be appended to this prefix and forms "
-"its identifier"
+"By default the database ID of a funding case will be appended to this prefix "
+"and forms its identifier"
 msgstr ""
 
 #: schema/FundingProgramContactRelation.entityType.php

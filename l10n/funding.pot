@@ -646,14 +646,6 @@ msgstr ""
 msgid "Costs"
 msgstr ""
 
-#: Civi/Funding/ClearingProcess/Form/ItemDetailsFormElementGenerator.php ang/crmFunding/form/editableField.directive.js
-msgid "Yes"
-msgstr ""
-
-#: Civi/Funding/ClearingProcess/Form/ItemDetailsFormElementGenerator.php ang/crmFunding/form/editableField.directive.js
-msgid "No"
-msgstr ""
-
 #: Civi/Funding/ClearingProcess/Form/ReceiptsFormGenerator.php
 msgid "Amount Cleared in %1"
 msgstr ""
@@ -1254,6 +1246,14 @@ msgstr ""
 msgid "Applications adoptable"
 msgstr ""
 
+#: Civi/Funding/JsonSchema/Util/JsonSchemaValueUtil.php ang/crmFunding/form/editableField.directive.js
+msgid "Yes"
+msgstr ""
+
+#: Civi/Funding/JsonSchema/Util/JsonSchemaValueUtil.php ang/crmFunding/form/editableField.directive.js
+msgid "No"
+msgstr ""
+
 #: Civi/Funding/PayoutProcess/DrawdownDocumentCreator.php
 msgid "No bank account for contact with ID \"%1\" available."
 msgstr ""
@@ -1792,6 +1792,14 @@ msgstr ""
 
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
 msgid "Percent of amount approved"
+msgstr ""
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Exact amount"
+msgstr ""
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "The exact amount of each created drawdown. In case that exceeds the amount available, the amount available will be used."
 msgstr ""
 
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
