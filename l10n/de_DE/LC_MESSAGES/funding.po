@@ -2603,6 +2603,18 @@ msgid "Percent of amount approved"
 msgstr "Prozent des bewilligten Betrags"
 
 #: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid "Exact amount"
+msgstr "Exakter Betrag"
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
+msgid ""
+"The exact amount of each created drawdown. In case that exceeds the amount "
+"available, the amount available will be used."
+msgstr ""
+"Der exakte Betrag jedes erstellten Mittelabrufs. Sollte dies den verfügbaren "
+"Betrag überschreiten, wird der verfügbare Betrag verwendet."
+
+#: ang/crmFunding/case/searchTask/fundingCaseSearchTaskCreateDrawdown.template.html
 msgid "Create %1 drawdowns"
 msgstr "%1 Mittelabrufe erstellen"
 
