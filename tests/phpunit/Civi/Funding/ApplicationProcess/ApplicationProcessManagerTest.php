@@ -37,6 +37,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessUpdatedEvent;
 use Civi\Funding\Fixtures\ApplicationProcessFixture;
 use Civi\Funding\Fixtures\ContactFixture;
+use Civi\Funding\Fixtures\FundingCaseBundleFixture;
 use Civi\Funding\Fixtures\FundingCaseContactRelationFixture;
 use Civi\Funding\Fixtures\FundingCaseFixture;
 use Civi\Funding\Fixtures\FundingCaseTypeFixture;
@@ -240,6 +241,28 @@ final class ApplicationProcessManagerTest extends AbstractFundingHeadlessTestCas
       ->with($fundingCase->getId())
       ->willReturn(FundingCaseBundleFactory::create());
     static::assertNotNull($this->applicationProcessManager->getBundle($applicationProcess->getId()));
+  }
+
+  public function testGetBundleForObject(): void {
+    $contact = ContactFixture::addIndividual();
+    $fundingCaseBundle = FundingCaseBundleFixture::create();
+    $fundingCase = $fundingCaseBundle->getFundingCase();
+    $applicationProcess = ApplicationProcessFixture::addFixture($fundingCase->getId());
+
+    FundingCaseContactRelationFixture::addContact($contact['id'], $fundingCase->getId(), ['test_permission']);
+    $this->fundingCaseManagerMock->expects(static::once())->method('getBundle')
+      ->with($applicationProcess->getFundingCaseId())
+      ->willReturn($fundingCaseBundle);
+
+    static::assertEquals(
+      new ApplicationProcessEntityBundle(
+        $applicationProcess,
+        $fundingCaseBundle->getFundingCase(),
+        $fundingCaseBundle->getFundingCaseType(),
+        $fundingCaseBundle->getFundingProgram()
+      ),
+      $this->applicationProcessManager->getBundleForObject($applicationProcess)
+    );
   }
 
   public function testGetCustomFields(): void {

@@ -19,6 +19,7 @@ nav:
       - 'Application States': usage/application-states.md
       - 'Usage for Applicants': usage/usage-applicants.md
       - 'Usage for Reviewers': usage/usage-reviewers.md
+      - 'Template Tokens': usage/template-tokens.md
 
 markdown_extensions:
   - attr_list
