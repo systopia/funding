@@ -72,7 +72,7 @@ return [
       'input_type' => 'Text',
       'required' => TRUE,
       // phpcs:ignore Generic.Files.LineLength.TooLong
-      'description' => E::ts('The database ID of a funding case will be appended to this prefix and forms its identifier'),
+      'description' => E::ts('By default the database ID of a funding case will be appended to this prefix and forms its identifier'),
     ],
     'start_date' => [
       'title' => E::ts('Start Date'),

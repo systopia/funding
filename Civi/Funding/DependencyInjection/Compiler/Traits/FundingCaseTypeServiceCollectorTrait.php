@@ -40,7 +40,8 @@ trait FundingCaseTypeServiceCollectorTrait {
     int|string $argumentKey = 0,
     bool $public = FALSE,
   ): array {
-    $services = $this->getTaggedFundingCaseTypeServices($container, $interfaceClass::SERVICE_TAG);
+    $tagName = defined("$interfaceClass::SERVICE_TAG") ? $interfaceClass::SERVICE_TAG : $interfaceClass;
+    $services = $this->getTaggedFundingCaseTypeServices($container, $tagName);
     $container->autowire($interfaceClass, $collectorClass)
       ->setArgument($argumentKey, ServiceLocatorTagPass::register($container, $services))
       ->setPublic($public);

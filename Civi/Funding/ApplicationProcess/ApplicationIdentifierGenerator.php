@@ -26,6 +26,8 @@ use Civi\Funding\Entity\ApplicationProcessEntityBundle;
  */
 final class ApplicationIdentifierGenerator implements ApplicationIdentifierGeneratorInterface {
 
+  public const SUPPORTED_FUNDING_CASE_TYPE = '*';
+
   public function generateIdentifier(
     ApplicationProcessEntityBundle $applicationProcessBundle
   ): string {
