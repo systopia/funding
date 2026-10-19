@@ -31,6 +31,9 @@ use Civi\Funding\Api4\Util\WhereUtil;
  */
 final class UpdateAction extends DAOUpdateAction {
 
+  /**
+   * @var bool
+   */
   protected bool $ignoreCasePermissions = FALSE;
 
   public function __construct() {
