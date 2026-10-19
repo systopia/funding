@@ -26,6 +26,7 @@ use Civi\Funding\ApplicationProcess\ApplicationCostItemManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManager;
 use Civi\Funding\ApplicationProcess\ApplicationExternalFileManagerInterface;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGenerator;
+use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorCollector;
 use Civi\Funding\ApplicationProcess\ApplicationIdentifierGeneratorInterface;
 use Civi\Funding\ApplicationProcess\ApplicationProcessActivityManager;
 use Civi\Funding\ApplicationProcess\ApplicationProcessBundleLoader;
@@ -106,6 +107,10 @@ use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 $container->addCompilerPass(new FundingCaseTypeServicePass(
+  ApplicationIdentifierGeneratorCollector::class,
+  ApplicationIdentifierGeneratorInterface::class,
+));
+$container->addCompilerPass(new FundingCaseTypeServicePass(
   ApplicationProcessActionsDeterminerCollector::class,
   ApplicationProcessActionsDeterminerInterface::class,
   TRUE
@@ -152,7 +157,8 @@ $container->autowire(ApplicationProcessBundleLoader::class)
 $container->autowire(ApplicationCostItemManager::class);
 $container->autowire(ApplicationResourcesItemManager::class);
 $container->autowire(ApplicationExternalFileManagerInterface::class, ApplicationExternalFileManager::class);
-$container->autowire(ApplicationIdentifierGeneratorInterface::class, ApplicationIdentifierGenerator::class);
+$container->autowire(ApplicationIdentifierGenerator::class)
+  ->addTag(ApplicationIdentifierGeneratorInterface::class);
 $container->autowire(ApplicationProcessActivityManager::class);
 $container->autowire(EligibleApplicationProcessesLoader::class);
 $container->autowire(ApplicationSnapshotManager::class);

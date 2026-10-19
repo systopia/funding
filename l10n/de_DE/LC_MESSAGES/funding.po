@@ -3866,7 +3866,7 @@ msgstr ""
 
 #: schema/FundingProgram.entityType.php
 msgid ""
-"The database ID of a funding case will be appended to this prefix and forms "
+"By default the database ID of a funding case will be appended to this prefix and forms "
 "its identifier"
 msgstr ""
 
