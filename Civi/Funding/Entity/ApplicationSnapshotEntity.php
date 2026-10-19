@@ -45,6 +45,10 @@ use Civi\Funding\Util\DateTimeUtil;
  *   last_application_contact_id: ?int,
  *   is_review_content: ?bool,
  *   is_review_calculative: ?bool,
+ *   first_statement_of_eligibility_date: ?string,
+ *   first_statement_of_eligibility_contact_id: ?int,
+ *   last_statement_of_eligibility_date: ?string,
+ *   last_statement_of_eligibility_contact_id: ?int,
  *   is_eligible: ?bool,
  *   is_in_work: bool,
  *   is_rejected: bool,
@@ -159,6 +163,52 @@ final class ApplicationSnapshotEntity extends AbstractEntity {
 
   public function getIsReviewCalculative(): ?bool {
     return $this->values['is_review_calculative'];
+
+  }
+
+  public function getFirstStatementOfEligibilityDate(): ?\DateTimeInterface {
+
+    return DateTimeUtil::toDateTimeOrNull($this->values['first_statement_of_eligibility_date']);
+  }
+
+  public function setFirstStatementOfEligibilityDate(?\DateTimeInterface $firstStatementOfEligibility): self {
+    $this->values['first_statement_of_eligibility_date'] = DateTimeUtil::toDateTimeStrOrNull(
+      $firstStatementOfEligibility
+    );
+
+    return $this;
+  }
+
+  public function getFirstStatementOfEligibilityContactId(): ?int {
+    return $this->values['first_statement_of_eligibility_contact_id'];
+  }
+
+  public function setFirstStatementOfEligibilityContactId(?int $firstStatementOfEligibilityContactId): self {
+    $this->values['first_statement_of_eligibility_contact_id'] = $firstStatementOfEligibilityContactId;
+
+    return $this;
+  }
+
+  public function getLastStatementOfEligibilityDate(): ?\DateTimeInterface {
+    return DateTimeUtil::toDateTimeOrNull($this->values['last_statement_of_eligibility_date']);
+  }
+
+  public function setLastStatementOfEligibilityDate(?\DateTimeInterface $lastStatementOfEligibilityDate): self {
+    $this->values['last_statement_of_eligibility_date'] = DateTimeUtil::toDateTimeStrOrNull(
+      $lastStatementOfEligibilityDate
+    );
+
+    return $this;
+  }
+
+  public function getLastStatementOfEligibilityContactId(): ?int {
+    return $this->values['last_statement_of_eligibility_contact_id'];
+  }
+
+  public function setLastStatementOfEligibilityContactId(?int $lastStatementOfEligibilityContactId): self {
+    $this->values['last_statement_of_eligibility_contact_id'] = $lastStatementOfEligibilityContactId;
+
+    return $this;
   }
 
   public function getIsEligible(): ?bool {
