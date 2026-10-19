@@ -20,50 +20,110 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AdB\SonstigeAktivitaet\Report\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
-use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
-use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class AVK1SachberichtCategory extends JsonFormsCategory {
 
   public function __construct(string $scopePrefix) {
     parent::__construct('Sachbericht', [
-      new JsonFormsControl(
-        "$scopePrefix/durchgefuehrt",
-        'Die Maßnahme wurde durchgeführt',
-        NULL,
-        ['format' => 'radio']
+      new JsonFormsGroup(
+        'Inhalt und Ziele der Aktivität/Veranstaltung',
+        [
+          new JsonFormsControl(
+          "$scopePrefix/inhalteUndZiele",
+            <<<EOD
+Welche Ziele (inhaltlich, methodisch-didaktisch, strategisch) wurden mit der Veranstaltung verfolgt? Welche
+(gesellschafts-politischen) Inhalte wurden mit den Teilnehmenden diskutiert/reflektiert und welche Methoden wurden
+umgesetzt? Wie steht die Veranstaltung in Bezug zum Themenschwerpunkt und Vorhaben?
+EOD,
+            NULL,
+            [
+              'multi' => TRUE,
+              'placeholder' => 'Mindestens 1.500 Zeichen, gerne auch mehr',
+            ]
+          ),
+        ]
       ),
-      new JsonFormsControl("$scopePrefix/aenderungen", '', NULL, ['multi' => TRUE], [
-        'rule' => new JsonFormsRule(
-          'ENABLE',
-          "$scopePrefix/durchgefuehrt",
-          JsonSchema::fromArray(['const' => 'geaendert'])
-        ),
-      ]),
-      new JsonFormsControl(
-        "$scopePrefix/thematischeSchwerpunkte",
-        'Welche thematischen Schwerpunkte hatte die Veranstaltung?',
-        NULL,
-        ['multi' => TRUE],
+      new JsonFormsGroup(
+        'Zielgruppe',
+        [
+          new JsonFormsControl(
+          "$scopePrefix/zielgruppe",
+          'Erläuterung zur Zielgruppe',
+            <<<EOD
+Wer waren die Teilnehmenden? An wen richtete sich die Veranstaltung primär? bspw. Schulklasse; Frauen mit
+Fluchtbiographie; queere junge Menschen…
+EOD,
+            ['descriptionDisplay' => 'before']
+          ),
+        ]
       ),
-      new JsonFormsControl(
-        "$scopePrefix/methoden",
-        'Inwiefern und mit welchen Methoden wurden die  inhaltlichen Ziele erreicht?',
-        NULL,
-        ['multi' => TRUE]
+      new JsonFormsGroup(
+        'Auswertung der Erfahrungen bei der Vorbereitung und Durchführung der Veranstaltung',
+        [
+          new JsonFormsControl(
+          "$scopePrefix/erfahrungen",
+          <<<EOD
+Welche Erfahrungen wurden bei der Vorbereitung und Durchführung der Veranstaltung gemacht? Was hat gut funktioniert; was
+ggf. nicht? Wie ist aus deiner Sicht im Nachhinein die Veranstaltung und ihre Umsetzung unter Berücksichtigung der
+angestrebten Ziele insgesamt einzuschätzen? Bitte berücksichtige dabei auch die Rückmeldungen der Teilnehmenden
+EOD,
+          NULL,
+          ['multi' => TRUE],
+          ),
+          new JsonFormsControl(
+          "$scopePrefix/einbeziehungTeilnehmende",
+            <<<EOD
+Wie wurden Teilnehmende bei der Konzeption und Umsetzung einbezogen? (Rückmeldung der TN hierzu einbeziehen)
+EOD,
+            NULL,
+            ['multi' => TRUE]
+          ),
+        ]
       ),
-      new JsonFormsControl(
-        "$scopePrefix/zielgruppe",
-        'Welche Zielgruppe wurde mit der Veranstaltung erreicht (Zusammensetzung, Alter)?',
-        NULL,
-        ['multi' => TRUE]
+      new JsonFormsGroup(
+        'Inklusives und diversitätsorientiertes Vorgehen', [
+          new JsonFormsControl(
+          "$scopePrefix/inklusivesVorgehen",
+          <<<EOD
+Wie wurde (durch sprachliches, inhaltliches, methodisches Vorgehen) darauf geachtet, dass sich möglichst jede*r
+Teilnehmende einbringen konnte und wohl gefühlt hat? Welche Maßnahmen wurden getroffen, um auf organisatorischer,
+inhaltlicher und/oder methodischer Ebene eine Diversiätssensible und -orientierte Umsetzung zu berücksichtigen?
+EOD,
+          NULL,
+          ['multi' => TRUE],
+          ),
+        ]),
+      new JsonFormsGroup(
+        'Ergebnisse, Fortführung, Ausblick',
+        [
+          new JsonFormsControl(
+          "$scopePrefix/ergebnisse",
+          'Ergebnisse, Fortführung, Ausblick',
+            <<<EOD
+Welche Ergebnisse, konkrete Schritte oder neue Themenstellungen sind aus der Veranstaltung entstanden? Wie werden diese
+zukünftig weiter bearbeitet oder fortgeführt?
+EOD,
+            [
+              'multi' => TRUE,
+              'descriptionDisplay' => 'before',
+              'placeholder' => 'Mindestens 600 Zeichen (gerne auch mehr)',
+            ]
+          ),
+        ]
       ),
-      new JsonFormsControl(
-        "$scopePrefix/sonstiges",
-        'Besondere Vorkommnisse, Schlussfolgerungen oder sonstige Hinweise',
-        NULL,
-        ['multi' => TRUE]
+      new JsonFormsGroup(
+        'Kursinhalte in Stichpunkten',
+        [
+          new JsonFormsControl(
+            "$scopePrefix/kursinhalte",
+            <<<EOD
+    Bitte in kurzen Stichworten die Inhalte des Kurses zusammenfassen – max. 200 Zeichen. Die Angaben werden für den
+    KJP-Verwendungsnachweis benötigt.
+    EOD,
+          ),
+        ]
       ),
     ]);
   }
