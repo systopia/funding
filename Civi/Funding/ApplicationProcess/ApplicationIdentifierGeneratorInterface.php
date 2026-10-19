@@ -20,8 +20,9 @@ declare(strict_types = 1);
 namespace Civi\Funding\ApplicationProcess;
 
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeServiceInterface;
 
-interface ApplicationIdentifierGeneratorInterface {
+interface ApplicationIdentifierGeneratorInterface extends FundingCaseTypeServiceInterface {
 
   public function generateIdentifier(
     ApplicationProcessEntityBundle $applicationProcessBundle
