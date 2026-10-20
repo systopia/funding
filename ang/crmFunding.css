@@ -155,6 +155,7 @@ div:not(.btn-group), span:not(.btn-group) {
   white-space: pre-wrap;
   word-break: normal;
   hyphens: auto;
+  overflow: auto;
 }
 
 /* don't let textarea grow out of a modal */
