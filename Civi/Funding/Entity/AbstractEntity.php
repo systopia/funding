@@ -28,7 +28,7 @@ use Civi\Funding\Util\DateTimeUtil;
  * "check_permissions" and "custom" are automatically added by CiviCRM since
  * version 5.53.
  *
- * @template T of array<string, mixed>
+ * @template T of array<string, mixed> = array<string, mixed>
  *
  * T should contain `id?: int`.
  *
