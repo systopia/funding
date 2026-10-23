@@ -12,6 +12,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name'],
       'values' => [
         'name' => 'funding_application_review_status_change',
         'table_name' => 'civicrm_value_funding_application_review_status_change',
@@ -41,6 +42,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['custom_group_id', 'name'],
       'values' => [
         'custom_group_id.name' => 'funding_application_review_status_change',
         'name' => 'from_is_review_calculative',
@@ -66,6 +68,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['custom_group_id', 'name'],
       'values' => [
         'custom_group_id.name' => 'funding_application_review_status_change',
         'name' => 'to_is_review_calculative',
@@ -91,6 +94,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['custom_group_id', 'name'],
       'values' => [
         'custom_group_id.name' => 'funding_application_review_status_change',
         'name' => 'from_is_review_content',
@@ -116,6 +120,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['custom_group_id', 'name'],
       'values' => [
         'custom_group_id.name' => 'funding_application_review_status_change',
         'name' => 'to_is_review_content',

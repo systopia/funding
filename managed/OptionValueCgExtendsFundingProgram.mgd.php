@@ -28,6 +28,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'cg_extend_objects',
         'label' => E::ts('Funding Program'),

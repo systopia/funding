@@ -38,7 +38,7 @@ return [
     'cleanup' => 'unused',
     'update' => 'always',
     'params' => [
-      'match' => ['name'],
+      'match' => ['custom_group_id', 'name'],
       'version' => 4,
       'values' => [
         'custom_group_id.name' => 'funding_application_restore',

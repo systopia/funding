@@ -12,6 +12,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name'],
       'values' => [
         'name' => 'funding_application_snapshot_creation',
         'table_name' => 'civicrm_value_funding_application_snapshot_creation',
@@ -41,6 +42,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['custom_group_id', 'name'],
       'values' => [
         'custom_group_id.name' => 'funding_application_snapshot_creation',
         'name' => 'snapshot_id',

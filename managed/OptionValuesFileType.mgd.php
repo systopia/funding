@@ -12,6 +12,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'file_type',
         'label' => E::ts('Drawdown Submit Confirmation'),
@@ -33,6 +34,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'file_type',
         'label' => E::ts('Drawdown Submit Confirmation Template'),
@@ -54,6 +56,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'file_type',
         'label' => E::ts('Transfer Contract'),
@@ -75,6 +78,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'file_type',
         'label' => E::ts('Transfer Contract Template'),
@@ -96,6 +100,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'file_type',
         'label' => E::ts('Payment Instruction'),
@@ -117,6 +122,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'file_type',
         'label' => E::ts('Payment Instruction Template'),
@@ -138,6 +144,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'file_type',
         'label' => E::ts('Payback Claim'),
@@ -159,6 +166,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'file_type',
         'label' => E::ts('Payback Claim Template'),
