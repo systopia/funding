@@ -13,6 +13,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'activity_type',
         'label' => E::ts('Funding Application Comment by Applicant'),
