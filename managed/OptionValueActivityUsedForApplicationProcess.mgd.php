@@ -12,6 +12,7 @@ return [
     'update' => 'always',
     'params' => [
       'version' => 4,
+      'match' => ['name', 'option_group_id'],
       'values' => [
         'option_group_id.name' => 'activity_used_for',
         'label' => E::ts('Funding Application'),
