@@ -84,20 +84,23 @@ final class ClearingFormGenerator {
   public function generateForm(ClearingProcessEntityBundle $clearingProcessBundle): JsonFormsFormInterface {
   // phpcs:enable
     $receiptsForm = $this->receiptsFormGenerator->generateReceiptsForm($clearingProcessBundle);
-    /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $receiptsProperties */
-    $receiptsProperties = $receiptsForm->getJsonSchema()['properties']
-      ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
-    $receiptsProperties['costItems'] ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
-    $receiptsProperties['resourcesItems'] ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
+    if ([] !== $receiptsForm->getJsonSchema()->getKeywords()) {
+      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $receiptsProperties */
+      $receiptsProperties = $receiptsForm->getJsonSchema()['properties'] ??= new JsonSchema([]);
+      $receiptsProperties['costItems'] ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
+      $receiptsProperties['resourcesItems'] ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
+    }
+
     $reportForm = $this->reportFormFactory->createReportForm($clearingProcessBundle);
-    /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $reportProperties */
-    $reportProperties = $reportForm->getJsonSchema()['properties']
-      ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
-    /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $reportDataSchema */
-    $reportDataSchema = $reportProperties['reportData']
-      ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
-    if (!$this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle)) {
-      $reportDataSchema['readOnly'] = TRUE;
+    if ([] !== $reportForm->getJsonSchema()->getKeywords()) {
+      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $reportProperties */
+      $reportProperties = $reportForm->getJsonSchema()['properties'] ??= new JsonSchema([]);
+      /** @var \Civi\RemoteTools\JsonSchema\JsonSchema $reportDataSchema */
+      $reportDataSchema = $reportProperties['reportData']
+        ??= new JsonSchemaObject([], ['additionalProperties' => FALSE]);
+      if (!$this->actionsDeterminer->isContentChangeAllowed($clearingProcessBundle)) {
+        $reportDataSchema['readOnly'] = TRUE;
+      }
     }
 
     $keywords = $receiptsForm->getJsonSchema()->toArray();
@@ -124,6 +127,10 @@ final class ClearingFormGenerator {
     }
     else {
       $categories = [];
+      $keywords = [
+        'type' => 'object',
+        'properties' => [],
+      ];
     }
 
     if ([] !== $reportForm->getJsonSchema()->getKeywords()) {
