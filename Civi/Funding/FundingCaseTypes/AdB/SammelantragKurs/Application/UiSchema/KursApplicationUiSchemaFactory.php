@@ -41,6 +41,8 @@ final class KursApplicationUiSchemaFactory implements CombinedApplicationUiSchem
     return new KursApplicationUiSchema(
       $applicationProcessBundle->getApplicationProcess()->getIdentifier(),
       $applicationProcessBundle->getFundingProgram()->getCurrency(),
+      // @phpstan-ignore argument.type
+      $applicationProcessBundle->getApplicationProcess()->getRequestData()['nichtGefoerdert'] ?? FALSE,
     );
   }
 
@@ -48,14 +50,14 @@ final class KursApplicationUiSchemaFactory implements CombinedApplicationUiSchem
    * @inheritDoc
    */
   public function createUiSchemaAdd(FundingCaseBundle $fundingCaseBundle): JsonFormsLayout {
-    return new KursApplicationUiSchema('Neuer Kurs', $fundingCaseBundle->getFundingProgram()->getCurrency());
+    return new KursApplicationUiSchema('Neuer Kurs', $fundingCaseBundle->getFundingProgram()->getCurrency(), NULL);
   }
 
   public function createUiSchemaForTranslation(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType,
   ): JsonFormsLayout {
-    return new KursApplicationUiSchema('Neuer Kurs', $fundingProgram->getCurrency());
+    return new KursApplicationUiSchema('Neuer Kurs', $fundingProgram->getCurrency(), NULL);
   }
 
 }

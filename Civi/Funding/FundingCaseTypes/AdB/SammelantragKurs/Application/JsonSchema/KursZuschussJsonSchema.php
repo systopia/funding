@@ -42,8 +42,9 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
     $properties = [
       'teilnehmerkostenMax' => new JsonSchemaCalculate(
         'number',
-        'teilnehmertage * festbetrag',
+        'nichtGefoerdert ? 0 : teilnehmertage * festbetrag',
         [
+          'nichtGefoerdert' => new JsonSchemaDataPointer('/nichtGefoerdert'),
           'teilnehmertage' => new JsonSchemaDataPointer('2/grunddaten/teilnehmertage'),
           'festbetrag' => self::TEILNEHMERFESTBETRAG,
         ],
@@ -58,8 +59,9 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
       ], TRUE),
       'fahrtkostenMax' => new JsonSchemaCalculate(
         'number',
-        'teilnehmer * festbetrag',
+        'nichtGefoerdert ? 0 : teilnehmer * festbetrag',
         [
+          'nichtGefoerdert' => new JsonSchemaDataPointer('/nichtGefoerdert'),
           'teilnehmer' => new JsonSchemaDataPointer(
             sprintf('2/grunddaten/teilnehmer/%s', $report ? 'mitFahrtkosten' : 'gesamt'),
             0
@@ -77,8 +79,9 @@ final class KursZuschussJsonSchema extends JsonSchemaObject {
       ], TRUE),
       'honorarkostenMax' => new JsonSchemaCalculate(
         'number',
-        'programmtage * referenten * festbetrag',
+        'nichtGefoerdert ? 0 : programmtage * referenten * festbetrag',
         [
+          'nichtGefoerdert' => new JsonSchemaDataPointer('/nichtGefoerdert'),
           'programmtage' => new JsonSchemaDataPointer('2/grunddaten/programmtage'),
           'referenten' => new JsonSchemaDataPointer(
             sprintf('2/grunddaten/teilnehmer/%s', $report ? 'referentenMitHonorar' : 'referenten'),

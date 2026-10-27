@@ -43,6 +43,8 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
     return new KursApplicationJsonSchema(
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
+      // @phpstan-ignore argument.type
+      $applicationProcessBundle->getApplicationProcess()->getRequestData()['nichtGefoerdert'] ?? FALSE,
     );
   }
 
@@ -55,6 +57,7 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
     return new KursApplicationJsonSchema(
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
+      NULL
     );
   }
 
@@ -65,6 +68,7 @@ final class KursApplicationJsonSchemaFactory implements CombinedApplicationJsonS
     return new KursApplicationJsonSchema(
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
+      NULL
     );
   }
 

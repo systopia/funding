@@ -19,21 +19,45 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaBoolean;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 
 final class KursApplicationJsonSchema extends JsonSchemaObject {
 
   public function __construct(
     \DateTimeInterface $applicationBegin,
-    \DateTimeInterface $applicationEnd
+    \DateTimeInterface $applicationEnd,
+    ?bool $nichtGefoerdert
   ) {
-    // @todo Additional validations, e.g. required, length, min, max, ...
     $properties = [
       'grunddaten' => new KursGrunddatenJsonSchema($applicationBegin, $applicationEnd),
-      'finanzierung' => new KursFinanzierungJsonSchema(),
-      'zuschuss' => new KursZuschussJsonSchema(),
       'beschreibung' => new KursBeschreibungJsonSchema(),
     ];
+
+    if (TRUE === $nichtGefoerdert) {
+      $properties['nichtGefoerdert'] = new JsonSchemaBoolean(['const' => TRUE]);
+      // Initially amount_requested comes from JSON schema for "zuschuss".
+      $properties['beantragterBetrag'] = new JsonSchemaInteger([
+        'const' => 0,
+        'default' => 0,
+        '$default' => 0,
+        '$tag' => JsonSchema::fromArray(['mapToField' => ['fieldName' => 'amount_requested']]),
+      ]);
+    }
+    else {
+      if (NULL === $nichtGefoerdert) {
+        $properties['nichtGefoerdert'] = new JsonSchemaBoolean();
+      }
+      else {
+        $properties['nichtGefoerdert'] = new JsonSchemaBoolean(['const' => FALSE]);
+      }
+
+      $properties['finanzierung'] = new KursFinanzierungJsonSchema();
+      // When "nichtGefoerdert" is FALSE on initial submit cost items and resources items are removed by validator.
+      $properties['zuschuss'] = new KursZuschussJsonSchema();
+    }
 
     parent::__construct($properties, ['required' => array_keys($properties)]);
   }

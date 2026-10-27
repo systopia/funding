@@ -22,12 +22,13 @@ namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\UiSchem
 use Civi\RemoteTools\JsonForms\Control\JsonFormsArray;
 use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
 
 final class KursFinanzierungUiSchema extends JsonFormsCategory {
 
-  public function __construct(string $scopePrefix, string $currency) {
+  public function __construct(string $scopePrefix, string $currency, JsonFormsRule $nichtGefoerdertRule) {
     parent::__construct('Finanzierung', [
       new JsonFormsGroup('Finanzierung', [
         new JsonFormsControl(
@@ -78,7 +79,7 @@ final class KursFinanzierungUiSchema extends JsonFormsCategory {
           'Gesamtfinanzierung',
           [new JsonFormsControl("$scopePrefix/mittelGesamt", 'Gesamtfinanzierung in ' . $currency)]
         ),
-      ]),
+      ], NULL, NULL, ['rule' => $nichtGefoerdertRule]),
     ]);
   }
 

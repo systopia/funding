@@ -60,7 +60,7 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
       );
     }
 
-    parent::__construct('Grunddaten', [
+    $elements = [
       new JsonFormsControl("$scopePrefix/internerBezeichner", 'Interner Bezeichner'),
       new JsonFormsControl("$scopePrefix/titel", 'Titel'),
       new JsonFormsControl(
@@ -79,7 +79,13 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
       new JsonFormsControl("$scopePrefix/programmtage", 'Programmtage'),
       new JsonFormsGroup('Teilnehmer*innen', $teilnehmerElements),
       new JsonFormsControl("$scopePrefix/teilnehmertage", 'Teilnehmendentage'),
-    ]);
+    ];
+
+    if (!$report) {
+      array_unshift($elements, new JsonFormsControl('#/properties/nichtGefoerdert', 'Nicht geförderte Maßnahme'));
+    }
+
+    parent::__construct('Grunddaten', $elements);
   }
 
 }

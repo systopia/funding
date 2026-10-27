@@ -23,12 +23,14 @@ use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\JsonSchema\Ku
 use Civi\RemoteTools\JsonForms\Control\JsonFormsHidden;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
 use Civi\RemoteTools\JsonForms\JsonFormsMarkup;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonForms\Layout\JsonFormsVerticalLayout;
 
 final class KursZuschussUiSchema extends JsonFormsCategory {
 
-  public function __construct(string $currency) {
+  public function __construct(string $scopePrefix, string $currency, JsonFormsRule $nichtGefoerdertRule) {
     $elements = [
       new JsonFormsMarkup(<<<EOD
 <p>Anhand der Veranstaltungsdaten wird hier der maximal mögliche KJP-Zuschuss
@@ -43,10 +45,10 @@ EOD
           $currency
         )),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/teilnehmerkostenMax', 'Maximaler Zuschuss in ' . $currency,
+          "$scopePrefix/teilnehmerkostenMax", 'Maximaler Zuschuss in ' . $currency,
         ),
         new JsonFormsControl(
-          '#/properties/zuschuss/properties/teilnehmerkosten', 'Benötigter Zuschuss in ' . $currency,
+          "$scopePrefix/teilnehmerkosten", 'Benötigter Zuschuss in ' . $currency,
         ),
       ], <<<EOD
 An jedem Programmtag kann je Teilnehmer*in der Teilnehmendenfestbetrag
@@ -62,8 +64,8 @@ EOD
           KursZuschussJsonSchema::FAHRTKOSTENFESTBETRAG,
           $currency
         )),
-        new JsonFormsControl('#/properties/zuschuss/properties/fahrtkostenMax', 'Maximaler Zuschuss in ' . $currency),
-        new JsonFormsControl('#/properties/zuschuss/properties/fahrtkosten', 'Benötigter Zuschuss in ' . $currency),
+        new JsonFormsControl("$scopePrefix/fahrtkostenMax", 'Maximaler Zuschuss in ' . $currency),
+        new JsonFormsControl("$scopePrefix/fahrtkosten", 'Benötigter Zuschuss in ' . $currency),
       ], <<<EOD
 Der Reisekostenfestbetrag für Teilnehmer*innen kann nur geltend gemacht
 werden, wenn tatsächlich Reisekosten bei den entsprechenden Teilnehmenden
@@ -76,8 +78,8 @@ EOD
           KursZuschussJsonSchema::HONORARKOSTENFESTBETRAG,
           $currency
         )),
-        new JsonFormsControl('#/properties/zuschuss/properties/honorarkostenMax', 'Maximaler Zuschuss in ' . $currency),
-        new JsonFormsControl('#/properties/zuschuss/properties/honorarkosten', 'Benötigter Zuschuss in ' . $currency),
+        new JsonFormsControl("$scopePrefix/honorarkostenMax", 'Maximaler Zuschuss in ' . $currency),
+        new JsonFormsControl("$scopePrefix/honorarkosten", 'Benötigter Zuschuss in ' . $currency),
       ], <<<EOD
 Für jeden Veranstaltungstag, an dem Honorare an Vortragende
 ausgezahlt werden, kann pro vortragender Person ein Festbetrag
@@ -86,16 +88,18 @@ EOD
       ),
       // Not displayed, but used to have a cost item so receipts for previously
       // unknown costs can be submitted.
-      new JsonFormsHidden('#/properties/zuschuss/properties/sonstigeAusgaben'),
+      new JsonFormsHidden("$scopePrefix/sonstigeAusgaben"),
       new JsonFormsGroup('Maximal möglicher Gesamtzuschuss in ' . $currency, [
-        new JsonFormsControl('#/properties/zuschuss/properties/gesamtMax', ''),
+        new JsonFormsControl("$scopePrefix/gesamtMax", ''),
       ]),
       new JsonFormsGroup('Beantragter Zuschuss', [
-        new JsonFormsControl('#/properties/zuschuss/properties/gesamt', 'Beantragte KJP-Mittel gesamt in ' . $currency),
+        new JsonFormsControl("$scopePrefix/gesamt", 'Beantragte KJP-Mittel gesamt in ' . $currency),
       ]),
     ];
 
-    parent::__construct('Zuschussberechnung', $elements);
+    parent::__construct('Zuschussberechnung', [
+      new JsonFormsVerticalLayout($elements, NULL, ['rule' => $nichtGefoerdertRule]),
+    ]);
   }
 
 }

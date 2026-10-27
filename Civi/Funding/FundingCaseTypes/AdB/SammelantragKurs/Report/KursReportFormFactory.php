@@ -51,42 +51,53 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
   use KursSupportedFundingCaseTypesTrait;
 
   public function createReportForm(ClearingProcessEntityBundle $clearingProcessBundle): ReportFormInterface {
-    return $this->doCreateReportForm($clearingProcessBundle->getFundingProgram());
+    return $this->doCreateReportForm(
+      $clearingProcessBundle->getFundingProgram(),
+      // @phpstan-ignore argument.type
+      $clearingProcessBundle->getApplicationProcess()->getRequestData()['nichtGefoerdert'] ?? FALSE
+    );
   }
 
   public function createReportFormForTranslation(
     FundingProgramEntity $fundingProgram,
     FundingCaseTypeEntity $fundingCaseType
   ): ReportFormInterface {
-    return $this->doCreateReportForm($fundingProgram);
+    return $this->doCreateReportForm($fundingProgram, FALSE);
   }
 
-  public function doCreateReportForm(FundingProgramEntity $fundingProgram): ReportFormInterface {
+  public function doCreateReportForm(FundingProgramEntity $fundingProgram, bool $nichtGefoerdert): ReportFormInterface {
     $grunddatenJsonSchema = new KursGrunddatenJsonSchema(
       $fundingProgram->getStartDate(),
       $fundingProgram->getEndDate(),
       TRUE
     );
 
-    $zuschussJsonSchema = new KursZuschussJsonSchema(TRUE);
-    $zuschussJsonSchema['required'] = [];
-    $zuschussJsonSchema['properties'] = new JsonSchema(array_filter(
-      // @phpstan-ignore-next-line
-      $zuschussJsonSchema['properties']->getKeywords(),
-      fn ($propertyName) => str_ends_with((string) $propertyName, 'Max'),
-      ARRAY_FILTER_USE_KEY
-    ));
+    $properties = [
+      'grunddaten' => $grunddatenJsonSchema,
+      'beschreibung' => new KursBeschreibungJsonSchema(),
+      'sachbericht' => new KursSachberichtJsonSchema(),
+      'dokumente' => new KursDokumenteJsonSchema(),
+    ];
+
+    if (!$nichtGefoerdert) {
+      $zuschussJsonSchema = new KursZuschussJsonSchema(TRUE);
+      $zuschussJsonSchema['required'] = [];
+      $zuschussJsonSchema['properties'] = new JsonSchema(
+        array_filter(
+          // @phpstan-ignore method.nonObject
+          $zuschussJsonSchema['properties']->getKeywords(),
+          fn($propertyName) => str_ends_with((string) $propertyName, 'Max'),
+          ARRAY_FILTER_USE_KEY
+        )
+      );
+
+      $properties['zuschuss'] = $zuschussJsonSchema;
+      $properties['foerderung'] = new KursFoerderungJsonSchema();
+    }
 
     $jsonSchema = new JsonSchemaObject([
-      'reportData' => new JsonSchemaObject([
-        'grunddaten' => $grunddatenJsonSchema,
-        'zuschuss' => $zuschussJsonSchema,
-        'beschreibung' => new KursBeschreibungJsonSchema(),
-        'sachbericht' => new KursSachberichtJsonSchema(),
-        'dokumente' => new KursDokumenteJsonSchema(),
-        'foerderung' => new KursFoerderungJsonSchema(),
-      ], [
-        'required' => ['grunddaten', 'zuschuss', 'beschreibung', 'sachbericht', 'dokumente', 'foerderung'],
+      'reportData' => new JsonSchemaObject($properties, [
+        'required' => array_keys($properties),
       ]),
     ], [
       'required' => ['reportData'],
@@ -110,22 +121,24 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
       new KursDokumenteCategory('#/properties/reportData/properties/dokumente/properties'),
     ]);
 
-    $currency = $fundingProgram->getCurrency();
-    $zuschussUiSchema = new KursZuschussGroup(
-      $currency,
-      '#/properties/reportData/properties/zuschuss/properties'
-    );
-    $maxZuschussUiSchema = new JsonFormsGroup('Maximal möglicher Gesamtzuschuss in ' . $currency, [
-      new JsonFormsControl('#/properties/reportData/properties/zuschuss/properties/gesamtMax', ''),
-    ]);
-    $foerderungUiSchema = new KursFoerderungGroup(
-      '#/properties/reportData/properties/foerderung/properties',
-      $currency,
-    );
+    if (!$nichtGefoerdert) {
+      $currency = $fundingProgram->getCurrency();
+      $zuschussUiSchema = new KursZuschussGroup(
+        $currency,
+        '#/properties/reportData/properties/zuschuss/properties'
+      );
+      $maxZuschussUiSchema = new JsonFormsGroup('Maximal möglicher Gesamtzuschuss in ' . $currency, [
+        new JsonFormsControl('#/properties/reportData/properties/zuschuss/properties/gesamtMax', ''),
+      ]);
+      $foerderungUiSchema = new KursFoerderungGroup(
+        '#/properties/reportData/properties/foerderung/properties',
+        $currency,
+      );
 
-    $receiptsAppendUiSchema = new JsonFormsGroup('', [$maxZuschussUiSchema, $foerderungUiSchema]);
+      $receiptsAppendUiSchema = new JsonFormsGroup('', [$maxZuschussUiSchema, $foerderungUiSchema]);
+    }
 
-    return new ReportForm($jsonSchema, $uiSchema, $zuschussUiSchema, $receiptsAppendUiSchema);
+    return new ReportForm($jsonSchema, $uiSchema, $zuschussUiSchema ?? NULL, $receiptsAppendUiSchema ?? NULL);
   }
 
 }

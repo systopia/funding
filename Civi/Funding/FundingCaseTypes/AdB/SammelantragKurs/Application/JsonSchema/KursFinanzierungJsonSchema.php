@@ -21,6 +21,7 @@ namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\JsonSch
 
 use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItem;
 use Civi\Funding\ApplicationProcess\JsonSchema\ResourcesItem\JsonSchemaResourcesItems;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
 use Civi\RemoteTools\JsonSchema\JsonSchemaCalculate;
 use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
@@ -31,6 +32,17 @@ use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 final class KursFinanzierungJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
+    $nichtGefoerdertValidation = JsonSchema::fromArray([
+      'keyword' => 'evaluate',
+      'value' => [
+        'expression' => '!nichtGefoerdert || data == 0',
+        'variables' => [
+          'nichtGefoerdert' => new JsonSchemaDataPointer('/nichtGefoerdert'),
+        ],
+      ],
+      'message' => 'Bei nicht geförderten Maßnahmen nicht möglich.',
+    ]);
+
     parent::__construct([
       'teilnehmerbeitraege' => new JsonSchemaMoney([
         'minimum' => 0,
@@ -39,6 +51,7 @@ final class KursFinanzierungJsonSchema extends JsonSchemaObject {
           'type' => 'teilnehmerbeitraege',
           'identifier' => 'teilnehmerbeitraege',
         ]),
+        '$validations' => [$nichtGefoerdertValidation],
       ]),
       'eigenmittel' => new JsonSchemaMoney([
         'minimum' => 0,
@@ -47,6 +60,7 @@ final class KursFinanzierungJsonSchema extends JsonSchemaObject {
           'type' => 'eigenmittel',
           'identifier' => 'eigenmittel',
         ]),
+        '$validations' => [$nichtGefoerdertValidation],
       ]),
       'oeffentlicheMittel' => new JsonSchemaObject([
         'europa' => new JsonSchemaMoney([
@@ -56,6 +70,7 @@ final class KursFinanzierungJsonSchema extends JsonSchemaObject {
             'type' => 'oeffentlicheMittel/europa',
             'identifier' => 'oeffentlicheMittel.europa',
           ]),
+          '$validations' => [$nichtGefoerdertValidation],
         ]),
         'bundeslaender' => new JsonSchemaMoney([
           'minimum' => 0,
@@ -64,6 +79,7 @@ final class KursFinanzierungJsonSchema extends JsonSchemaObject {
             'type' => 'oeffentlicheMittel/bundeslaender',
             'identifier' => 'oeffentlicheMittel.bundeslaender',
           ]),
+          '$validations' => [$nichtGefoerdertValidation],
         ]),
         'staedteUndKreise' => new JsonSchemaMoney([
           'minimum' => 0,
@@ -72,6 +88,7 @@ final class KursFinanzierungJsonSchema extends JsonSchemaObject {
             'type' => 'oeffentlicheMittel/staedteUndKreise',
             'identifier' => 'oeffentlicheMittel.staedteUndKreise',
           ]),
+          '$validations' => [$nichtGefoerdertValidation],
         ]),
       ]),
       'oeffentlicheMittelGesamt' => new JsonSchemaCalculate(
@@ -100,7 +117,9 @@ final class KursFinanzierungJsonSchema extends JsonSchemaObject {
       'sonstigeMittelGesamt' => new JsonSchemaCalculate(
         'number',
         'round(sum(map(sonstigeMittel, "value.betrag")), 2)',
-        ['sonstigeMittel' => new JsonSchemaDataPointer('1/sonstigeMittel')]
+        ['sonstigeMittel' => new JsonSchemaDataPointer('1/sonstigeMittel')],
+        0,
+        ['$validations' => [$nichtGefoerdertValidation]]
       ),
       'mittelGesamt' => new JsonSchemaCalculate(
         'number',

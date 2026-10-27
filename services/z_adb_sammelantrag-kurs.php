@@ -29,6 +29,7 @@ use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\Data\KursAppl
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\Data\KursApplicationFormFilesFactory;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\JsonSchema\KursApplicationJsonSchemaFactory;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\UiSchema\KursApplicationUiSchemaFactory;
+use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\Validation\KursApplicationFormAddValidator;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\EventSubscriber\KursApplicationStatusSubscriber;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\FundingCase\Actions\KursCaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\FundingCase\Data\KursCaseFormDataFactory;
@@ -69,6 +70,8 @@ $container->autowire(KursApplicationFormDataFactory::class)
   ->addTag(KursApplicationFormDataFactory::SERVICE_TAG);
 $container->autowire(KursApplicationFormFilesFactory::class)
   ->addTag(KursApplicationFormFilesFactory::SERVICE_TAG);
+$container->autowire(KursApplicationFormAddValidator::class)
+  ->addTag(KursApplicationFormAddValidator::SERVICE_TAG);
 
 TaskServiceRegistrator::autowireAll(
   $container,
