@@ -19,21 +19,34 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\UiSchema;
 
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategorization;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class KursApplicationUiSchema extends JsonFormsGroup {
 
-  public function __construct(string $title, string $currency) {
-    $elements = [
-      new JsonFormsCategorization([
-        new KursGrunddatenUiSchema('#/properties/grunddaten/properties'),
-        new KursFinanzierungUiSchema('#/properties/finanzierung/properties', $currency),
-        new KursZuschussUiSchema($currency),
-        new KursBeschreibungUiSchema('#/properties/beschreibung/properties'),
-      ]),
+  public function __construct(string $title, string $currency, ?bool $nichtGefoerdert) {
+    $categories = [
+      new KursGrunddatenUiSchema('#/properties/grunddaten/properties'),
     ];
-    parent::__construct($title, $elements);
+
+    if (TRUE !== $nichtGefoerdert) {
+      $nichtGefoerdertRule = new JsonFormsRule(
+        'HIDE',
+        '#/properties/nichtGefoerdert',
+        JsonSchema::fromArray(['const' => TRUE])
+      );
+
+      $categories[] = new KursFinanzierungUiSchema(
+        '#/properties/finanzierung/properties', $currency, $nichtGefoerdertRule
+      );
+      $categories[] = new KursZuschussUiSchema('#/properties/zuschuss/properties', $currency, $nichtGefoerdertRule);
+    }
+
+    $categories[] = new KursBeschreibungUiSchema('#/properties/beschreibung/properties');
+
+    parent::__construct($title, [new JsonFormsCategorization($categories)]);
   }
 
 }

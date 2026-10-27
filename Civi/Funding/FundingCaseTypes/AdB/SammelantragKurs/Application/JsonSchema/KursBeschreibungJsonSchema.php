@@ -19,8 +19,8 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\JsonSchema;
 
-use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
 use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
@@ -48,7 +48,7 @@ final class KursBeschreibungJsonSchema extends JsonSchemaObject {
         new JsonSchemaString([
           'oneOf' => JsonSchemaUtil::buildTitledOneOf(self::ZIELE_OPTIONS),
         ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
-      'bildungsanteil' => new JsonSchema(['type' => ['integer', 'null'], 'minimum' => 0, 'maximum' => 100]),
+      'bildungsanteil' => new JsonSchemaInteger(['minimum' => 0, 'maximum' => 100]),
       'veranstaltungsort' => new JsonSchemaString(['minLength' => 1]),
       'kooperationspartner' => new JsonSchemaString(),
     ];
