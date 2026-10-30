@@ -53,14 +53,95 @@ final class CreateDrawdownsActionHandlerTest extends TestCase {
     );
   }
 
-  public function test(): void {
+  public function testExact(): void {
+    $action = (new CreateDrawdownsAction())
+      ->setAmountExact(1.23)
+      ->setIds([2]);
+
+    $payoutProcessBundle = PayoutProcessBundleFactory::create(
+      ['amount_total' => 12.34],
+      ['id' => 2, 'permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
+    );
+
+    $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
+      ->with(2)
+      ->willReturn($payoutProcessBundle);
+
+    $this->payoutProcessManagerMock->method('getAmountAvailable')
+      ->with($payoutProcessBundle->getPayoutProcess())
+      ->willReturn(1.23);
+
+    $drawdown = DrawdownFactory::create();
+    $this->drawdownManagerMock->expects(static::once())->method('createNew')
+      ->with($payoutProcessBundle, 1.23, 1234)
+      ->willReturn($drawdown);
+
+    static::assertSame(
+      [2 => $drawdown->toArray()],
+      $this->handler->createDrawdowns($action)
+    );
+  }
+
+  public function testExactUsesAmountAvailable(): void {
+    $action = (new CreateDrawdownsAction())
+      ->setAmountExact(1.24)
+      ->setIds([2]);
+
+    $payoutProcessBundle = PayoutProcessBundleFactory::create(
+      ['amount_total' => 12.34],
+      ['id' => 2, 'permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
+    );
+
+    $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
+      ->with(2)
+      ->willReturn($payoutProcessBundle);
+
+    $this->payoutProcessManagerMock->method('getAmountAvailable')
+      ->with($payoutProcessBundle->getPayoutProcess())
+      ->willReturn(1.23);
+
+    $drawdown = DrawdownFactory::create();
+    $this->drawdownManagerMock->expects(static::once())->method('createNew')
+      ->with($payoutProcessBundle, 1.23, 1234)
+      ->willReturn($drawdown);
+
+    static::assertSame(
+      [2 => $drawdown->toArray()],
+      $this->handler->createDrawdowns($action)
+    );
+  }
+
+  public function testExactNoAmountAvailable(): void {
+    $action = (new CreateDrawdownsAction())
+      ->setAmountExact(1.23)
+      ->setIds([2]);
+
+    $payoutProcessBundle = PayoutProcessBundleFactory::create(
+      ['amount_total' => 12.34],
+      ['id' => 2, 'permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
+    );
+
+    $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
+      ->with(2)
+      ->willReturn($payoutProcessBundle);
+
+    $this->payoutProcessManagerMock->method('getAmountAvailable')
+      ->with($payoutProcessBundle->getPayoutProcess())
+      ->willReturn(0.0);
+
+    $this->drawdownManagerMock->expects(static::never())->method('createNew');
+
+    static::assertSame([], $this->handler->createDrawdowns($action));
+  }
+
+  public function testPercent(): void {
     $action = (new CreateDrawdownsAction())
       ->setAmountPercent(10)
       ->setIds([2]);
 
     $payoutProcessBundle = PayoutProcessBundleFactory::create(
       ['amount_total' => 12.34],
-      ['permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
+      ['id' => 2, 'permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
     );
 
     $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
@@ -82,14 +163,14 @@ final class CreateDrawdownsActionHandlerTest extends TestCase {
     );
   }
 
-  public function testUsesAmountAvailable(): void {
+  public function testPercentUsesAmountAvailable(): void {
     $action = (new CreateDrawdownsAction())
       ->setAmountPercent(10)
       ->setIds([2]);
 
     $payoutProcessBundle = PayoutProcessBundleFactory::create(
       ['amount_total' => 12.34],
-      ['permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
+      ['id' => 2, 'permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
     );
 
     $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
@@ -111,14 +192,14 @@ final class CreateDrawdownsActionHandlerTest extends TestCase {
     );
   }
 
-  public function testNoAmountAvailable(): void {
+  public function testPercentNoAmountAvailable(): void {
     $action = (new CreateDrawdownsAction())
       ->setAmountPercent(10)
       ->setIds([2]);
 
     $payoutProcessBundle = PayoutProcessBundleFactory::create(
       ['amount_total' => 12.34],
-      ['permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
+      ['id' => 2, 'permissions' => [FundingCasePermissions::REVIEW_DRAWDOWN_CREATE]],
     );
 
     $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
@@ -134,6 +215,28 @@ final class CreateDrawdownsActionHandlerTest extends TestCase {
     static::assertSame([], $this->handler->createDrawdowns($action));
   }
 
+  public function testBothExactAndPercentSet(): void {
+    $action = (new CreateDrawdownsAction())
+      ->setAmountExact(1.23)
+      ->setAmountPercent(10)
+      ->setIds([2]);
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('Either amountExact or amountPercent must be set, but not both');
+
+    static::assertSame([], $this->handler->createDrawdowns($action));
+  }
+
+  public function testBotExactAndPercentNotSet(): void {
+    $action = (new CreateDrawdownsAction())
+      ->setIds([2]);
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('Either amountExact or amountPercent must be set');
+
+    static::assertSame([], $this->handler->createDrawdowns($action));
+  }
+
   public function testPermissionMissing(): void {
     $action = (new CreateDrawdownsAction())
       ->setAmountPercent(10)
@@ -141,7 +244,7 @@ final class CreateDrawdownsActionHandlerTest extends TestCase {
 
     $payoutProcessBundle = PayoutProcessBundleFactory::create(
       ['amount_total' => 12.34],
-      ['permissions' => [FundingCasePermissions::REVIEW_FINISH]],
+      ['id' => 2, 'permissions' => [FundingCasePermissions::REVIEW_FINISH]],
     );
 
     $this->payoutProcessManagerMock->method('getLastBundleByFundingCaseId')
