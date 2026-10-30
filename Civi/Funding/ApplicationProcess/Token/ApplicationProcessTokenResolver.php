@@ -51,6 +51,12 @@ class ApplicationProcessTokenResolver implements TokenResolverInterface {
       'last_application_contact_display_name' => new ResolvedToken(
         $this->getContactDisplayName($entity->getLastApplicationContactId()), 'text/plain'
       ),
+      'first_statement_of_eligibility_contact_display_name' => new ResolvedToken(
+        $this->getContactDisplayName($entity->getFirstStatementOfEligibilityContactId()), 'text/plain'
+      ),
+      'last_statement_of_eligibility_contact_display_name' => new ResolvedToken(
+        $this->getContactDisplayName($entity->getLastStatementOfEligibilityContactId()), 'text/plain'
+      ),
       default => $this->tokenResolver->resolveToken($entityName, $entity, $tokenName)
     };
   }
