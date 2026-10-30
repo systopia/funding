@@ -21,11 +21,18 @@ declare(strict_types = 1);
 namespace Civi\Funding\ClearingProcess\Token;
 
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
+use Civi\Funding\ClearingProcess\Form\ReportFormFactoryInterface;
 use Civi\Funding\DocumentRender\Token\ResolvedToken;
 use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
+use Civi\Funding\DocumentRender\Token\TokenValueLoader;
+use Civi\Funding\DocumentRender\Token\ValueConverter;
 use Civi\Funding\Entity\AbstractEntity;
 use Civi\Funding\Entity\ClearingProcessEntity;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\JsonSchema\Util\JsonSchemaValueUtil;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
+use Webmozart\Assert\Assert;
 
 /**
  * @implements TokenResolverInterface<ClearingProcessEntity>
@@ -38,18 +45,25 @@ final class ClearingProcessTokenResolver implements TokenResolverInterface {
   private array $clearingProcessBundles = [];
 
   /**
+   * @var array<int, JsonSchema>
+   */
+  private $reportJsonSchemas = [];
+
+  /**
    * @param \Civi\Funding\DocumentRender\Token\TokenResolverInterface<ClearingProcessEntity> $tokenResolver
    */
   public function __construct(
     private readonly ApplicationProcessManager $applicationProcessManager,
-    private readonly ClearingCostReceiptsTableGenerator $costReceiptTableGenerator,
+    private readonly ClearingCostReceiptsTableGenerator $costReceiptsTableGenerator,
     private readonly ClearingCostsTableGenerator $costsTableGenerator,
-    private readonly ClearingResourcesReceiptsTableGenerator $resourcesReceiptTableGenerator,
+    private readonly ClearingResourcesReceiptsTableGenerator $resourcesReceiptsTableGenerator,
     private readonly ClearingResourcesTableGenerator $resourcesTableGenerator,
+    private readonly ReportFormFactoryInterface $reportFormFactory,
     /**
      * @var \Civi\Funding\DocumentRender\Token\TokenResolverInterface<ClearingProcessEntity>
      */
-    private readonly TokenResolverInterface $tokenResolver
+    private readonly TokenResolverInterface $tokenResolver,
+    private readonly TokenValueLoader $tokenValueLoader,
   ) {}
 
   /**
@@ -74,16 +88,20 @@ final class ClearingProcessTokenResolver implements TokenResolverInterface {
 
     if ('cost_receipts_table' === $tokenName) {
       return new ResolvedToken(
-        $this->costReceiptTableGenerator->generateReceiptsTable($this->getClearingProcessBundle($entity)),
+        $this->costReceiptsTableGenerator->generateReceiptsTable($this->getClearingProcessBundle($entity)),
         'text/html'
       );
     }
 
     if ('resources_receipts_table' === $tokenName) {
       return new ResolvedToken(
-        $this->resourcesReceiptTableGenerator->generateReceiptsTable($this->getClearingProcessBundle($entity)),
+        $this->resourcesReceiptsTableGenerator->generateReceiptsTable($this->getClearingProcessBundle($entity)),
         'text/html'
       );
+    }
+
+    if (1 === preg_match('/^report_data::.+:label$/', $tokenName)) {
+      return $this->resolveTokenLabel($entityName, $entity, $tokenName);
     }
 
     return $this->tokenResolver->resolveToken($entityName, $entity, $tokenName);
@@ -103,6 +121,45 @@ final class ClearingProcessTokenResolver implements TokenResolverInterface {
 
     return $this->clearingProcessBundles[$clearingProcess->getId()]
       = new ClearingProcessEntityBundle($clearingProcess, $applicationProcessBundle);
+  }
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
+  private function resolveTokenLabel(
+    string $entityName,
+    ClearingProcessEntity $clearingProcess,
+    string $tokenName
+  ): ResolvedToken {
+    $tokenName = substr($tokenName, 0, -6);
+    [$fieldName, $path] = explode('::', $tokenName, 2);
+    $value = $this->tokenValueLoader->getValue($entityName, $clearingProcess, $tokenName);
+
+    $jsonSchema = $this->getJsonSchema($clearingProcess);
+    $propertyPath = array_merge(['reportData'], explode('.', $path));
+    $propertySchema = JsonSchemaUtil::getPropertySchemaAt($jsonSchema, $propertyPath);
+
+    if (NULL === $propertySchema) {
+      return ValueConverter::toResolvedToken($value);
+    }
+
+    if (is_array($value)) {
+      Assert::allNullOrScalar($value);
+
+      return ValueConverter::toResolvedToken(
+        array_map(fn ($v) => JsonSchemaValueUtil::valueToString($v, $propertySchema), $value)
+      );
+    }
+
+    Assert::nullOrScalar($value);
+
+    return ValueConverter::toResolvedToken(JsonSchemaValueUtil::valueToString($value, $propertySchema));
+  }
+
+  private function getJsonSchema(ClearingProcessEntity $clearingProcess): JsonSchema {
+    return $this->reportJsonSchemas[$clearingProcess->getId()]
+      ??= $this->reportFormFactory
+        ->createReportForm($this->getClearingProcessBundle($clearingProcess))->getJsonSchema();
   }
 
 }
