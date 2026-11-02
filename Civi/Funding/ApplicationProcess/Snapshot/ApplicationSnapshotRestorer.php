@@ -68,6 +68,18 @@ final class ApplicationSnapshotRestorer implements ApplicationSnapshotRestorerIn
     $applicationProcess->setLastApplicationContactId($applicationSnapshot->getLastApplicationContactId());
     $applicationProcess->setIsReviewCalculative($applicationSnapshot->getIsReviewCalculative());
     $applicationProcess->setIsReviewContent($applicationSnapshot->getIsReviewContent());
+    $applicationProcess->setFirstStatementOfEligibilityDate(
+      $applicationSnapshot->getFirstStatementOfEligibilityDate()
+    );
+    $applicationProcess->setFirstStatementOfEligibilityContactId(
+      $applicationSnapshot->getFirstStatementOfEligibilityContactId()
+    );
+    $applicationProcess->setLastStatementOfEligibilityDate(
+      $applicationSnapshot->getLastStatementOfEligibilityDate()
+    );
+    $applicationProcess->setLastStatementOfEligibilityContactId(
+      $applicationSnapshot->getLastStatementOfEligibilityContactId()
+    );
     $applicationProcess->setIsEligible($applicationSnapshot->getIsEligible());
     $applicationProcess->setIsInWork($applicationSnapshot->getIsInWork());
     $applicationProcess->setIsRejected($applicationSnapshot->getIsRejected());

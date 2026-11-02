@@ -25,6 +25,7 @@ use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreCreateEvent;
 use Civi\Funding\Event\ApplicationProcess\ApplicationProcessPreUpdateEvent;
 use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
+use Civi\RemoteTools\RequestContext\RequestContextInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
 
@@ -38,8 +39,6 @@ final class ApplicationProcessStatusFlagsSubscriber implements EventSubscriberIn
    */
   public const PRIORITY = -100;
 
-  private FundingCaseTypeMetaDataProviderInterface $metaDataProvider;
-
   /**
    * @inheritDoc
    */
@@ -50,9 +49,10 @@ final class ApplicationProcessStatusFlagsSubscriber implements EventSubscriberIn
     ];
   }
 
-  public function __construct(FundingCaseTypeMetaDataProviderInterface $metaDataProvider) {
-    $this->metaDataProvider = $metaDataProvider;
-  }
+  public function __construct(
+    private readonly FundingCaseTypeMetaDataProviderInterface $metaDataProvider,
+    private readonly RequestContextInterface $requestContext
+  ) {}
 
   public function onPreCreate(ApplicationProcessPreCreateEvent $event): void {
     $this->updateStatusFlags($event->getApplicationProcessBundle());
@@ -71,6 +71,18 @@ final class ApplicationProcessStatusFlagsSubscriber implements EventSubscriberIn
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
     $status = $metaData->getApplicationProcessStatus($applicationProcess->getStatus());
     Assert::notNull($status);
+
+    if (TRUE === $status->isEligible() && TRUE !== $applicationProcess->getIsEligible()) {
+      $statementOfEligibilityDate = new \DateTime(\CRM_Utils_Time::date('YmdHis'));
+      if (NULL === $applicationProcess->getFirstStatementOfEligibilityDate()) {
+        $applicationProcess->setFirstStatementOfEligibilityDate($statementOfEligibilityDate);
+        $applicationProcess->setFirstStatementOfEligibilityContactId($this->requestContext->getContactId());
+      }
+
+      $applicationProcess->setLastStatementOfEligibilityDate($statementOfEligibilityDate);
+      $applicationProcess->setLastStatementOfEligibilityContactId($this->requestContext->getContactId());
+    }
+
     $applicationProcess
       ->setIsEligible($status->isEligible())
       ->setIsInWork($status->isInWork())

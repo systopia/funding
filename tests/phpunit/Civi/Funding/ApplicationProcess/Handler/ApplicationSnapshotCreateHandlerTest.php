@@ -105,6 +105,10 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
       'first_application_contact_id' => 1,
       'last_application_date' => '2026-02-02 02:02:02',
       'last_application_contact_id' => 2,
+      'first_statement_of_eligibility_date' => '2026-03-03 03:03:03',
+      'first_statement_of_eligibility_contact_id' => 3,
+      'last_statement_of_eligiblity_date' => '2026-04-04 04:04:04',
+      'last_statement_of_eligibility_contact_id' => 4,
       'is_eligible' => TRUE,
     ]);
     $applicationProcess = $applicationProcessBundle->getApplicationProcess();
@@ -161,6 +165,22 @@ final class ApplicationSnapshotCreateHandlerTest extends TestCase {
         static::assertSame(
           $applicationProcess->getIsReviewCalculative(),
           $applicationSnapshot->getIsReviewCalculative()
+        );
+        static::assertEquals(
+          $applicationProcess->getFirstStatementOfEligibilityDate(),
+          $applicationSnapshot->getFirstStatementOfEligibilityDate()
+        );
+        static::assertSame(
+          $applicationProcess->getFirstStatementOfEligibilityContactId(),
+          $applicationSnapshot->getFirstStatementOfEligibilityContactId()
+        );
+        static::assertEquals(
+          $applicationProcess->getLastStatementOfEligibilityDate(),
+          $applicationSnapshot->getLastStatementOfEligibilityDate()
+        );
+        static::assertSame(
+          $applicationProcess->getLastStatementOfEligibilityContactId(),
+          $applicationSnapshot->getLastStatementOfEligibilityContactId()
         );
         static::assertSame($applicationProcess->getIsEligible(), $applicationSnapshot->getIsEligible());
         static::assertSame(['foo.bar' => 'baz'], $applicationSnapshot->getCustomFields());

@@ -282,10 +282,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     E::schema()->alterSchemaField(
       'FundingApplicationProcess',
       'first_application_date',
-      [
-        'sql_type' => 'timestamp',
-        'input_type' => 'Select Date',
-      ],
+      ['sql_type' => 'timestamp'],
       'AFTER amount_eligible'
     );
     E::schema()->alterSchemaField(
@@ -304,10 +301,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     E::schema()->alterSchemaField(
       'FundingApplicationProcess',
       'last_application_date',
-      [
-        'sql_type' => 'timestamp',
-        'input_type' => 'Select Date',
-      ],
+      ['sql_type' => 'timestamp'],
       'AFTER amount_eligible'
     );
     E::schema()->alterSchemaField(
@@ -327,10 +321,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     E::schema()->alterSchemaField(
       'FundingApplicationSnapshot',
       'first_application_date',
-      [
-        'sql_type' => 'timestamp',
-        'input_type' => 'Select Date',
-      ],
+      ['sql_type' => 'timestamp'],
       'AFTER amount_eligible'
     );
     E::schema()->alterSchemaField(
@@ -349,10 +340,7 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
     E::schema()->alterSchemaField(
       'FundingApplicationSnapshot',
       'last_application_date',
-      [
-        'sql_type' => 'timestamp',
-        'input_type' => 'Select Date',
-      ],
+      ['sql_type' => 'timestamp'],
       'AFTER amount_eligible'
     );
     E::schema()->alterSchemaField(
@@ -375,6 +363,89 @@ final class CRM_Funding_Upgrader extends CRM_Extension_Upgrader_Base {
   public function upgrade_0027(): bool {
     $this->ctx->log->info('Applying database migration 0027');
     E::schema()->createEntityTable('upgrade/0027/FundingAmountApprovedChangeRequest.entityType.php');
+
+    return TRUE;
+  }
+
+  public function upgrade_0028(): bool {
+    $this->ctx->log->info('Applying database migration 0028');
+    E::schema()->alterSchemaField(
+      'FundingApplicationProcess',
+      'first_statement_of_eligibility_date',
+      ['sql_type' => 'timestamp'],
+      'AFTER reviewer_calc_contact_id',
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationProcess',
+      'first_statement_of_eligibility_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER first_statement_of_eligibility_date',
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationProcess',
+      'last_statement_of_eligibility_date',
+      ['sql_type' => 'timestamp'],
+      'AFTER first_statement_of_eligibility_contact_id',
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationProcess',
+      'last_statement_of_eligibility_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER last_statement_of_eligibility_date',
+    );
+
+    E::schema()->alterSchemaField(
+      'FundingApplicationSnapshot',
+      'first_statement_of_eligibility_date',
+      ['sql_type' => 'timestamp'],
+      'AFTER is_review_calculative',
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationSnapshot',
+      'first_statement_of_eligibility_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER first_statement_of_eligibility_date',
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationSnapshot',
+      'last_statement_of_eligibility_date',
+      ['sql_type' => 'timestamp'],
+      'AFTER first_statement_of_eligibility_contact_id',
+    );
+    E::schema()->alterSchemaField(
+      'FundingApplicationSnapshot',
+      'last_statement_of_eligibility_contact_id',
+      [
+        'sql_type' => 'int unsigned',
+        'entity_reference' => [
+          'entity' => 'Contact',
+          'key' => 'id',
+          'on_delete' => 'RESTRICT',
+        ],
+      ],
+      'AFTER last_statement_of_eligibility_date',
+    );
 
     return TRUE;
   }

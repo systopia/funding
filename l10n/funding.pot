@@ -498,6 +498,14 @@ msgstr ""
 msgid "Last Application Contact Display Name"
 msgstr ""
 
+#: Civi/Funding/ApplicationProcess/Token/ApplicationProcessTokenNameExtractor.php
+msgid "First Statement of Eligibility Contact Display Name"
+msgstr ""
+
+#: Civi/Funding/ApplicationProcess/Token/ApplicationProcessTokenNameExtractor.php
+msgid "Last Statement of Eligibility Contact Display Name"
+msgstr ""
+
 #: Civi/Funding/ApplicationProcess/Validator/IsReviewCalculativeValidator.php
 msgid "Permission to change calculative review result is missing."
 msgstr ""
@@ -2512,6 +2520,22 @@ msgstr ""
 
 #: schema/ApplicationProcess.entityType.php schema/ClearingProcess.entityType.php
 msgid "Reviewer Calc Contact ID"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "First Statement of Eligibility At"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "First Statement of Eligibility By"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Last Statement of Eligibility At"
+msgstr ""
+
+#: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
+msgid "Last Statement of Eligibility By"
 msgstr ""
 
 #: schema/ApplicationProcess.entityType.php schema/ApplicationSnapshot.entityType.php
