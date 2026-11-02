@@ -34,7 +34,7 @@ use CRM_Funding_ExtensionUtil as E;
  *   \Civi\Funding\Entity\ClearingCostItemEntity
  * >
  */
-final class ClearingCostsTableGenerator extends AbstractClearingTableGenerator {
+class ClearingCostsTableGenerator extends AbstractClearingTableGenerator {
 
   public function __construct(
     private readonly ApplicationCostItemManager $appCostItemManager,

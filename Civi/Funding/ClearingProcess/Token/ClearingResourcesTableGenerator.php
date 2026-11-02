@@ -34,7 +34,7 @@ use CRM_Funding_ExtensionUtil as E;
  *   \Civi\Funding\Entity\ClearingResourcesItemEntity
  * >
  */
-final class ClearingResourcesTableGenerator extends AbstractClearingTableGenerator {
+class ClearingResourcesTableGenerator extends AbstractClearingTableGenerator {
 
   public function __construct(
     private readonly ApplicationResourcesItemManager $appResourcesItemManager,

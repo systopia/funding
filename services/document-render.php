@@ -33,6 +33,7 @@ use Civi\Funding\DocumentRender\Token\TokenNameExtractorCacheDecorator;
 use Civi\Funding\DocumentRender\Token\TokenNameExtractorInterface;
 use Civi\Funding\DocumentRender\Token\TokenResolver;
 use Civi\Funding\DocumentRender\Token\TokenResolverInterface;
+use Civi\Funding\DocumentRender\Token\TokenValueLoader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 // Don't fail in event subscriber pass, when CiviOffice is not available.
@@ -61,3 +62,4 @@ $container->autowire(TokenNameExtractorInterface::class, TokenNameExtractor::cla
 $container->autowire(TokenNameExtractorCacheDecorator::class)
   ->setDecoratedService(TokenNameExtractorInterface::class);
 $container->autowire(TokenResolverInterface::class, TokenResolver::class);
+$container->autowire(TokenValueLoader::class);

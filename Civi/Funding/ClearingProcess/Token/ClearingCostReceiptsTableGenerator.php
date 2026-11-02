@@ -33,7 +33,7 @@ use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
  *   \Civi\Funding\Entity\ClearingCostItemEntity
  * >
  */
-final class ClearingCostReceiptsTableGenerator extends AbstractClearingReceiptsTableGenerator {
+class ClearingCostReceiptsTableGenerator extends AbstractClearingReceiptsTableGenerator {
 
   public function __construct(
     private readonly ApplicationCostItemManager $appCostItemManager,

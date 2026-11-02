@@ -16,12 +16,6 @@ parameters:
 			message: '#^Call to deprecated method withConsecutive\(\) of class PHPUnit\\Framework\\MockObject\\Builder\\InvocationMocker\.$#'
 			identifier: method.deprecated
 			count: 1
-			path: tests/phpunit/Civi/Funding/DocumentRender/Token/TokenResolverTest.php
-
-		-
-			message: '#^Call to deprecated method withConsecutive\(\) of class PHPUnit\\Framework\\MockObject\\Builder\\InvocationMocker\.$#'
-			identifier: method.deprecated
-			count: 1
 			path: tests/phpunit/Civi/Funding/EventSubscriber/ApplicationProcess/ApplicationProcessStatusSubscriberTest.php
 
 		-
