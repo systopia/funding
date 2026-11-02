@@ -19,47 +19,28 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\SonstigeAktivitaet\Report\JsonSchema;
 
-use Civi\RemoteTools\JsonSchema\JsonSchema;
-use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
-use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class AVK1SachberichtJsonSchema extends JsonSchemaObject {
 
   public function __construct() {
     parent::__construct([
-      'durchgefuehrt' => new JsonSchemaString([
-        'oneOf' => JsonSchemaUtil::buildTitledOneOf2([
-          'entsprechend dem geplanten Programm' => 'geplant',
-          'mit folgenden wesentlichen Änderungen (kurze Begründung für die Änderung):' => 'geaendert',
-        ]),
-      ]),
-      'aenderungen' => new JsonSchemaString([
-        '$validations' => [
-          JsonSchema::fromArray([
-            'keyword' => 'evaluate',
-            'value' => [
-              'expression' => 'data != "" || durchgefuehrt === "geplant"',
-              'variables' => [
-                'durchgefuehrt' => new JsonSchemaDataPointer('1/durchgefuehrt'),
-              ],
-            ],
-            'message' => 'Bitte Begründung für die Änderungen angeben.',
-          ]),
-        ],
-      ], TRUE),
-      'thematischeSchwerpunkte' => new JsonSchemaString(['minLength' => 1]),
-      'methoden' => new JsonSchemaString(['minLength' => 1]),
+      'inhalteUndZiele' => new JsonSchemaString(['minLength' => 1500]),
       'zielgruppe' => new JsonSchemaString(['minLength' => 1]),
-      'sonstiges' => new JsonSchemaString(['minLength' => 1]),
+      'erfahrungen' => new JsonSchemaString(['minLength' => 1500]),
+      'einbeziehungTeilnehmende' => new JsonSchemaString(['minLength' => 1]),
+      'inklusivesVorgehen' => new JsonSchemaString(['minLength' => 1]),
+      'ergebnisse' => new JsonSchemaString(['minLength' => 600]),
+      'kursinhalte' => new JsonSchemaString(['minLength' => 1, 'maxLength' => 200]),
     ], [
       'required' => [
-        'durchgefuehrt',
-        'thematischeSchwerpunkte',
-        'methoden',
+        'inhalteUndZiele',
         'zielgruppe',
-        'sonstiges',
+        'erfahrungen',
+        'inklusivesVorgehen',
+        'ergebnisse',
+        'kursinhalte',
       ],
     ]);
   }
