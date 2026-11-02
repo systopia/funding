@@ -25,8 +25,12 @@ use Civi\Funding\Api4\Action\Traits\IdsParameterTrait;
 use Civi\RemoteTools\Api4\Action\Traits\ActionHandlerRunTrait;
 
 /**
- * @method int getAmountPercent()
- * @method $this setAmountPercent(int $amountPercent)
+ * @method float|null getAmountExact()
+ * @method $this setAmountExact(float|null $amountExact)
+ * @method int|null getAmountPercent()
+ * @method $this setAmountPercent(int|null $amountPercent)
+ *
+ * @see \Civi\Funding\FundingCase\Api4\ActionHandler\CreateDrawdownsActionHandler
  */
 final class CreateDrawdownsAction extends AbstractAction {
 
@@ -35,8 +39,12 @@ final class CreateDrawdownsAction extends AbstractAction {
   use IdsParameterTrait;
 
   /**
+   * @var float
+   */
+  protected ?float $amountExact = NULL;
+
+  /**
    * @var int
-   * @required
    */
   protected ?int $amountPercent = NULL;
 

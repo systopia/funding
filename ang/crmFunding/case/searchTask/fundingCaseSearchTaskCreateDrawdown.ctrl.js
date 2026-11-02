@@ -23,6 +23,9 @@
     const model = $scope.model;
     const ctrl = this;
 
+    $scope.amountPercent = null;
+    $scope.amountExact = null;
+
     // HTML in AngularJS expressions is not possible, thus we define the string here.
     $scope.amountPercentHelp = ts('The amount of each created drawdown is: <code>This value × amount approved ÷ 100</code>. In case that exceeds the amount available, the amount available will be used.');
 
@@ -41,6 +44,7 @@
       crmApi4('FundingCase', 'createDrawdowns', {
         ids: model.ids,
         amountPercent: $scope.amountPercent,
+        amountExact: $scope.amountExact,
       }).then(() => {
         dialogService.close('crmSearchTask');
       }, (failure) => {
