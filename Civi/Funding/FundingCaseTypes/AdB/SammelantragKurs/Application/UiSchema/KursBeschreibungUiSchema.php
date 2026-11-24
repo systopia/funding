@@ -20,11 +20,13 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class KursBeschreibungUiSchema extends JsonFormsCategory {
 
-  public function __construct(string $scopePrefix) {
+  public function __construct(string $scopePrefix, bool $report = FALSE) {
     parent::__construct('Beschreibung des Vorhabens', [
       new JsonFormsControl(
         "$scopePrefix/ziele", 'Welche Ziele hat die Veranstaltung? (Mehrfachauswahl möglich)'
@@ -42,7 +44,29 @@ EOD
         "$scopePrefix/veranstaltungsort", 'Wo findet die Veranstaltung statt?'
       ),
       new JsonFormsControl(
-        "$scopePrefix/kooperationspartner", 'Kooperationspartner'
+        "$scopePrefix/kooperationspartner",
+        'Kooperationspartner*innen',
+        sprintf(<<<'EOD'
+Bei dieser Aktivität der außerschulischen politischen Bildung %1$s mit
+Partner*innen kooperiert. Partner*innen sind Organisationen, mit denen die
+Veranstaltung gemeinsam konzipiert, vorbereitet und/oder durchgeführt %1$s.
+(Mehrfachnennungen möglich)
+EOD,
+        $report ? 'wurde' : 'wird'),
+        ['descriptionDisplay' => 'before']
+      ),
+      new JsonFormsControl(
+        "$scopePrefix/andereKooperationspartner",
+        'Andere Kooperationspartner*innen',
+        'Bitte hier benennen, welchem Bereich der/die anderen Kooperationspartner*innen zuzuordnen sind.',
+        ['hideLabel' => TRUE],
+        [
+          'rule' => new JsonFormsRule(
+            'ENABLE',
+            "$scopePrefix/kooperationspartner",
+            JsonSchema::fromArray(['contains' => ['const' => 'andere']])
+          ),
+        ]
       ),
     ]);
   }

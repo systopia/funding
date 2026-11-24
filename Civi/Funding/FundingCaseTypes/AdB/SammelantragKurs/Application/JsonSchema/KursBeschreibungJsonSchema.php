@@ -19,7 +19,9 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaInteger;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
@@ -42,6 +44,20 @@ final class KursBeschreibungJsonSchema extends JsonSchemaObject {
     'kinderJugendhilfe' => 'Weiterentwicklung der Kinder- und Jugendhilfe',
   ];
 
+  private const KOOPERATIONSPARTNER_OPTIONS = [
+    'keine' => 'keine Kooperationspartner*innen',
+    'betrieb' => 'Betrieb',
+    'schule' => 'Schule',
+    'hochschule' => 'Universität/Fachhichschule',
+    'jugendverband' => 'Jugendverband',
+    'sportverein' => 'Sportverein',
+    'offeneKinderUndJugendarbeit' => 'Offene Kinder- und Jugendarbeit',
+    'interkulturelleBildung' => 'Interkulturelle Bildung',
+    'kinderUndJugendhilfe' => 'Kinder- und Jugendhilfe',
+    'strafvollzug' => 'Jugendstrafvollzug/Justizvollzugsanstalt o.ä.',
+    'andere' => 'Andere Kooperationspartner*innen, und zwar:',
+  ];
+
   public function __construct() {
     $properties = [
       'ziele' => new JsonSchemaArray(
@@ -50,10 +66,31 @@ final class KursBeschreibungJsonSchema extends JsonSchemaObject {
         ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
       'bildungsanteil' => new JsonSchemaInteger(['minimum' => 0, 'maximum' => 100]),
       'veranstaltungsort' => new JsonSchemaString(['minLength' => 1]),
-      'kooperationspartner' => new JsonSchemaString(),
+      'kooperationspartner' => new JsonSchemaArray(
+        new JsonSchemaString([
+          'oneOf' => JsonSchemaUtil::buildTitledOneOf(self::KOOPERATIONSPARTNER_OPTIONS),
+        ]), ['uniqueItems' => TRUE, 'minItems' => 1]),
+      'andereKooperationspartner' => new JsonSchemaString([
+        'maxLength' => 300,
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || "andere" not in kooperationspartner',
+              'variables' => [
+                'kooperationspartner' => new JsonSchemaDataPointer('1/kooperationspartner'),
+              ],
+            ],
+            'message' => 'Bitte die anderen Kooperationspartner*innen angeben.',
+          ]),
+        ],
+      ], TRUE),
     ];
 
-    parent::__construct($properties, ['required' => ['ziele', 'bildungsanteil', 'veranstaltungsort']]);
+    parent::__construct(
+      $properties,
+      ['required' => ['ziele', 'bildungsanteil', 'veranstaltungsort', 'kooperationspartner']]
+    );
   }
 
 }

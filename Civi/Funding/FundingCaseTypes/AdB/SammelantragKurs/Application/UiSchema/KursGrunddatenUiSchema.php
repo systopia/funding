@@ -30,13 +30,25 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
    * @param bool $report TRUE if used for report.
    */
   public function __construct(string $scopePrefix, bool $report = FALSE) {
-    $teilnehmerElements = [
+    $teilnehmerGenderElements = [
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/weiblich", 'weiblich'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/maennlich", 'männlich'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/divers", 'divers'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/genderKeineAngabe", 'keine Angabe'),
+    ];
+    $teilnehmerAlterElements = [
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/alter0bis5", '0 bis 5 Jahre'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/alter6bis9", '6 bis 9 Jahre'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/alter10bis12", '10 bis 12 Jahre'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/alter13bis16", '13 bis 16 Jahre'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/alter17bis20", '17 bis 20 Jahre'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/alter21bis26", '21 bis 26 Jahre'),
+      new JsonFormsControl("$scopePrefix/teilnehmer/properties/alterAb27", 'ab 27 Jahre Jahre'),
+    ];
+    $teilnehmerAllgemeinElements = [
       new JsonFormsControl(
-        "$scopePrefix/teilnehmer/properties/gesamt", 'Gesamtanzahl der Teilnehmer*innen',
+        "$scopePrefix/teilnehmer/properties/gesamt", 'Anzahl der Teilnehmenden gesamt',
       ),
-      new JsonFormsControl("$scopePrefix/teilnehmer/properties/weiblich", 'davon weiblich'),
-      new JsonFormsControl("$scopePrefix/teilnehmer/properties/divers", 'davon divers'),
-      new JsonFormsControl("$scopePrefix/teilnehmer/properties/unter27", 'davon U27'),
       new JsonFormsControl(
         "$scopePrefix/teilnehmer/properties/inJugendhilfeEhrenamtlichTaetig",
         'davon in der Kinder- und Jugendhilfe (Multiplikator*innen-Seminare) ehrenamtlich tätig',
@@ -50,11 +62,11 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
       ),
     ];
     if ($report) {
-      $teilnehmerElements[] = new JsonFormsControl(
+      $teilnehmerAllgemeinElements[] = new JsonFormsControl(
         "$scopePrefix/teilnehmer/properties/referentenMitHonorar",
         'davon Referent*innen, bei denen tatsächlich ein Honorar gezahlt wurde',
       );
-      $teilnehmerElements[] = new JsonFormsControl(
+      $teilnehmerAllgemeinElements[] = new JsonFormsControl(
         "$scopePrefix/teilnehmer/properties/mitFahrtkosten",
         'davon Personen, bei denen tatsächlich Fahrtkosten angefallen sind',
       );
@@ -77,7 +89,29 @@ final class KursGrunddatenUiSchema extends JsonFormsCategory {
         'removeButtonLabel' => 'Zeitraum entfernen',
       ]),
       new JsonFormsControl("$scopePrefix/programmtage", 'Programmtage'),
-      new JsonFormsGroup('Teilnehmer*innen', $teilnehmerElements),
+      new JsonFormsGroup(
+        'Anzahl der Teilnehmenden nach Gender',
+        $teilnehmerGenderElements,
+        <<<EOD
+Um statistisch nachweisen zu können, dass wir erfolgreich Maßnahmen des
+Gendermainstreaming umsetzen, zu denen wir qua KJP-Förderung verpflichtet sind,
+erheben wir entsprechend der TN-Listen Angaben zum Geschlecht. Da wir es jedoch
+als problematisch ansehen eine Positionierung von Jugendlichen zu erzwingen, ist
+nur die Angabe zur Anzahl weiblicher Personen in dieser Abfrage verpflichtend.
+EOD
+      ),
+      new JsonFormsGroup(
+        'Alterskohorten der Teilnehmenden',
+        $teilnehmerAlterElements,
+      ),
+      new JsonFormsGroup(
+        'Teilnehmende',
+        $teilnehmerAllgemeinElements,
+        <<<EOD
+Bitte bei sämtlichen Daten die Referent*innen berücksichtigen. Personen, die hauptamtlich beim Träger angestellt sind,
+gelten hier nicht als Teilnehmende.
+EOD,
+      ),
       new JsonFormsControl("$scopePrefix/teilnehmertage", 'Teilnehmendentage'),
     ];
 

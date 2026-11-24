@@ -20,15 +20,56 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\JsonSchema;
 
+use Civi\RemoteTools\JsonSchema\JsonSchema;
+use Civi\RemoteTools\JsonSchema\JsonSchemaArray;
+use Civi\RemoteTools\JsonSchema\JsonSchemaDataPointer;
 use Civi\RemoteTools\JsonSchema\JsonSchemaObject;
 use Civi\RemoteTools\JsonSchema\JsonSchemaString;
+use Civi\RemoteTools\JsonSchema\Util\JsonSchemaUtil;
 
 final class KursSachberichtJsonSchema extends JsonSchemaObject {
+
+  private const SCHULISCHER_BERUFLICHER_KONTEXT_OPTIONS = [
+    'kindergarten' => 'Kindertagesstätte/Kindertageseinrichtung/Kindergarten',
+    'grundschule' => 'Grundschule/Orientierungsstufe',
+    'gesamtschule' => 'Gesamtschule',
+    'sekundarstufe1' => 'Sekundarstufe 1 (Real- oder Gemeinschaftsschule)',
+    'sekundarstufe2' => 'Sekundarstufe 2 / Gymnasium',
+    'sonderschule' => 'Sonderschule/Förderzentrum',
+    'freiwilligendienst' => 'Jugendliche im Freiwilligendienst',
+    'ausbildung' => 'Auszubildende/Berufsschule',
+    'berufstaetig' => 'Berufstätige',
+    'arbeitslos' => 'Arbeitslose',
+    'studium' => 'Studierende',
+    'anderer' => 'anderer Kontext/Status/Berufsfeld; und zwar:',
+  ];
 
   public function __construct() {
     parent::__construct([
       'inhalteUndZiele' => new JsonSchemaString(['minLength' => 1500]),
       'zielgruppe' => new JsonSchemaString(['minLength' => 1]),
+      'schulischerBeruflicherKontext' => new JsonSchemaArray(
+        new JsonSchemaString([
+          'oneOf' => JsonSchemaUtil::buildTitledOneOf(self::SCHULISCHER_BERUFLICHER_KONTEXT_OPTIONS),
+        ]), [
+          'uniqueItems' => TRUE,
+        ]
+      ),
+      'andererSchulischerBeruflicherKontext' => new JsonSchemaString([
+        'maxLength' => 300,
+        '$validations' => [
+          JsonSchema::fromArray([
+            'keyword' => 'evaluate',
+            'value' => [
+              'expression' => 'data != "" || "anderer" not in schulischerBeruflicherKontext',
+              'variables' => [
+                'schulischerBeruflicherKontext' => new JsonSchemaDataPointer('1/schulischerBeruflicherKontext'),
+              ],
+            ],
+            'message' => 'Bitte Kontext/Status/Berufsfeld angeben.',
+          ]),
+        ],
+      ], TRUE),
       'erfahrungen' => new JsonSchemaString(['minLength' => 1500]),
       'einbeziehungTeilnehmende' => new JsonSchemaString(['minLength' => 1]),
       'inklusivesVorgehen' => new JsonSchemaString(['minLength' => 1]),
@@ -38,6 +79,8 @@ final class KursSachberichtJsonSchema extends JsonSchemaObject {
       'required' => [
         'inhalteUndZiele',
         'zielgruppe',
+        'schulischerBeruflicherKontext',
+        'andererSchulischerBeruflicherKontext',
         'erfahrungen',
         'inklusivesVorgehen',
         'ergebnisse',

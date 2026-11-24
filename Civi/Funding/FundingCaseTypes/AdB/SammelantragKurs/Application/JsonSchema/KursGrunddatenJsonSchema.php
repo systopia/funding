@@ -89,8 +89,16 @@ EOD,
       'teilnehmer' => new JsonSchemaObject([
         'gesamt' => new JsonSchemaInteger(['minimum' => 1]),
         'weiblich' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'maennlich' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'divers' => new JsonSchemaInteger(['minimum' => 0], TRUE),
-        'unter27' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'genderKeineAngabe' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'alter0bis5' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'alter6bis9' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'alter10bis12' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'alter13bis16' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'alter17bis20' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'alter21bis26' => new JsonSchemaInteger(['minimum' => 0], TRUE),
+        'alterAb27' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'inJugendhilfeEhrenamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'inJugendhilfeHauptamtlichTaetig' => new JsonSchemaInteger(['minimum' => 0], TRUE),
         'referenten' => new JsonSchemaInteger(['minimum' => 0]),
@@ -153,8 +161,13 @@ EOD,
   private function addReportValidations(): void {
     $requiredTeilnehmerIntegers = [
       'weiblich',
-      'divers',
-      'unter27',
+      'alter0bis5',
+      'alter6bis9',
+      'alter10bis12',
+      'alter13bis16',
+      'alter17bis20',
+      'alter21bis26',
+      'alterAb27',
       'inJugendhilfeEhrenamtlichTaetig',
       'inJugendhilfeHauptamtlichTaetig',
       'referenten',
@@ -162,9 +175,9 @@ EOD,
       'mitFahrtkosten',
     ];
 
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
     $this['properties']['teilnehmer']['required']
-    // @phpstan-ignore-next-line
+      // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, argument.type
       = array_merge($this['properties']['teilnehmer']['required'], $requiredTeilnehmerIntegers);
 
     foreach ($requiredTeilnehmerIntegers as $property) {

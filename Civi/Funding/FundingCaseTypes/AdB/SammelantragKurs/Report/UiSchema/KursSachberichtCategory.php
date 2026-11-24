@@ -21,8 +21,10 @@ declare(strict_types = 1);
 namespace Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\UiSchema;
 
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
+use Civi\RemoteTools\JsonForms\JsonFormsRule;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsCategory;
 use Civi\RemoteTools\JsonForms\Layout\JsonFormsGroup;
+use Civi\RemoteTools\JsonSchema\JsonSchema;
 
 final class KursSachberichtCategory extends JsonFormsCategory {
 
@@ -57,6 +59,28 @@ Wer waren die Teilnehmenden? An wen richtete sich die Veranstaltung primär? bsp
 Fluchtbiographie; queere junge Menschen…
 EOD,
             ['descriptionDisplay' => 'before']
+          ),
+        ]
+      ),
+      new JsonFormsGroup(
+        'Schulischer oder beruflicher Kontext der Teilnehmenden',
+        [
+          new JsonFormsControl(
+            "$scopePrefix/schulischerBeruflicherKontext",
+          'Welcher schulischen oder beruflichen Gruppe waren die Teilnehmenden zuzuordnen? (Mehrfachnennung möglich)'
+          ),
+          new JsonFormsControl(
+            "$scopePrefix/andererSchulischerBeruflicherKontext",
+            'Anderer Kontext/Status/Berufsfeld',
+            NULL,
+            ['hideLabel' => TRUE],
+            [
+              'rule' => new JsonFormsRule(
+                'ENABLE',
+                "$scopePrefix/schulischerBeruflicherKontext",
+                JsonSchema::fromArray(['contains' => ['const' => 'anderer']])
+              ),
+            ]
           ),
         ]
       ),
