@@ -19,31 +19,17 @@ declare(strict_types = 1);
 
 namespace Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet;
 
-use Civi\Funding\FundingCaseType\MetaData\AbstractFundingCaseTypeMetaData;
 use Civi\Funding\FundingCaseType\MetaData\CostItemType;
-use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessActions;
-use Civi\Funding\FundingCaseType\MetaData\DefaultApplicationProcessStatuses;
 use Civi\Funding\FundingCaseType\MetaData\ResourcesItemType;
-use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessStatuses;
-use Civi\Funding\FundingCaseType\MetaData\ReworkApplicationProcessActions;
+use Civi\Funding\FundingCaseTypes\DVV\AbstractDvvFundingCaseTypeMetaData;
 
-final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
+final class AVK1MetaData extends AbstractDvvFundingCaseTypeMetaData {
 
   public const NAME = AVK1Constants::FUNDING_CASE_TYPE_NAME;
 
   public function getName(): string {
     return self::NAME;
   }
-
-  /**
-   * @var non-empty-array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessAction>|null
-   */
-  private ?array $applicationProcessActions = NULL;
-
-  /**
-   * @var non-empty-array<string, \Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus>|null
-   */
-  private ?array $applicationProcessStatuses = NULL;
 
   /**
    * @phpstan-var array<string, CostItemType>
@@ -54,60 +40,6 @@ final class AVK1MetaData extends AbstractFundingCaseTypeMetaData {
    * @phpstan-var array<string, ResourcesItemType>
    */
   private ?array $resourcesItemTypes = NULL;
-
-  /**
-   * @inheritDoc
-   */
-  public function getApplicationProcessActions(): array {
-    return $this->applicationProcessActions ??= [
-      // Applicant actions.
-      'save' => DefaultApplicationProcessActions::save(),
-      'apply' => DefaultApplicationProcessActions::apply(
-        'Einreichen',
-        'Nach der Einreichung kann der Antrag nicht mehr verändert werden. Wollen Sie fortfahren?'
-      ),
-      'withdraw' => DefaultApplicationProcessActions::withdraw(),
-      'delete' => DefaultApplicationProcessActions::delete(),
-      // Reviewer actions.
-      'review' => DefaultApplicationProcessActions::review(),
-      'approve-calculative' => DefaultApplicationProcessActions::approveCalculative(),
-      'reject-calculative' => DefaultApplicationProcessActions::rejectCalculative(),
-      'approve-content' => DefaultApplicationProcessActions::approveContent(),
-      'reject-content' => DefaultApplicationProcessActions::rejectContent(),
-      'request-change' => DefaultApplicationProcessActions::requestChange(),
-      'approve' => DefaultApplicationProcessActions::approve(),
-      'reject' => DefaultApplicationProcessActions::reject(),
-      'move-to-new-funding-case' => DefaultApplicationProcessActions::moveToNewFundingCase(),
-      // Rework: Applicant actions.
-      'request-rework' => ReworkApplicationProcessActions::requestRework(),
-      'withdraw-rework-request' => ReworkApplicationProcessActions::withdrawReworkRequest(),
-      'withdraw-change' => ReworkApplicationProcessActions::withdrawChange(),
-      'withdraw-rework' => ReworkApplicationProcessActions::withdrawRework(),
-      // Rework: Reviewer actions.
-      'approve-rework-request' => ReworkApplicationProcessActions::approveReworkRequest(),
-      'reject-rework-request' => ReworkApplicationProcessActions::rejectReworkRequest(),
-      'approve-change' => ReworkApplicationProcessActions::approveChange(),
-      'reject-change' => ReworkApplicationProcessActions::rejectChange(),
-    ];
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getApplicationProcessStatuses(): array {
-    return $this->applicationProcessStatuses ??= [
-      'complete' => DefaultApplicationProcessStatuses::complete(),
-      'draft' => DefaultApplicationProcessStatuses::draft(),
-      'eligible' => DefaultApplicationProcessStatuses::eligible(),
-      'new' => DefaultApplicationProcessStatuses::new(),
-      'rejected' => DefaultApplicationProcessStatuses::rejected(),
-      'review' => DefaultApplicationProcessStatuses::review(),
-      'withdrawn' => DefaultApplicationProcessStatuses::withdrawn(),
-      'rework' => ReworkApplicationProcessStatuses::rework(),
-      'rework-requested' => ReworkApplicationProcessStatuses::reworkRequested(),
-      'rework-review' => ReworkApplicationProcessStatuses::reworkReview(),
-    ];
-  }
 
   /**
    * @inheritDoc

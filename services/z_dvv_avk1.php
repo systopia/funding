@@ -23,6 +23,7 @@ declare(strict_types = 1);
 
 use Civi\Funding\DependencyInjection\Util\TaskServiceRegistrator;
 use Civi\Funding\FundingCaseType\MetaData\FundingCaseTypeMetaDataInterface;
+use Civi\Funding\FundingCaseTypes\DVV\EventSubscriber\DvvAngularModuleSubscriber;
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\Actions\AVK1ApplicationActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\Actions\AVK1ApplicationStatusDeterminer;
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Application\Data\AVK1ApplicationFormFilesFactory;
@@ -35,6 +36,9 @@ use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\AVK1MetaData;
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\FundingCase\Actions\AVK1CaseActionsDeterminer;
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Report\AVK1ReportDataLoader;
 use Civi\Funding\FundingCaseTypes\DVV\SonstigeAktivitaet\Report\AVK1ReportFormFactory;
+
+$container->autowire(DvvAngularModuleSubscriber::class)
+  ->addTag('kernel.event_subscriber');
 
 $container->autowire(AVK1MetaData::class)
   ->addTag(FundingCaseTypeMetaDataInterface::class);
