@@ -71,8 +71,7 @@ class RecreateTransferContractAction extends AbstractAction {
 
   private function getTransferContractRecreateHandler(): TransferContractRecreateHandlerInterface {
     // @phpstan-ignore return.type, assign.propertyType
-    return $this->transferContractRecreateHandler
-      ??= \Civi::service(TransferContractRecreateHandlerInterface::class);
+    return $this->transferContractRecreateHandler ??= \Civi::service(TransferContractRecreateHandlerInterface::class);
   }
 
 }
