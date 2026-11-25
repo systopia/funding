@@ -40,6 +40,8 @@ final class ApiActionComparator extends ObjectComparator {
     $array = parent::toArray($action);
     unset($array['_id']);
     unset($array['_debugOutput']);
+    unset($array['_paramInfo']);
+    unset($array['_reflection']);
 
     return $array;
   }
