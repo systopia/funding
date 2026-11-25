@@ -56,7 +56,7 @@ class ClearingGroupExtractor {
    * @param \Civi\RemoteTools\JsonSchema\JsonSchema|null $ancestorLayout
    *   An ancestor layout containing the group label if $layout has no label.
    *
-   * @phpstan-return array<string, ClearingItemsGroup>
+   * @phpstan-return array<int, ClearingItemsGroup>
    *
    * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
    */
@@ -83,7 +83,7 @@ class ClearingGroupExtractor {
       $groupLabel = NULL;
     }
     else {
-      $groupKey = spl_object_hash($ancestorLayout);
+      $groupKey = spl_object_id($ancestorLayout);
       /** @var string $groupLabel */
       $groupLabel = $ancestorLayout->getKeywordValue('label');
     }
@@ -105,7 +105,7 @@ class ClearingGroupExtractor {
           unset($scopes[$scopePos]);
 
           if (NULL === $ancestorLayout) {
-            $groupKey = spl_object_hash($element);
+            $groupKey = spl_object_id($element);
           }
 
           $result[$groupKey] ??= new ClearingItemsGroup($groupLabel);
