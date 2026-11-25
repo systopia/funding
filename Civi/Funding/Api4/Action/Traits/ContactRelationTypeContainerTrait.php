@@ -27,8 +27,9 @@ trait ContactRelationTypeContainerTrait {
   protected ?RelationTypeContainerInterface $_contactRelationTypeContainer;
 
   public function getContactRelationTypeContainer(): RelationTypeContainerInterface {
-    // @phpstan-ignore return.type, assign.propertyType
+    // @phpstan-ignore return.type
     return $this->_contactRelationTypeContainer
+      // @phpstan-ignore assign.propertyType
       ??= \Civi::service('funding.permission.contact_relation_type_container');
   }
 
