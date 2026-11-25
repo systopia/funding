@@ -24,7 +24,9 @@ use Civi\Funding\Api4\Action\Remote\FundingClearingProcess\GetOrCreateAction;
 use Civi\Funding\ApplicationProcess\ApplicationProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessManager;
 use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
+use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\Entity\ClearingProcessEntityBundle;
+use Civi\Funding\FundingCaseType\FundingCaseTypeMetaDataProviderInterface;
 use Civi\RemoteTools\ActionHandler\ActionHandlerInterface;
 
 /**
@@ -34,17 +36,11 @@ final class RemoteGetOrCreateActionHandler implements ActionHandlerInterface {
 
   public const ENTITY_NAME = 'RemoteFundingClearingProcess';
 
-  private ApplicationProcessManager $applicationProcessManager;
-
-  private ClearingProcessManager $clearingProcessManager;
-
   public function __construct(
-    ApplicationProcessManager $applicationProcessManager,
-    ClearingProcessManager $clearingProcessManager
-  ) {
-    $this->applicationProcessManager = $applicationProcessManager;
-    $this->clearingProcessManager = $clearingProcessManager;
-  }
+    private readonly ApplicationProcessManager $applicationProcessManager,
+    private readonly ClearingProcessManager $clearingProcessManager,
+    private readonly FundingCaseTypeMetaDataProviderInterface $metaDataProvider
+  ) {}
 
   /**
    * @phpstan-return clearingProcessT
@@ -59,9 +55,9 @@ final class RemoteGetOrCreateActionHandler implements ActionHandlerInterface {
       );
     }
 
-    if (TRUE !== $applicationProcessBundle->getApplicationProcess()->getIsEligible()) {
+    if (!$this->isClearingAvailable($applicationProcessBundle)) {
       throw new \CRM_Core_Exception(
-        sprintf('Application process with ID %d is not in an eligible status', $action->getApplicationProcessId())
+        sprintf('Application process with ID %d is currently not clearable', $action->getApplicationProcessId())
       );
     }
 
@@ -91,6 +87,13 @@ final class RemoteGetOrCreateActionHandler implements ActionHandlerInterface {
     }
 
     return $clearingProcess->toArray();
+  }
+
+  private function isClearingAvailable(ApplicationProcessEntityBundle $applicationProcessBundle): bool {
+    $metaData = $this->metaDataProvider->get($applicationProcessBundle->getFundingCaseType()->getName());
+    $status = $metaData->getApplicationProcessStatus($applicationProcessBundle->getApplicationProcess()->getStatus());
+
+    return (bool) $status?->isClearingAvailable();
   }
 
 }

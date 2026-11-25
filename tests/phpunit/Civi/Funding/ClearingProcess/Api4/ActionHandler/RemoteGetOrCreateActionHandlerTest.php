@@ -27,6 +27,9 @@ use Civi\Funding\ClearingProcess\ClearingProcessPermissions;
 use Civi\Funding\Entity\ApplicationProcessEntityBundle;
 use Civi\Funding\EntityFactory\ApplicationProcessBundleFactory;
 use Civi\Funding\EntityFactory\ClearingProcessBundleFactory;
+use Civi\Funding\FundingCaseType\MetaData\ApplicationProcessStatus;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataMock;
+use Civi\Funding\Mock\FundingCaseType\MetaData\FundingCaseTypeMetaDataProviderMock;
 use Civi\Funding\Traits\CreateMockTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -44,14 +47,19 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
 
   private RemoteGetOrCreateActionHandler $handler;
 
+  private FundingCaseTypeMetaDataMock $metaDataMock;
+
   protected function setUp(): void {
     parent::setUp();
+
+    $this->metaDataMock = new FundingCaseTypeMetaDataMock();
 
     $this->applicationProcessManagerMock = $this->createMock(ApplicationProcessManager::class);
     $this->clearingProcessManagerMock = $this->createMock(ClearingProcessManager::class);
     $this->handler = new RemoteGetOrCreateActionHandler(
       $this->applicationProcessManagerMock,
-      $this->clearingProcessManagerMock
+      $this->clearingProcessManagerMock,
+      new FundingCaseTypeMetaDataProviderMock($this->metaDataMock),
     );
   }
 
@@ -68,19 +76,23 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $this->handler->getOrCreate($action);
   }
 
-  public function testApplicationProcessNotEligible(): void {
+  public function testApplicationProcessNotClearable(): void {
     $action = static::createApi4ActionMock(GetOrCreateAction::class);
     $action->setApplicationProcessId(12);
 
-    $applicationProcessBundle = ApplicationProcessBundleFactory::create(
-      ['is_eligible' => FALSE]
-    );
+    $applicationProcessBundle = ApplicationProcessBundleFactory::create(['status' => 'test']);
     $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn($applicationProcessBundle);
 
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'Test',
+      'clearingAvailable' => FALSE,
+    ]));
+
     $this->expectException(\CRM_Core_Exception::class);
-    $this->expectExceptionMessage('Application process with ID 12 is not in an eligible status');
+    $this->expectExceptionMessage('Application process with ID 12 is currently not clearable');
     $this->handler->getOrCreate($action);
   }
 
@@ -94,7 +106,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
         'creation_date' => NULL,
         'modification_date' => NULL,
       ],
-      ['is_eligible' => TRUE],
+      ['status' => 'test'],
       ['permissions' => ['application_modify']],
     );
     $applicationProcessBundle = new ApplicationProcessEntityBundle(
@@ -107,6 +119,12 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn($applicationProcessBundle);
+
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'Test',
+      'clearingAvailable' => TRUE,
+    ]));
 
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
@@ -130,7 +148,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
         'creation_date' => NULL,
         'modification_date' => NULL,
       ],
-      ['is_eligible' => TRUE],
+      ['status' => 'test'],
       ['permissions' => [$permission]],
     );
     $applicationProcessBundle = new ApplicationProcessEntityBundle(
@@ -143,6 +161,12 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn($applicationProcessBundle);
+
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'Test',
+      'clearingAvailable' => TRUE,
+    ]));
 
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
@@ -172,7 +196,7 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
         'creation_date' => '2024-11-11 01:02:03',
         'modification_date' => '2024-11-11 01:02:03',
       ],
-      ['is_eligible' => TRUE],
+      ['status' => 'test'],
       ['permissions' => ['application_modify']],
     );
     $applicationProcessBundle = new ApplicationProcessEntityBundle(
@@ -185,6 +209,12 @@ final class RemoteGetOrCreateActionHandlerTest extends TestCase {
     $this->applicationProcessManagerMock->method('getBundle')
       ->with(12)
       ->willReturn($applicationProcessBundle);
+
+    $this->metaDataMock->addApplicationProcessStatus(new ApplicationProcessStatus([
+      'name' => 'test',
+      'label' => 'Test',
+      'clearingAvailable' => TRUE,
+    ]));
 
     $this->clearingProcessManagerMock->method('getByApplicationProcessId')
       ->with(12)
