@@ -33,8 +33,10 @@ use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\UiSchema\Kurs
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Application\UiSchema\KursGrunddatenUiSchema;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\JsonSchema\KursDokumenteJsonSchema;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\JsonSchema\KursFoerderungJsonSchema;
+use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\JsonSchema\KursSachberichtJsonSchema;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\UiSchema\KursDokumenteCategory;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\UiSchema\KursFoerderungGroup;
+use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\UiSchema\KursSachberichtCategory;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Report\UiSchema\KursZuschussGroup;
 use Civi\Funding\FundingCaseTypes\AdB\SammelantragKurs\Traits\KursSupportedFundingCaseTypesTrait;
 use Civi\RemoteTools\JsonForms\JsonFormsControl;
@@ -80,10 +82,11 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
         'grunddaten' => $grunddatenJsonSchema,
         'zuschuss' => $zuschussJsonSchema,
         'beschreibung' => new KursBeschreibungJsonSchema(),
+        'sachbericht' => new KursSachberichtJsonSchema(),
         'dokumente' => new KursDokumenteJsonSchema(),
         'foerderung' => new KursFoerderungJsonSchema(),
       ], [
-        'required' => ['grunddaten', 'zuschuss', 'beschreibung', 'dokumente', 'foerderung'],
+        'required' => ['grunddaten', 'zuschuss', 'beschreibung', 'sachbericht', 'dokumente', 'foerderung'],
       ]),
     ], [
       'required' => ['reportData'],
@@ -103,6 +106,7 @@ final class KursReportFormFactory implements ReportFormFactoryInterface {
     $uiSchema = new JsonFormsCategorization([
       new KursGrunddatenUiSchema('#/properties/reportData/properties/grunddaten/properties', TRUE),
       new KursBeschreibungUiSchema('#/properties/reportData/properties/beschreibung/properties'),
+      new KursSachberichtCategory('#/properties/reportData/properties/sachbericht/properties'),
       new KursDokumenteCategory('#/properties/reportData/properties/dokumente/properties'),
     ]);
 
