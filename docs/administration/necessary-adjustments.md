@@ -1,5 +1,11 @@
 # Necessary Adjustments
 
+!!! warning "Outdated"
+    Parts of this page are outdated. Funding case types are no longer defined
+    by managed entities in the funding extension, and the paths below have
+    changed (see `Civi/Funding/FundingCaseTypes` and `services/z_*.php`).
+    A revised guide on implementing a funding case type is in preparation.
+
 Necessary adjustments to represent the funding workflow of a specific giving
 organization can be done via code in a custom extension.
 If you need support in this, you can send an email to info@systopia.de.
