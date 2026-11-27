@@ -36,11 +36,18 @@ An overview of funding programs can be found at **Funding > Funding Programs**. 
 
 You can upload different document templates for every funding case type. All documents need to be word documents with the ending _.docx_. They will be processed by [CiviOffice](https://docs.civicrm.org/civioffice/) and may contain tokens that will be replaced accordingly.
 
-Navigate to **Funding > Funding Case Type**. For every funding case type there exist the actions **Manage templates** for required templates and **Manage external application templates** for additional templates that are available for applicants.
+Navigate to **Funding > Funding Case Types**. For every funding case type there exist the actions **Manage templates** for the templates of documents that are created automatically and **Manage external application templates** for additional templates that are available for applicants.
 
-### Required Document Templates
+### Funding Case Type Templates
 
-There are two templates that are required for the funding case type to work: The transfer contract and the payment instructions. You can upload the documents at **Manage templates**.
+The action **Manage templates** allows you to upload the following templates:
+
+* **Transfer Contract Template**: Used to create the transfer contract when a funding case is approved. The transfer contract is created again if the amount approved changes. Required.
+* **Payment Instruction Template**: Used to create the payment instruction when a drawdown is accepted. Required.
+* **Payback Claim Template**: Used instead of the payment instruction when an accepted drawdown has a negative amount, e.g. if a clearing results in a reclaim of funds. Required if paybacks can occur.
+* **Drawdown Submit Confirmation Template**: Used to create a confirmation document for applicants when a drawdown is submitted. Optional.
+
+If a required template is missing, the corresponding action fails with an error.
 
 ### Additional Document Templates
 
