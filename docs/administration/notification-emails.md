@@ -1,11 +1,16 @@
 # Notification Emails
 
-It is possible to send notification emails when an application process status or
-a funding case status changes. This requires message templates with a
-`workflow_name` that follows these patterns:
+It is possible to send notification emails when the status of an application
+process, a funding case, a drawdown, or a clearing process changes. This
+requires message templates with a `workflow_name` that follows these patterns:
 
 * `funding.[case_type:<type>.]application_process.status_change:<new_status>`
 * `funding.[case_type:<type>.]funding_case.status_change:<new_status>`
+* `funding.[case_type:<type>.]drawdown.status_change:<new_status>`
+* `funding.[case_type:<type>.]clearing_process.status_change:<new_status>`
+
+A notification is also sent when one of these is created, using its initial
+status.
 
 When an application process status changes the behavior is like this:
 
@@ -18,13 +23,17 @@ When an application process status changes the behavior is like this:
 Available tokens:
 
 * `{contact.*}` The notification contact.
-* `{application_process.*}`
 * `{funding_case.*}`
 * `{funding_case_type.*}`
 * `{funding_program.*}`
+* `{funding_application_process.*}` Only for application process and clearing
+  process notifications.
+* `{funding_clearing_process.*}` Only for clearing process notifications.
+* `{funding_drawdown.*}` and `{funding_payout_process.*}` Only for drawdown
+  notifications.
 
-The behavior is the same for changes of a funding case status, apart from that
-there's no application process token.
+The behavior is the same for the other status changes, apart from the
+available tokens.
 
 The message templates have to be created manually via API call. (It's not
 possible to create message templates with `workflow_name` via UI.)
