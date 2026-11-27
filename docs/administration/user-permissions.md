@@ -22,7 +22,7 @@ After installing the funding extension, the Drupal roles need to be given the co
     * CiviCRM: access Funding Program Manager
 * Funding Admins need to have a role that grants the following permissions:
     * CiviCRM: access Funding Program Manager
-    * CiviCRM: Funding Program Manager Administration
+    * CiviCRM: administer Funding Program Manager
 
 If you don't need to differentiate, reviewer and funding program admin permissions can also be combined in one role.
 
@@ -39,11 +39,11 @@ The CiviRemote User Roles are automatically synchronised with the Drupal user ac
 
 ## Funding Program
 
-After creating a funding program, it will be listed at **Funding > Funding Programs**. There are several actions available, namely **Edit Recipients**, **Edit permissions** and **Edit initial funding case permissions**. These three settings have to be configured correctly before opening the program for applicants.
+After creating a funding program, it will be listed at **Funding > Funding Programs**. There are several actions available, namely **Edit possible funding recipients**, **Edit permissions** and **Edit initial funding case permissions**. These three settings have to be configured correctly before opening the program for applicants.
 
-### Edit Recipients
+### Edit Possible Funding Recipients {#edit-recipients}
 
-When an applicant creates an application, one field of the application form asks who is going to be the recipient of the funding. The recipient is not necessarily identical to the applicant. The field in the application form is a dropdown menu where the correct recipient needs to be chosen. The values that are shown in the dropdown menu need to be configured at **Edit Recipients**.
+When an applicant creates an application, one field of the application form asks who is going to be the recipient of the funding. The recipient is not necessarily identical to the applicant. The field in the application form is a dropdown menu where the correct recipient needs to be chosen. The values that are shown in the dropdown menu need to be configured at **Edit possible funding recipients**.
 
 As an example, consider a funding program that funds organizations. The application is not created by the organization but by an employee of that organization. In this case, the applicant is the employee and the recipient is the organization. If both exist as contacts in CiviCRM and are connected by a relationship of type _Employee_, the configuration would look as follows:
 
@@ -73,7 +73,7 @@ A configuration could look like this:
 
 ### Initial Funding Case Permissions
 
-Additional to the permissions that are set for a whole funding program, there exist permissions that are on the level of a funding case and can be different between cases. Funding cases are created automatically during the application process and there might be many cases for one funding program. This requires a default set of permissions that are automatically assigned during the creation of a new funding case. These initial permissions can be configured with the action **Initial funding case permissions** of a funding program. To alter the permissions for a specific funding case, go to **Funding > Funding Cases**, find the funding case in the list and choose the action **Edit permissions** for this case.
+Additional to the permissions that are set for a whole funding program, there exist permissions that are on the level of a funding case and can be different between cases. Funding cases are created automatically during the application process and there might be many cases for one funding program. This requires a default set of permissions that are automatically assigned during the creation of a new funding case. These initial permissions can be configured with the action **Edit initial funding case permissions** of a funding program. To alter the permissions for a specific funding case, go to **Funding > Funding Cases**, find the funding case in the list and choose the action **Edit permissions** for this case.
 
 The following permissions exist for reviewers:
 

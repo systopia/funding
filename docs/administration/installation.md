@@ -61,10 +61,10 @@ composer update drupal/views_current_path
 
 - `fontawesome` is not required if **Font Awesome** is provided by other means.
 - `formtips` is not required, but recommended.
-- `symfony/property-access`, `tomsgu/pdf-merger`, and `webmozart/assert` are dependencies of the funding extension.
+- `symfony/html-sanitizer`, `symfony/property-access`, `tomsgu/pdf-merger`, and `webmozart/assert` are dependencies of the funding extension.
 
 ```
-composer require drupal/fontawesome:^2 drupal/formtips symfony/property-access tomsgu/pdf-merger webmozart/assert
+composer require drupal/fontawesome:^2 drupal/formtips symfony/html-sanitizer symfony/property-access tomsgu/pdf-merger webmozart/assert
 drush pm:install fontawesome formtips
 ```
 
@@ -229,6 +229,4 @@ CiviCRM contacts must use the same time zone. Therefore, the option
 
 ## Create and Configure Funding Case Type Templates
 
-The creation of transfer contracts, payment instructions, and payback claims relies on templates in `docx` format. They are created with [CiviOffice](https://docs.civicrm.org/civioffice/en/latest/) and can contain tokens. For each funding case type different templates need to be uploaded.
-
-To upload your templates open `/civicrm/funding/case-type/list` and click *Manage templates* at the funding case type you want to configure the templates.
+The creation of transfer contracts, payment instructions, and other documents relies on templates in `docx` format that are processed by [CiviOffice](https://docs.civicrm.org/civioffice/en/latest/). They need to be uploaded for each funding case type, see [Manage Document Templates](./funding-programs.md#manage-document-templates).

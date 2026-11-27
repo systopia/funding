@@ -26,8 +26,12 @@ Opening a funding application leads to an overview of all information that were 
 
 ### List of Tasks
 
-A list of tasks that are assigned to the person currently logged into CiviCRM can be found at **Funding > My tasks**.
-The list includes tasks to review an application.
+The funding extension creates tasks automatically whenever a reviewer needs to act, for example to review an application, a drawdown, or a clearing, or to approve a funding case. Tasks are completed or cancelled automatically as soon as the corresponding step is done or no longer necessary. Which tasks are created depends on the funding case type.
+
+* **Funding > My Tasks** lists the open tasks that are assigned to the person currently logged into CiviCRM or not assigned to anyone, and for which this person has the required permission.
+* **Funding > Tasks (Pending)** lists all open tasks of the funding cases the person can access, independent of the assignee.
+
+Tasks are stored as activities of the types *Funding Application Task*, *Funding Case Task*, *Funding Drawdown Task*, and *Funding Clearing Task*.
 
 ## Application Phase
 
@@ -51,7 +55,7 @@ As soon as a review is started, different actions become available. The list of 
 
 ![](../img/review-pending.png){ width=300 }
 
-By starting a review, an activity of type *Internal Funding Application Task* is created and assigned to the contact of the reviewer. The activity has the status *pending* until the review is finished. All activities of this type and status *pending* are listed at **Funding > My tasks**.
+When an application gets into a status that requires a review, typically a content review task and a calculative review task are created. If a reviewer is assigned, the task is assigned to this reviewer. The task is completed as soon as the result of the corresponding review is set. The tasks are listed at **Funding > My Tasks**.
 
 ### Comments
 
